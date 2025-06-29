@@ -25,8 +25,4 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
     fun getRaceResultsByCategory(category: RaceCategory): Flow<List<RaceResult>> {
         return raceResultDao.getRaceResultsByCategory(category)
     }
-
-    fun getAllRaceResults(): Flow<List<RaceResult>> {
-        return raceResultDao.getAllRaceResults()
-    }
 }
