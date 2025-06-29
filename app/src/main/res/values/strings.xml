@@ -11,4 +11,6 @@
     <string name="menu_statistics">Stats</string>
     <string name="new_race">New race (150cc)</string>
     <string name="new_knockout">New knockout (150cc)</string>
+    <string name="race_statistics">Race Statistics</string>
+    <string name="no_race_results_yet">No race results yet.</string>
 </resources>

@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 data class RaceResult(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0, // Primärschlüssel, automatisch generiert
-    val category: Enum<RaceCategory>,
-    val mode: Enum<RaceMode>,
+    val category: RaceCategory,
+    val mode: RaceMode,
     val knockoutCupName: String?,
     val drivingFromTrackName: String?,
     val drivingToTrackName: String?,

@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
                 knockoutCupName = null,
                 drivingFromTrackName = null,
                 drivingToTrackName = "Mario Bros. Circuit",
-                position = null,
+                position = 1,
                 date = System.currentTimeMillis()
             )
             homeViewModel.insertRaceResult(newRace)
@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
                 knockoutCupName = "Moon Cup",
                 drivingFromTrackName = null,
                 drivingToTrackName = null,
-                position = null,
+                position = 7,
                 date = System.currentTimeMillis()
             )
             homeViewModel.insertRaceResult(newRace)
