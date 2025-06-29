@@ -21,7 +21,7 @@
         app:iconGravity="start"
         android:text="@string/new_race"
         android:textColor="@color/button_text_color"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:backgroundTint="@color/button_background_color"
         android:layout_marginBottom="16dp"/>
 
@@ -34,7 +34,7 @@
         app:iconGravity="start"
         android:text="@string/new_knockout"
         android:textColor="@color/button_text_color"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:backgroundTint="@color/button_background_color"/>
 
 </LinearLayout>
