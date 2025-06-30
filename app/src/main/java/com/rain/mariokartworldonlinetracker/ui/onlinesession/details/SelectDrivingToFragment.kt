@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.home.details
+package com.rain.mariokartworldonlinetracker.ui.onlinesession.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,13 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingToBinding
-import com.rain.mariokartworldonlinetracker.ui.home.NewRaceViewModel
-import com.rain.mariokartworldonlinetracker.ui.home.NewRaceViewModelFactory
+import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
+import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
 
 class SelectDrivingToFragment : Fragment() {
     private var _binding: FragmentSelectDrivingToBinding? = null
-    private lateinit var newRaceViewModel: NewRaceViewModel
+    private lateinit var newOnlineSessionViewModel: NewOnlineSessionViewModel
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -32,34 +30,33 @@ class SelectDrivingToFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Repository und ViewModel initialisieren (Beispiel, besser mit Dependency Injection)
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val repository = RaceResultRepository(raceResultDao)
-        val factory = NewRaceViewModelFactory(repository)
-
-        newRaceViewModel = ViewModelProvider(findNavController().getViewModelStoreOwner(R.id.new_race_flow_nav_graph), factory)
-            .get(NewRaceViewModel::class.java)
+        newOnlineSessionViewModel = ViewModelProvider(
+            findNavController().getViewModelStoreOwner(R.id.new_race_flow_nav_graph_id),
+            NewOnlineSessionViewModelFactory(repository))
+            .get(NewOnlineSessionViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Beobachte lastDrivingToTrackName, um den "Last"-Button ggf. zu aktualisieren
-        newRaceViewModel.lastDrivingToTrackName.observe(viewLifecycleOwner) { lastName ->
-            // binding.buttonFromLast.text = "Last (${lastName ?: "N/A"})"
+        binding.buttonToMbc.setOnClickListener {
+            navigateNext("Mario Bros. Circuit")
         }
 
-        binding.buttonToMbc.setOnClickListener {
-            newRaceViewModel.setDrivingToTrackName("Mario Bros. Circuit")
-            findNavController().navigate(R.id.action_selectDrivingToFragment_to_enterPositionFragment)
-        }
         binding.buttonToCc.setOnClickListener {
-            newRaceViewModel.setDrivingToTrackName("Crown City")
-            findNavController().navigate(R.id.action_selectDrivingToFragment_to_enterPositionFragment)
+            navigateNext("Crown City")
         }
+
         binding.buttonToWss.setOnClickListener {
-            newRaceViewModel.setDrivingToTrackName("Whistlestop Summit")
-            findNavController().navigate(R.id.action_selectDrivingToFragment_to_enterPositionFragment)
+            navigateNext("Whistlestop Summit")
         }
+    }
+
+    fun navigateNext(drivingToTrackName: String) {
+        newOnlineSessionViewModel.setDrivingToTrackName(drivingToTrackName)
+        findNavController().navigate(R.id.action_selectDrivingToFragment_to_enterPositionFragment)
+
     }
 }

@@ -2,33 +2,32 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/new_race_flow_nav_graph"
-    app:startDestination="@id/selectDrivingFromFragment">
+    android:id="@+id/new_race_flow_nav_graph_id"
+    app:startDestination="@+id/selectRaceModeFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.rain.mariokartworldonlinetracker.ui.home.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_home">
+        android:id="@+id/selectRaceModeFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectRaceModeFragment"
+        android:label="Select Race Mode"
+        tools:layout="@layout/fragment_select_race_mode">
         <action
-            android:id="@+id/action_homeFragment_to_newRaceFlow"
-            app:destination="@id/new_race_flow_nav_graph" />
+            android:id="@+id/action_selectRaceModeFragment_to_selectDrivingFromFragment"
+            app:destination="@id/selectDrivingFromFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/selectDrivingFromFragment"
-        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.SelectDrivingFromFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectDrivingFromFragment"
         android:label="Select Driving From"
         tools:layout="@layout/fragment_select_driving_from">
         <action
             android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingToFragment"
             app:destination="@id/selectDrivingToFragment" />
-        <!-- Argument, um die gewählte Option an das ViewModel weiterzugeben oder direkt zu setzen -->
     </fragment>
 
     <fragment
         android:id="@+id/selectDrivingToFragment"
-        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.SelectDrivingToFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectDrivingToFragment"
         android:label="Select Driving To"
         tools:layout="@layout/fragment_select_driving_to">
         <action
@@ -38,10 +37,22 @@
 
     <fragment
         android:id="@+id/enterPositionFragment"
-        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.EnterPositionFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectPositionFragment"
         android:label="Enter Position"
-        tools:layout="@layout/fragment_enter_position">
-        <!-- Keine ausgehende Action hier, da dies der letzte Schritt vor dem Speichern ist -->
+        tools:layout="@layout/fragment_select_position">
+        <!-- Aktion, um zurück zum Start des Race-Loops zu springen -->
+        <action
+            android:id="@+id/action_selectPosition_back_to_selectRaceMode"
+            app:destination="@id/selectRaceModeFragment"
+            app:popUpTo="@id/selectRaceModeFragment"
+            app:popUpToInclusive="true" />
+
+        <!-- Optional: Aktion, um den gesamten Race-Loop zu verlassen und zum StartSessionFragment zurückzukehren -->
+<!--        <action-->
+<!--            android:id="@+id/action_selectPosition_exit_loop_to_startSession"-->
+<!--            app:destination="@id/nav_start_session"-->
+<!--            app:popUpTo="@id/new_race_flow_nav_graph_id"-->
+<!--            app:popUpToInclusive="true" />-->
     </fragment>
 
 </navigation>

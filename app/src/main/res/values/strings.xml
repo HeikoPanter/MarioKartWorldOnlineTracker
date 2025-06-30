@@ -7,12 +7,12 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Add result</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_start_session">New session</string>
     <string name="menu_statistics">Stats</string>
-    <string name="new_race">New race (150cc)</string>
-    <string name="new_knockout">New knockout (150cc)</string>
+    <string name="new_race">Start race session</string>
+    <string name="new_knockout">Start knockout session</string>
     <string name="race_statistics">Race Statistics</string>
     <string name="no_race_results_yet">No race results yet.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home_start_message">Welcome to the Mario Kart World Online Tracker</string>
 </resources>

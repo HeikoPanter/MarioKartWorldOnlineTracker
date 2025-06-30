@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.home.details.SelectDrivingFromFragment">
+    tools:context=".ui.onlinesession.details.SelectDrivingFromFragment">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_from_last"
