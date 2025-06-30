@@ -3,13 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_home">
 
     <fragment
         android:id="@+id/nav_home"
         android:name="com.rain.mariokartworldonlinetracker.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_start_session"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.StartSessionFragment"
+        android:label="@string/menu_start_session"
+        tools:layout="@layout/fragment_start_session">
+        <action
+            android:id="@+id/action_startSessionFragment_to_newRaceFlowNavGraph"
+            app:destination="@id/new_race_flow_nav_graph_id" />
+    </fragment>
+
+    <!-- Einbinden des anderen Navigationsgraphen -->
+    <include app:graph="@navigation/new_race_flow_nav_graph" />
 
     <fragment
         android:id="@+id/nav_statistics"

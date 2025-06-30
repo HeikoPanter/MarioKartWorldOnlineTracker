@@ -4,23 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.onlinesession.details.SelectDrivingToFragment">
+    tools:context=".ui.onlinesession.details.SelectRaceModeFragment">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_to_mbc"
-        android:text="Mario Bros. Circuit"
+        android:id="@+id/button_mode_150cc"
+        android:text="150cc"
         android:layout_height="40dp"
         android:layout_width="match_parent"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_to_cc"
-        android:text="Crown City"
+        android:id="@+id/button_mode_mirror"
+        android:text="Mirror"
         android:layout_height="40dp"
         android:layout_width="match_parent"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_to_wss"
-        android:text="Whistlestop Summit"
+        android:id="@+id/button_mode_100cc"
+        android:text="100cc"
         android:layout_height="40dp"
         android:layout_width="match_parent"/>
 
