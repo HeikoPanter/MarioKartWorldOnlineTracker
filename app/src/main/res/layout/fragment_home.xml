@@ -13,7 +13,7 @@
     tools:context=".ui.home.HomeFragment">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new_race"
+        android:id="@+id/button_new_race_150cc"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         app:icon="@drawable/ic_add"
@@ -26,7 +26,7 @@
         android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_new_knockout"
+        android:id="@+id/button_new_knockout_150cc"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         app:icon="@drawable/ic_add"

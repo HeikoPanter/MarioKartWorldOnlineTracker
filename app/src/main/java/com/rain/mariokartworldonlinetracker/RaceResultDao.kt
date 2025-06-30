@@ -26,4 +26,7 @@ interface RaceResultDao {
 
     @Query("SELECT * FROM race_results WHERE category = :category ORDER BY date DESC")
     fun getRaceResultsByCategory(category: RaceCategory): Flow<List<RaceResult>>
+
+    @Query("SELECT drivingToTrackName FROM race_results WHERE category = 'RACE' ORDER BY date DESC LIMIT 1")
+    fun getLastDrivingToTrackName(): String?
 }
