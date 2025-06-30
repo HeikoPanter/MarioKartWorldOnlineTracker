@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView // Wird möglicherweise nicht mehr benötigt, wenn Sie nur die Buttons verwenden
-import androidx.activity.result.launch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.application
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.RaceMode
 import com.rain.mariokartworldonlinetracker.RaceResult
@@ -22,28 +20,15 @@ import com.rain.mariokartworldonlinetracker.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var newRaceViewModel: NewRaceViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        // Der Code für das TextView kann bleiben, wenn Sie es noch verwenden
-        // val textView: TextView = binding.textHome
-        // homeViewModel.text.observe(viewLifecycleOwner) {
-        //     textView.text = it
-        // }
 
         return root
     }
@@ -54,7 +39,7 @@ class HomeFragment : Fragment() {
         // Repository und ViewModel initialisieren (Beispiel, besser mit Dependency Injection)
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val repository = RaceResultRepository(raceResultDao)
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(repository)).get(HomeViewModel::class.java)
+        newRaceViewModel = ViewModelProvider(this, NewRaceViewModelFactory(repository)).get(NewRaceViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,30 +48,15 @@ class HomeFragment : Fragment() {
         // Direkter Zugriff auf die Buttons über das binding-Objekt
         // Die IDs (button_new_race, button_new_knockout) werden automatisch
         // in CamelCase-Properties im binding-Objekt umgewandelt.
-        binding.buttonNewRace.setOnClickListener {
-            val newRace = RaceResult(
-                category = RaceCategory.RACE,
-                mode = RaceMode._150CC,
-                knockoutCupName = null,
-                drivingFromTrackName = null,
-                drivingToTrackName = "Mario Bros. Circuit",
-                position = 1,
-                date = System.currentTimeMillis()
-            )
-            homeViewModel.insertRaceResult(newRace)
+        binding.buttonNewRace150cc.setOnClickListener {
+            // Navigiert zum Start des "New Race"-Flows
+            // Annahme: action_homeFragment_to_newRaceFlow ist eine Action zu new_race_flow_nav_graph
+            // oder direkt zu selectDrivingFromFragment, wenn es im Hauptgraphen ist.
+            findNavController().navigate(R.id.action_homeFragment_to_newRaceFlow)
         }
 
-        binding.buttonNewKnockout.setOnClickListener {
-            val newRace = RaceResult(
-                category = RaceCategory.KNOCKOUT,
-                mode = RaceMode._150CC,
-                knockoutCupName = "Moon Cup",
-                drivingFromTrackName = null,
-                drivingToTrackName = null,
-                position = 7,
-                date = System.currentTimeMillis()
-            )
-            homeViewModel.insertRaceResult(newRace)
+        binding.buttonNewKnockout150cc.setOnClickListener {
+
         }
     }
 

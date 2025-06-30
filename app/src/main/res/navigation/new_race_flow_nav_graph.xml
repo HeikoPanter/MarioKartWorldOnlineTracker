@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_race_flow_nav_graph"
+    app:startDestination="@id/selectDrivingFromFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_newRaceFlow"
+            app:destination="@id/new_race_flow_nav_graph" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectDrivingFromFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.SelectDrivingFromFragment"
+        android:label="Select Driving From"
+        tools:layout="@layout/fragment_select_driving_from">
+        <action
+            android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingToFragment"
+            app:destination="@id/selectDrivingToFragment" />
+        <!-- Argument, um die gewählte Option an das ViewModel weiterzugeben oder direkt zu setzen -->
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectDrivingToFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.SelectDrivingToFragment"
+        android:label="Select Driving To"
+        tools:layout="@layout/fragment_select_driving_to">
+        <action
+            android:id="@+id/action_selectDrivingToFragment_to_enterPositionFragment"
+            app:destination="@id/enterPositionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/enterPositionFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.home.details.EnterPositionFragment"
+        android:label="Enter Position"
+        tools:layout="@layout/fragment_enter_position">
+        <!-- Keine ausgehende Action hier, da dies der letzte Schritt vor dem Speichern ist -->
+    </fragment>
+
+</navigation>

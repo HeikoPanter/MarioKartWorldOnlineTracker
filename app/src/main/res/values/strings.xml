@@ -13,4 +13,6 @@
     <string name="new_knockout">New knockout (150cc)</string>
     <string name="race_statistics">Race Statistics</string>
     <string name="no_race_results_yet">No race results yet.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
