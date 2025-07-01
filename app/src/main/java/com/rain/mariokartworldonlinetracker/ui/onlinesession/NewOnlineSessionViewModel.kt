@@ -7,9 +7,10 @@ import kotlinx.coroutines.launch
 class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : ViewModel() {
 
     var raceCategory: RaceCategory = RaceCategory.UNKNOWN
+    var lastDrivingToTrackName: String? = null
+
     private var _raceMode: RaceMode = RaceMode.UNKNOWN
 
-    private val _lastDrivingToTrackName = MutableLiveData<String?>()
     private val _drivingFromOption = MutableLiveData<DrivingFromOption>()
 
     private val _drivingFromTrackName = MutableLiveData<String?>()
@@ -30,7 +31,7 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
 
     fun resetSession() {
         raceCategory = RaceCategory.UNKNOWN
-        setLastDrivingToTrackName(null)
+        lastDrivingToTrackName = null
         resetRace()
     }
 
@@ -47,14 +48,10 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
         _raceMode = mode
     }
 
-    fun setLastDrivingToTrackName(name: String?) {
-        _lastDrivingToTrackName.value = name
-    }
-
     fun setDrivingFromOption(option: DrivingFromOption) {
         _drivingFromOption.value = option
         when (option) {
-            DrivingFromOption.LAST -> setDrivingFromTrackName(_lastDrivingToTrackName.value)
+            DrivingFromOption.LAST -> setDrivingFromTrackName(lastDrivingToTrackName)
             DrivingFromOption.NONE -> setDrivingFromTrackName(null)
             DrivingFromOption.OTHER -> setDrivingFromTrackName(null)
             DrivingFromOption.UNKNOWN -> setDrivingFromTrackName(null)
@@ -96,6 +93,7 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
             repository.insert(newRace)
         }
 
+        lastDrivingToTrackName = toTrack
         resetRace()
     }
 }

@@ -7,23 +7,22 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.rain.mariokartworldonlinetracker.DrivingFromOption
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingFromBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingFromOtherBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
 
-class SelectDrivingFromFragment : Fragment() {
+class SelectDrivingFromOtherFragment : Fragment() {
 
-    private var _binding: FragmentSelectDrivingFromBinding? = null
+    private var _binding: FragmentSelectDrivingFromOtherBinding? = null
     private lateinit var newOnlineSessionViewModel: NewOnlineSessionViewModel
 
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentSelectDrivingFromBinding.inflate(inflater, container, false)
+        _binding = FragmentSelectDrivingFromOtherBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         return root
@@ -43,28 +42,21 @@ class SelectDrivingFromFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFromLast.setOnClickListener {
-            navigateNext(DrivingFromOption.LAST)
+        binding.buttonFromMbc.setOnClickListener {
+            navigateNext("Mario Bros. Circuit")
         }
 
-        binding.buttonFromNone.setOnClickListener {
-            navigateNext(DrivingFromOption.NONE)
+        binding.buttonFromCc.setOnClickListener {
+            navigateNext("Crown City")
         }
 
-        binding.buttonFromOther.setOnClickListener {
-            navigateNext(DrivingFromOption.OTHER)
+        binding.buttonFromWss.setOnClickListener {
+            navigateNext("Whistlestop Summit")
         }
     }
 
-    fun navigateNext(drivingFromOption: DrivingFromOption) {
-        newOnlineSessionViewModel.setDrivingFromOption(drivingFromOption)
-
-        if (drivingFromOption == DrivingFromOption.OTHER) {
-            findNavController().navigate(R.id.action_selectDrivingFromFragment_to_selectDrivingFromOtherFragment)
-        }
-        else {
-            findNavController().navigate(R.id.action_selectDrivingFromFragment_to_selectDrivingToFragment)
-        }
-
+    fun navigateNext(drivingFromTrackName: String?) {
+        newOnlineSessionViewModel.setDrivingFromTrackName(drivingFromTrackName)
+        findNavController().navigate(R.id.action_selectDrivingFromOtherFragment_to_selectDrivingToFragment)
     }
 }

@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/selectKnockoutCupFragment"
         android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectKnockoutCupFragment"
-        android:label="Select Driving From"
+        android:label="Select Knockout Cup"
         tools:layout="@layout/fragment_select_knockout_cup">
         <action
             android:id="@+id/action_selectKnockoutCupFragment_to_selectPositionFragment"
@@ -38,6 +38,20 @@
         tools:layout="@layout/fragment_select_driving_from">
         <action
             android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingToFragment"
+            app:destination="@id/selectDrivingToFragment" />
+
+        <action
+            android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingFromOtherFragment"
+            app:destination="@id/selectDrivingFromOtherFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/selectDrivingFromOtherFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectDrivingFromOtherFragment"
+        android:label="Select Driving From Other"
+        tools:layout="@layout/fragment_select_driving_from_other">
+        <action
+            android:id="@+id/action_selectDrivingFromOtherFragment_to_selectDrivingToFragment"
             app:destination="@id/selectDrivingToFragment" />
     </fragment>
 
