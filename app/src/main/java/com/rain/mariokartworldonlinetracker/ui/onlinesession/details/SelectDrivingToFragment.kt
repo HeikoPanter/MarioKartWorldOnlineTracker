@@ -33,7 +33,7 @@ class SelectDrivingToFragment : Fragment() {
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val repository = RaceResultRepository(raceResultDao)
         newOnlineSessionViewModel = ViewModelProvider(
-            findNavController().getViewModelStoreOwner(R.id.new_race_flow_nav_graph_id),
+            requireActivity(),
             NewOnlineSessionViewModelFactory(repository))
             .get(NewOnlineSessionViewModel::class.java)
     }
