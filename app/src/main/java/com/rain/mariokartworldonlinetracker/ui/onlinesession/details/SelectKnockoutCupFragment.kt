@@ -7,23 +7,23 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.rain.mariokartworldonlinetracker.DrivingFromOption
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
-import com.rain.mariokartworldonlinetracker.RaceCategory
-import com.rain.mariokartworldonlinetracker.RaceMode
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectRaceModeBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectKnockoutCupBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
 
-class SelectRaceModeFragment : Fragment() {
-    private var _binding: FragmentSelectRaceModeBinding? = null
+class SelectKnockoutCupFragment : Fragment() {
+
+    private var _binding: FragmentSelectKnockoutCupBinding? = null
     private lateinit var newOnlineSessionViewModel: NewOnlineSessionViewModel
 
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentSelectRaceModeBinding.inflate(inflater, container, false)
+        _binding = FragmentSelectKnockoutCupBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         return root
@@ -43,26 +43,21 @@ class SelectRaceModeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonMode150cc.setOnClickListener {
-            navigateNext(RaceMode._150CC)
+        binding.buttonKoGr.setOnClickListener {
+            navigateNext("Golden Rally")
         }
 
-        binding.buttonModeMirror.setOnClickListener {
-            navigateNext(RaceMode.MIRROR)
+        binding.buttonKoIr.setOnClickListener {
+            navigateNext("IceRally")
         }
 
-        binding.buttonMode100cc.setOnClickListener {
-            navigateNext(RaceMode._100CC)
+        binding.buttonKoMr.setOnClickListener {
+            navigateNext("Moon Rally")
         }
     }
 
-    fun navigateNext(raceMode: RaceMode) {
-        newOnlineSessionViewModel.setRaceMode(raceMode)
-        if (newOnlineSessionViewModel.raceCategory == RaceCategory.RACE) {
-            findNavController().navigate(R.id.action_selectRaceModeFragment_to_selectDrivingFromFragment)
-        }
-        else if (newOnlineSessionViewModel.raceCategory == RaceCategory.KNOCKOUT) {
-            findNavController().navigate(R.id.action_selectRaceModeFragment_to_selectKnockoutCupFragment)
-        }
+    fun navigateNext(knockoutCupName: String) {
+        newOnlineSessionViewModel.setKnockoutCupName(knockoutCupName)
+        findNavController().navigate(R.id.action_selectKnockoutCupFragment_to_selectPositionFragment)
     }
 }

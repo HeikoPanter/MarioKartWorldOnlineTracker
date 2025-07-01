@@ -21,6 +21,8 @@ class StartSessionFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
+
+        android.util.Log.d("onCreateView", "Calling onCreateView")
         _binding = FragmentStartSessionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -30,16 +32,20 @@ class StartSessionFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        android.util.Log.d("onCreate", "Calling onCreate")
+
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val repository = RaceResultRepository(raceResultDao)
         newOnlineSessionViewModel = ViewModelProvider(
-                findNavController().getViewModelStoreOwner(R.id.new_race_flow_nav_graph_id),
+                requireActivity(),
                 NewOnlineSessionViewModelFactory(repository))
             .get(NewOnlineSessionViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        android.util.Log.d("onViewCreated", "Calling onViewCreated")
 
         binding.buttonNewRaceSession.setOnClickListener {
             navigateNext(RaceCategory.RACE)
@@ -52,7 +58,10 @@ class StartSessionFragment : Fragment() {
 
     fun navigateNext(raceCategory: RaceCategory) {
         newOnlineSessionViewModel.resetSession()
-        newOnlineSessionViewModel.setRaceCategory(raceCategory)
+        newOnlineSessionViewModel.raceCategory = raceCategory
+
+        android.util.Log.d("navigateNext", "Calling navigate from the findNavController()")
+
         findNavController().navigate(R.id.action_startSessionFragment_to_newRaceFlowNavGraph)
     }
 

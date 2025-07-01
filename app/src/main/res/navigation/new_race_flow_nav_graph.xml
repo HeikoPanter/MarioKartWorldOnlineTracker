@@ -13,8 +13,24 @@
         <action
             android:id="@+id/action_selectRaceModeFragment_to_selectDrivingFromFragment"
             app:destination="@id/selectDrivingFromFragment" />
+
+        <action
+            android:id="@+id/action_selectRaceModeFragment_to_selectKnockoutCupFragment"
+            app:destination="@id/selectKnockoutCupFragment" />
     </fragment>
 
+    <!-- Knockout Session -->
+    <fragment
+        android:id="@+id/selectKnockoutCupFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectKnockoutCupFragment"
+        android:label="Select Driving From"
+        tools:layout="@layout/fragment_select_knockout_cup">
+        <action
+            android:id="@+id/action_selectKnockoutCupFragment_to_selectPositionFragment"
+            app:destination="@id/selectPositionFragment" />
+    </fragment>
+
+    <!-- Race Session -->
     <fragment
         android:id="@+id/selectDrivingFromFragment"
         android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectDrivingFromFragment"
@@ -32,27 +48,20 @@
         tools:layout="@layout/fragment_select_driving_to">
         <action
             android:id="@+id/action_selectDrivingToFragment_to_enterPositionFragment"
-            app:destination="@id/enterPositionFragment" />
+            app:destination="@id/selectPositionFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/enterPositionFragment"
+        android:id="@+id/selectPositionFragment"
         android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectPositionFragment"
         android:label="Enter Position"
         tools:layout="@layout/fragment_select_position">
-        <!-- Aktion, um zurück zum Start des Race-Loops zu springen -->
+
         <action
             android:id="@+id/action_selectPosition_back_to_selectRaceMode"
             app:destination="@id/selectRaceModeFragment"
             app:popUpTo="@id/selectRaceModeFragment"
             app:popUpToInclusive="true" />
-
-        <!-- Optional: Aktion, um den gesamten Race-Loop zu verlassen und zum StartSessionFragment zurückzukehren -->
-<!--        <action-->
-<!--            android:id="@+id/action_selectPosition_exit_loop_to_startSession"-->
-<!--            app:destination="@id/nav_start_session"-->
-<!--            app:popUpTo="@id/new_race_flow_nav_graph_id"-->
-<!--            app:popUpToInclusive="true" />-->
     </fragment>
 
 </navigation>
