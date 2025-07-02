@@ -57,7 +57,7 @@ class SelectPositionFragment : Fragment() {
     fun navigateNext(position: Short?) {
         newOnlineSessionViewModel.setPosition(position)
         newOnlineSessionViewModel.saveNewRace()
-        findNavController().navigate(R.id.action_selectPosition_back_to_selectRaceMode)
+        findNavController().navigate(R.id.action_selectPosition_back_to_selectEngineClass)
 
     }
 }

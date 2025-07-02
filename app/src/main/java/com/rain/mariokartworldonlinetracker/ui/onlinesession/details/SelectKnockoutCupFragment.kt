@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.rain.mariokartworldonlinetracker.DrivingFromOption
+import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
@@ -44,19 +44,19 @@ class SelectKnockoutCupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonKoGr.setOnClickListener {
-            navigateNext("Golden Rally")
+            navigateNext(KnockoutCupName.GR1)
         }
 
         binding.buttonKoIr.setOnClickListener {
-            navigateNext("IceRally")
+            navigateNext(KnockoutCupName.IR2)
         }
 
         binding.buttonKoMr.setOnClickListener {
-            navigateNext("Moon Rally")
+            navigateNext(KnockoutCupName.MR3)
         }
     }
 
-    fun navigateNext(knockoutCupName: String) {
+    fun navigateNext(knockoutCupName: KnockoutCupName) {
         newOnlineSessionViewModel.setKnockoutCupName(knockoutCupName)
         findNavController().navigate(R.id.action_selectKnockoutCupFragment_to_selectPositionFragment)
     }
