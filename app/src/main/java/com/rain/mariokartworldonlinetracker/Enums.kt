@@ -14,7 +14,7 @@ enum class RaceCategory {
     KNOCKOUT
 }
 
-enum class RaceMode {
+enum class EngineClass {
     UNKNOWN,
     _100CC,
     _150CC,

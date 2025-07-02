@@ -8,10 +8,10 @@ data class RaceResult(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0, // Primärschlüssel, automatisch generiert
     val category: RaceCategory,
-    val mode: RaceMode,
-    val knockoutCupName: String?,
-    val drivingFromTrackName: String?,
-    val drivingToTrackName: String?,
+    val engineClass: EngineClass,
+    val knockoutCupName: KnockoutCupName?,
+    val drivingFromTrackName: TrackName?,
+    val drivingToTrackName: TrackName?,
     val position: Short?,
     val date: Long // Zeitstempel, wann das Rennen stattgefunden hat
 )

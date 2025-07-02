@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingToBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
@@ -42,19 +43,19 @@ class SelectDrivingToFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonToMbc.setOnClickListener {
-            navigateNext("Mario Bros. Circuit")
+            navigateNext(TrackName.MBC1)
         }
 
         binding.buttonToCc.setOnClickListener {
-            navigateNext("Crown City")
+            navigateNext(TrackName.CC2)
         }
 
         binding.buttonToWss.setOnClickListener {
-            navigateNext("Whistlestop Summit")
+            navigateNext(TrackName.WSS3)
         }
     }
 
-    fun navigateNext(drivingToTrackName: String) {
+    fun navigateNext(drivingToTrackName: TrackName) {
         newOnlineSessionViewModel.setDrivingToTrackName(drivingToTrackName)
         findNavController().navigate(R.id.action_selectDrivingToFragment_to_enterPositionFragment)
 

@@ -7,20 +7,20 @@ import kotlinx.coroutines.launch
 class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : ViewModel() {
 
     var raceCategory: RaceCategory = RaceCategory.UNKNOWN
-    var lastDrivingToTrackName: String? = null
+    var lastDrivingToTrackName: TrackName? = null
 
-    private var _raceMode: RaceMode = RaceMode.UNKNOWN
+    private var _engineClass: EngineClass = EngineClass.UNKNOWN
 
     private val _drivingFromOption = MutableLiveData<DrivingFromOption>()
 
-    private val _drivingFromTrackName = MutableLiveData<String?>()
-    val drivingFromTrackName: LiveData<String?> = _drivingFromTrackName
+    private val _drivingFromTrackName = MutableLiveData<TrackName?>()
+    val drivingFromTrackName: LiveData<TrackName?> = _drivingFromTrackName
 
-    private val _drivingToTrackName = MutableLiveData<String?>()
-    val drivingToTrackName: LiveData<String?> = _drivingToTrackName
+    private val _drivingToTrackName = MutableLiveData<TrackName?>()
+    val drivingToTrackName: LiveData<TrackName?> = _drivingToTrackName
 
-    private val _knockoutCupName = MutableLiveData<String?>()
-    val knockoutCupName: LiveData<String?> = _knockoutCupName
+    private val _knockoutCupName = MutableLiveData<KnockoutCupName?>()
+    val knockoutCupName: LiveData<KnockoutCupName?> = _knockoutCupName
 
     private val _position = MutableLiveData<Short?>()
     val position: LiveData<Short?> = _position
@@ -38,14 +38,14 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
     fun resetRace() {
         setPosition(null)
         setDrivingFromOption(DrivingFromOption.UNKNOWN)
-        setRaceMode(RaceMode.UNKNOWN)
+        setEngineClass(EngineClass.UNKNOWN)
         setDrivingFromTrackName(null)
         setDrivingToTrackName(null)
         setKnockoutCupName(null)
     }
 
-    fun setRaceMode(mode: RaceMode) {
-        _raceMode = mode
+    fun setEngineClass(engineClass: EngineClass) {
+        _engineClass = engineClass
     }
 
     fun setDrivingFromOption(option: DrivingFromOption) {
@@ -58,15 +58,15 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
         }
     }
 
-    fun setDrivingFromTrackName(name: String?) {
+    fun setDrivingFromTrackName(name: TrackName?) {
         _drivingFromTrackName.value = name
     }
 
-    fun setDrivingToTrackName(name: String?) {
+    fun setDrivingToTrackName(name: TrackName?) {
         _drivingToTrackName.value = name
     }
 
-    fun setKnockoutCupName(name: String?) {
+    fun setKnockoutCupName(name: KnockoutCupName?) {
         _knockoutCupName.value = name
     }
 
@@ -82,7 +82,7 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
 
         val newRace = RaceResult(
             category = raceCategory,
-            mode = _raceMode,
+            engineClass = _engineClass,
             drivingFromTrackName = fromTrack,
             drivingToTrackName = toTrack,
             knockoutCupName = knockoutCupName,

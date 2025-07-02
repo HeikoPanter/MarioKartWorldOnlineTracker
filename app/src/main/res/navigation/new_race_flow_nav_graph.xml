@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_race_flow_nav_graph_id"
-    app:startDestination="@+id/selectRaceModeFragment">
+    app:startDestination="@+id/selectEngineClassFragment">
 
     <fragment
-        android:id="@+id/selectRaceModeFragment"
-        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectRaceModeFragment"
-        android:label="Select Race Mode"
-        tools:layout="@layout/fragment_select_race_mode">
+        android:id="@+id/selectEngineClassFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.SelectEngineClassFragment"
+        android:label="Select Engine Class"
+        tools:layout="@layout/fragment_select_engine_class">
         <action
-            android:id="@+id/action_selectRaceModeFragment_to_selectDrivingFromFragment"
+            android:id="@+id/action_selectEngineClassFragment_to_selectDrivingFromFragment"
             app:destination="@id/selectDrivingFromFragment" />
 
         <action
-            android:id="@+id/action_selectRaceModeFragment_to_selectKnockoutCupFragment"
+            android:id="@+id/action_selectEngineClassFragment_to_selectKnockoutCupFragment"
             app:destination="@id/selectKnockoutCupFragment" />
     </fragment>
 
@@ -72,9 +72,9 @@
         tools:layout="@layout/fragment_select_position">
 
         <action
-            android:id="@+id/action_selectPosition_back_to_selectRaceMode"
-            app:destination="@id/selectRaceModeFragment"
-            app:popUpTo="@id/selectRaceModeFragment"
+            android:id="@+id/action_selectPosition_back_to_selectEngineClass"
+            app:destination="@id/selectEngineClassFragment"
+            app:popUpTo="@id/selectEngineClassFragment"
             app:popUpToInclusive="true" />
     </fragment>
 

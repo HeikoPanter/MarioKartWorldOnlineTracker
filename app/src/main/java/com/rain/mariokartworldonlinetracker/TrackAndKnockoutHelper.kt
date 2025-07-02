@@ -2,7 +2,7 @@ package com.rain.mariokartworldonlinetracker
 
 object TrackAndKnockoutHelper {
     private val trackMap: Map<TrackName?, List<TrackName>> = mutableMapOf(
-        null to TrackName.values().toList(),
+        null to TrackName.entries.toList(),
         TrackName.MBC1 to listOf(TrackName.WS7, TrackName.TF26, TrackName.DKSS4, TrackName.WSS3, TrackName.DH5),
         TrackName.CC2 to listOf(TrackName.CM25, TrackName.PS15, TrackName.FAO14, TrackName.DKSS4, TrackName.DH5, TrackName.WS7),
         TrackName.WSS3 to listOf(TrackName.MBC1, TrackName.DKSS4, TrackName.DH5),
@@ -34,5 +34,11 @@ object TrackAndKnockoutHelper {
         TrackName.MC29 to listOf(TrackName.AH28, TrackName.SVP10, TrackName.MMM24, TrackName.TF26, TrackName.DBB23)
     )
 
+    fun getPossibleTracks(selectedTrack: TrackName?): List<TrackName> {
+        return trackMap[selectedTrack] ?: emptyList()
+    }
 
+    fun getKnockoutCups(): List<KnockoutCupName> {
+        return KnockoutCupName.entries.toList()
+    }
 }
