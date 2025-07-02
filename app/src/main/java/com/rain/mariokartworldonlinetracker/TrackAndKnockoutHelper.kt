@@ -1,5 +1,13 @@
 package com.rain.mariokartworldonlinetracker
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.setMargins
+
 object TrackAndKnockoutHelper {
     private val trackMap: Map<TrackName?, List<TrackName>> = mutableMapOf(
         null to TrackName.entries.toList(),
@@ -34,11 +42,140 @@ object TrackAndKnockoutHelper {
         TrackName.MC29 to listOf(TrackName.AH28, TrackName.SVP10, TrackName.MMM24, TrackName.TF26, TrackName.DBB23)
     )
 
+    private val trackResMap: Map<TrackName, Int> = mutableMapOf(
+        TrackName.MBC1 to R.drawable.mbc1,
+        TrackName.CC2 to R.drawable.cc2
+    )
+
+    private val knockoutCupResMap: Map<KnockoutCupName, Int> = mutableMapOf(
+    )
+
     fun getPossibleTracks(selectedTrack: TrackName?): List<TrackName> {
         return trackMap[selectedTrack] ?: emptyList()
     }
 
     fun getKnockoutCups(): List<KnockoutCupName> {
         return KnockoutCupName.entries.toList()
+    }
+
+    /**
+     * Erstellt und füllt ein LinearLayout mit Reihen von ImageViews.
+     *
+     * @param context Der Anwendungskontext.
+     * @param dataList Die Liste der Datenobjekte (z.B. TrackInfo).
+     * @param itemsPerRow Anzahl der Items, die pro Reihe angezeigt werden sollen.
+     * @param containerLinearLayout Das LinearLayout, dem die Reihen hinzugefügt werden sollen.
+     * @param itemMarginPx Der Margin für jedes einzelne ImageView in Pixeln.
+     * @param createImageViewFunc Eine Funktion, die ein einzelnes ImageView erstellt.
+     *                            Sie erhält ein Datenobjekt und den Margin.
+     * @param onItemClicked Eine Lambda-Funktion, die aufgerufen wird, wenn ein Item geklickt wird.
+     *                      Sie erhält das Datenobjekt des geklickten Items.
+     */
+    fun <T> populateImageRows(
+        context: Context,
+        dataList: List<T>,
+        itemsPerRow: Int,
+        containerLinearLayout: LinearLayout,
+        itemMarginPx: Int,
+        // Diese Funktion erstellt das spezifische ImageView
+        createImageViewFunc: (Context, T, Int, (T) -> Unit) -> ImageView,
+        // Diese Funktion wird als Klick-Handler für jedes ImageView verwendet
+        onItemClicked: (T) -> Unit
+    ) {
+        var currentRowLinearLayout: LinearLayout? = null
+        containerLinearLayout.removeAllViews() // Bestehende Views entfernen, falls neu befüllt wird
+
+        dataList.forEachIndexed { index, dataItem ->
+            if (index % itemsPerRow == 0) {
+                currentRowLinearLayout = LinearLayout(context).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    weightSum = itemsPerRow.toFloat()
+                }
+                containerLinearLayout.addView(currentRowLinearLayout)
+            }
+            // Das spezifische ImageView mit dem spezifischen Klick-Handler erstellen lassen
+            val imageView = createImageViewFunc(context, dataItem, itemMarginPx, onItemClicked)
+            currentRowLinearLayout?.addView(imageView)
+        }
+    }
+
+    // Spezifische ImageView-Erstellungsfunktion (kann auch außerhalb dieser Klasse sein)
+    // Diese Funktion wird an populateImageRows übergeben
+    fun createStandardTrackImageView(
+        context: Context,
+        trackName: TrackName,
+        marginPx: Int,
+        onTrackClicked: (TrackName) -> Unit // Wichtig: Der Klick-Handler wird durchgereicht
+    ): ImageView {
+        // Dieser Code ist im Grunde Ihre createTrackImageViewWithCustomClickHandler,
+        // aber so angepasst, dass er den Kontext explizit nimmt und den Klick-Handler weiterreicht.
+        return ImageView(context).apply {
+            id = View.generateViewId()
+            setImageResource(trackResMap[trackName] ?:0)
+            adjustViewBounds = true
+
+            val imageLayoutParams = LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                weight = 1f
+                setMargins(marginPx, marginPx, marginPx, marginPx)
+            }
+            this.layoutParams = imageLayoutParams
+            scaleType = ImageView.ScaleType.FIT_CENTER
+
+            val outValue = android.util.TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.selectableItemBackgroundBorderless, outValue, true)
+            background = ContextCompat.getDrawable(context, outValue.resourceId)
+
+            isClickable = true
+            isFocusable = true
+            contentDescription = trackName.name // Annahme: TrackInfo hat trackName
+
+            setOnClickListener {
+                onTrackClicked(trackName) // Der übergebene Klick-Handler wird hier aufgerufen
+            }
+        }
+    }
+
+    // Spezifische ImageView-Erstellungsfunktion (kann auch außerhalb dieser Klasse sein)
+    // Diese Funktion wird an populateImageRows übergeben
+    fun createStandardKnockoutCupImageView(
+        context: Context,
+        knockoutCupName: KnockoutCupName,
+        marginPx: Int,
+        onKnockoutCupClicked: (KnockoutCupName) -> Unit // Wichtig: Der Klick-Handler wird durchgereicht
+    ): ImageView {
+        // Dieser Code ist im Grunde Ihre createTrackImageViewWithCustomClickHandler,
+        // aber so angepasst, dass er den Kontext explizit nimmt und den Klick-Handler weiterreicht.
+        return ImageView(context).apply {
+            id = View.generateViewId()
+            setImageResource(knockoutCupResMap[knockoutCupName] ?: 0) // Annahme: TrackInfo hat iconResId
+            adjustViewBounds = true
+
+            val imageLayoutParams = LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                weight = 1f
+                setMargins(marginPx, marginPx, marginPx, marginPx)
+            }
+            this.layoutParams = imageLayoutParams
+            scaleType = ImageView.ScaleType.FIT_CENTER
+
+            val outValue = android.util.TypedValue()
+            context.theme.resolveAttribute(com.google.android.material.R.attr.selectableItemBackgroundBorderless, outValue, true)
+            background = ContextCompat.getDrawable(context, outValue.resourceId)
+
+            isClickable = true
+            isFocusable = true
+            contentDescription = knockoutCupName.name // Annahme: TrackInfo hat trackName
+
+            setOnClickListener {
+                onKnockoutCupClicked(knockoutCupName) // Der übergebene Klick-Handler wird hier aufgerufen
+            }
+        }
     }
 }
