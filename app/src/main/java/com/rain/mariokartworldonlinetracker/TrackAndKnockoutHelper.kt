@@ -44,7 +44,35 @@ object TrackAndKnockoutHelper {
 
     private val trackResMap: Map<TrackName, Int> = mutableMapOf(
         TrackName.MBC1 to R.drawable.mbc1,
-        TrackName.CC2 to R.drawable.cc2
+        TrackName.CC2 to R.drawable.cc2,
+        TrackName.WSS3 to R.drawable.wss3,
+        TrackName.DKSS4 to R.drawable.dkss4,
+        TrackName.DH5 to R.drawable.dh5,
+        TrackName.SGB6 to R.drawable.sgb6,
+        TrackName.WS7 to R.drawable.ws7,
+        TrackName.AF8 to R.drawable.af8,
+        TrackName.DKP9 to R.drawable.dkp9,
+        TrackName.SVP10 to R.drawable.svp10,
+        TrackName.SHS11 to R.drawable.shs11,
+        TrackName.WSY12 to R.drawable.wsy12,
+        TrackName.KTB13 to R.drawable.ktb13,
+        TrackName.FAO14 to R.drawable.fao14,
+        TrackName.PS15 to R.drawable.ps15,
+        TrackName.PB16 to R.drawable.pb16,
+        TrackName.SSSW17 to R.drawable.sssw17,
+        TrackName.DDJ18 to R.drawable.ddj18,
+        TrackName.GBR19 to R.drawable.gbr19,
+        TrackName.CCF20 to R.drawable.ccf20,
+        TrackName.DD21 to R.drawable.dd21,
+        TrackName.BC22 to R.drawable.bc22,
+        TrackName.DBB23 to R.drawable.dbb23,
+        TrackName.MMM24 to R.drawable.mmm24,
+        TrackName.CM25 to R.drawable.cm25,
+        TrackName.TF26 to R.drawable.tf26,
+        TrackName.BC27 to R.drawable.bc27,
+        TrackName.AH28 to R.drawable.ah28,
+        TrackName.MC29 to R.drawable.mc29,
+        TrackName.RR30 to R.drawable.rr30
     )
 
     private val knockoutCupResMap: Map<KnockoutCupName, Int> = mutableMapOf(
@@ -127,10 +155,6 @@ object TrackAndKnockoutHelper {
             this.layoutParams = imageLayoutParams
             scaleType = ImageView.ScaleType.FIT_CENTER
 
-            val outValue = android.util.TypedValue()
-            context.theme.resolveAttribute(com.google.android.material.R.attr.selectableItemBackgroundBorderless, outValue, true)
-            background = ContextCompat.getDrawable(context, outValue.resourceId)
-
             isClickable = true
             isFocusable = true
             contentDescription = trackName.name // Annahme: TrackInfo hat trackName
@@ -164,10 +188,6 @@ object TrackAndKnockoutHelper {
             }
             this.layoutParams = imageLayoutParams
             scaleType = ImageView.ScaleType.FIT_CENTER
-
-            val outValue = android.util.TypedValue()
-            context.theme.resolveAttribute(com.google.android.material.R.attr.selectableItemBackgroundBorderless, outValue, true)
-            background = ContextCompat.getDrawable(context, outValue.resourceId)
 
             isClickable = true
             isFocusable = true
