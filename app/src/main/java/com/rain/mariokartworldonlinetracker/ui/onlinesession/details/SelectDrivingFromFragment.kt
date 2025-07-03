@@ -11,6 +11,7 @@ import com.rain.mariokartworldonlinetracker.DrivingFromOption
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingFromBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
@@ -43,17 +44,53 @@ class SelectDrivingFromFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFromLast.setOnClickListener {
+        val lastTrackName = newOnlineSessionViewModel.lastDrivingToTrackName
+        val lastTrackContentDescr = lastTrackName?.name ?: "No last track"
+        var lastTrackResId = if (lastTrackName == null) R.drawable.noselected  else TrackAndKnockoutHelper.getTrackResId(lastTrackName)
+
+        val imageMarginDp = 4
+        val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
+
+        var buttonFromLast = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            lastTrackContentDescr,
+            lastTrackResId,
+            imageMarginPx
+            )
+
+        if (lastTrackName == null) {
+            buttonFromLast.isEnabled = false
+        }
+
+        var buttonFromNone = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "Three lap track",
+            R.drawable.threelap,
+            imageMarginPx
+        )
+
+        var buttonFromOther = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "Other track",
+            R.drawable.othertracks,
+            imageMarginPx
+        )
+
+        buttonFromLast.setOnClickListener {
             navigateNext(DrivingFromOption.LAST)
         }
 
-        binding.buttonFromNone.setOnClickListener {
+        buttonFromNone.setOnClickListener {
             navigateNext(DrivingFromOption.NONE)
         }
 
-        binding.buttonFromOther.setOnClickListener {
+        buttonFromOther.setOnClickListener {
             navigateNext(DrivingFromOption.OTHER)
         }
+
+        binding.fromlastLayout.addView(buttonFromLast)
+        binding.fromnoneLayout.addView(buttonFromNone)
+        binding.fromotherLayout.addView(buttonFromOther)
     }
 
     fun navigateNext(drivingFromOption: DrivingFromOption) {

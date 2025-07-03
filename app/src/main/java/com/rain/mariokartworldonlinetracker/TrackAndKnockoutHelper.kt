@@ -78,6 +78,10 @@ object TrackAndKnockoutHelper {
     private val knockoutCupResMap: Map<KnockoutCupName, Int> = mutableMapOf(
     )
 
+    fun getTrackResId(trackName: TrackName?): Int {
+        return trackResMap[trackName] ?: 0
+    }
+
     fun getPossibleTracks(selectedTrack: TrackName?): List<TrackName> {
         return trackMap[selectedTrack] ?: emptyList()
     }
@@ -128,6 +132,34 @@ object TrackAndKnockoutHelper {
             // Das spezifische ImageView mit dem spezifischen Klick-Handler erstellen lassen
             val imageView = createImageViewFunc(context, dataItem, itemMarginPx, onItemClicked)
             currentRowLinearLayout?.addView(imageView)
+        }
+    }
+
+    fun createImageView(
+        context: Context,
+        contentDescr: String,
+        imageResId: Int,
+        marginPx: Int
+    ): ImageView {
+        // Dieser Code ist im Grunde Ihre createTrackImageViewWithCustomClickHandler,
+        // aber so angepasst, dass er den Kontext explizit nimmt und den Klick-Handler weiterreicht.
+        return ImageView(context).apply {
+            id = View.generateViewId()
+            setImageResource(imageResId)
+            adjustViewBounds = true
+
+            val imageLayoutParams = LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                weight = 1f
+                setMargins(marginPx, marginPx, marginPx, marginPx)
+            }
+            this.layoutParams = imageLayoutParams
+            scaleType = ImageView.ScaleType.FIT_CENTER
+
+            isClickable = true
+            isFocusable = true
+            contentDescription = contentDescr
         }
     }
 
