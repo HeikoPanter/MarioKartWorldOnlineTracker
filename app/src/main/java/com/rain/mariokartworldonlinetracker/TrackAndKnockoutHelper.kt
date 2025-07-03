@@ -25,7 +25,7 @@ object TrackAndKnockoutHelper {
         TrackName.WSY12 to listOf(TrackName.SHS11, TrackName.PB16, TrackName.CCF20, TrackName.DKP9),
         TrackName.KTB13 to listOf(TrackName.PS15, TrackName.FAO14, TrackName.DDJ18, TrackName.DKSS4),
         TrackName.FAO14 to listOf(TrackName.CCF20, TrackName.SSSW17, TrackName.GBR19, TrackName.DDJ18, TrackName.KTB13, TrackName.PS15),
-        TrackName.PS15 to listOf(TrackName.MMM24, TrackName.CCF20, TrackName.FAO14, TrackName.KTB13, TrackName.CC2, TrackName.CM25),
+        TrackName.PS15 to listOf(TrackName.MMM24, TrackName.CCF20, TrackName.FAO14, TrackName.KTB13, TrackName.CC2, TrackName.CM25, TrackName.RR30),
         TrackName.PB16 to listOf(TrackName.WSY12, TrackName.GBR19, TrackName.SSSW17),
         TrackName.SSSW17 to listOf(TrackName.DKP9, TrackName.PB16, TrackName.GBR19, TrackName.DDJ18, TrackName.FAO14),
         TrackName.DDJ18 to listOf(TrackName.SSSW17, TrackName.GBR19, TrackName.KTB13, TrackName.FAO14),
