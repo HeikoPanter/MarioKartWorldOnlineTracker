@@ -10,6 +10,7 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     android:gravity="center_horizontal"
+    android:background="@drawable/background"
     tools:context=".ui.onlinesession.StartSessionFragment">
 
     <com.google.android.material.button.MaterialButton
