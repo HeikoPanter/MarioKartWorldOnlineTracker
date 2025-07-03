@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
@@ -50,7 +51,7 @@ class SelectDrivingFromOtherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val trackOptions = TrackAndKnockoutHelper.getPossibleTracks(null)
-        val itemsPerRow = 3
+        val itemsPerRow = MkwotSettings.itemsPerRow
         val imageMarginDp = 4
         val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
 

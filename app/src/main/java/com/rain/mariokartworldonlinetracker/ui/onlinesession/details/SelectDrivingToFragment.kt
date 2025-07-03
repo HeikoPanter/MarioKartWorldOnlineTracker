@@ -8,8 +8,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper.createStandardTrackImageView
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingToBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
@@ -42,17 +45,30 @@ class SelectDrivingToFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonToMbc.setOnClickListener {
-            navigateNext(TrackName.MBC1)
+
+        // After playing Rainbow Road, you start from Peach Stadium
+        if (newOnlineSessionViewModel.drivingFromTrackName.value == TrackName.RR30) {
+            newOnlineSessionViewModel.setDrivingFromTrackName(TrackName.PS15)
         }
 
-        binding.buttonToCc.setOnClickListener {
-            navigateNext(TrackName.CC2)
+        val trackOptions = TrackAndKnockoutHelper.getPossibleTracks(newOnlineSessionViewModel.drivingFromTrackName.value)
+        val itemsPerRow = MkwotSettings.itemsPerRow
+        val imageMarginDp = 4
+        val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
+
+        val drivingFromClickHandler = { trackName: TrackName ->
+            navigateNext(trackName)
         }
 
-        binding.buttonToWss.setOnClickListener {
-            navigateNext(TrackName.WSS3)
-        }
+        TrackAndKnockoutHelper.populateImageRows(
+            requireContext(),
+            trackOptions,
+            itemsPerRow,
+            binding.imageViewContainer,
+            imageMarginPx,
+            TrackAndKnockoutHelper::createStandardTrackImageView,
+            drivingFromClickHandler
+        )
     }
 
     fun navigateNext(drivingToTrackName: TrackName) {
