@@ -12,6 +12,7 @@ import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.EngineClass
 import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectEngineClassBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
@@ -43,17 +44,46 @@ class SelectEngineClassFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonMode150cc.setOnClickListener {
+        val imageMarginDp = 4
+        val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
+        val isRace = newOnlineSessionViewModel.raceCategory == RaceCategory.RACE
+
+        var button150cc = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "150cc",
+            if (isRace) R.drawable.engine150cc_race else R.drawable.engine150cc_knockout,
+            imageMarginPx
+        )
+
+        var buttonMirror = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "Mirror",
+            if (isRace) R.drawable.enginemirror_race else R.drawable.enginemirror_knockout,
+            imageMarginPx
+        )
+
+        var button100cc = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "100cc",
+            if (isRace) R.drawable.engine100cc_race else R.drawable.engine100cc_knockout,
+            imageMarginPx
+        )
+
+        button150cc.setOnClickListener {
             navigateNext(EngineClass._150CC)
         }
 
-        binding.buttonModeMirror.setOnClickListener {
+        buttonMirror.setOnClickListener {
             navigateNext(EngineClass.MIRROR)
         }
 
-        binding.buttonMode100cc.setOnClickListener {
+        button100cc.setOnClickListener {
             navigateNext(EngineClass._100CC)
         }
+
+        binding.layout150.addView(button150cc)
+        binding.layoutMirror.addView(buttonMirror)
+        binding.layout100.addView(button100cc)
     }
 
     fun navigateNext(engineClass: EngineClass) {
