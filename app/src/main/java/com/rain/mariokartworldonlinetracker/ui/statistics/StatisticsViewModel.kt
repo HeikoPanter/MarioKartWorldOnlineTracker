@@ -1,8 +1,8 @@
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import com.rain.mariokartworldonlinetracker.RaceResult // Ihre Entitätsklasse
-import com.rain.mariokartworldonlinetracker.RaceResultRepository // Ihr Repository
+import com.rain.mariokartworldonlinetracker.data.RaceResult // Ihre Entitätsklasse
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository // Ihr Repository
 
 class StatisticsViewModel(private val repository: RaceResultRepository) : ViewModel() {
 

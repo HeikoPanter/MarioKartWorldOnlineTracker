@@ -1,14 +1,25 @@
 package com.rain.mariokartworldonlinetracker.ui.onlinesession
 
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import com.rain.mariokartworldonlinetracker.*
+import com.rain.mariokartworldonlinetracker.data.OnlineSession
+import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
+import com.rain.mariokartworldonlinetracker.data.RaceResult
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import kotlinx.coroutines.launch
 
-class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : ViewModel() {
+class NewOnlineSessionViewModel(
+    private val raceResultRepository: RaceResultRepository,
+    private val onlineSessionRepository: OnlineSessionRepository
+) : ViewModel() {
 
-    var raceCategory: RaceCategory = RaceCategory.UNKNOWN
+
     var lastDrivingToTrackName: TrackName? = null
 
+    private var _raceCategory: RaceCategory = RaceCategory.UNKNOWN
+    private var _sessionId: Long = 0
     private var _engineClass: EngineClass = EngineClass.UNKNOWN
 
     private val _drivingFromOption = MutableLiveData<DrivingFromOption>()
@@ -29,10 +40,23 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
         resetSession()
     }
 
-    fun resetSession() {
-        raceCategory = RaceCategory.UNKNOWN
+    fun resetSession(raceCategory: RaceCategory = RaceCategory.UNKNOWN) {
+        _raceCategory = raceCategory
         lastDrivingToTrackName = null
+        _sessionId = 0
         resetRace()
+
+        if (raceCategory != RaceCategory.UNKNOWN) {
+
+            var newSession = OnlineSession(
+                creationDate = System.currentTimeMillis(),
+                category = raceCategory
+            )
+
+            viewModelScope.launch {
+                _sessionId = onlineSessionRepository.insert(newSession)
+            }
+        }
     }
 
     fun resetRace() {
@@ -42,6 +66,10 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
         setDrivingFromTrackName(null)
         setDrivingToTrackName(null)
         setKnockoutCupName(null)
+    }
+
+    fun getRaceCategory(): RaceCategory {
+        return _raceCategory
     }
 
     fun setEngineClass(engineClass: EngineClass) {
@@ -81,16 +109,16 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
         val position = _position.value
 
         val newRace = RaceResult(
-            category = raceCategory,
             engineClass = _engineClass,
             drivingFromTrackName = fromTrack,
             drivingToTrackName = toTrack,
             knockoutCupName = knockoutCupName,
             position = position,
-            date = System.currentTimeMillis()
+            creationDate = System.currentTimeMillis(),
+            onlineSessionId = _sessionId
         )
         viewModelScope.launch {
-            repository.insert(newRace)
+            raceResultRepository.insert(newRace)
         }
 
         lastDrivingToTrackName = toTrack
@@ -98,12 +126,29 @@ class NewOnlineSessionViewModel(private val repository: RaceResultRepository) : 
     }
 }
 
-class NewOnlineSessionViewModelFactory(private val repository: RaceResultRepository) : ViewModelProvider.Factory {
+class NewOnlineSessionViewModelFactory(
+    private val raceResultRepository: RaceResultRepository,
+    private val onlineSessionRepository: OnlineSessionRepository
+    ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NewOnlineSessionViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return NewOnlineSessionViewModel(repository) as T
+            return NewOnlineSessionViewModel(raceResultRepository, onlineSessionRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+    }
+}
+
+object NewOnlineSessionViewModelProvider {
+    fun getViewModel(app: MarioKartWorldOnlineTrackerApplication, activity: FragmentActivity): NewOnlineSessionViewModel {
+        val raceResultDao = app.database.raceResultDao()
+        val onlineSessionDao = app.database.onlineSessionDao()
+        val repository = RaceResultRepository(raceResultDao)
+        val onlineSessionRepository = OnlineSessionRepository(onlineSessionDao)
+
+        return ViewModelProvider(
+            activity,
+            NewOnlineSessionViewModelFactory(repository, onlineSessionRepository))
+            .get(NewOnlineSessionViewModel::class.java)
     }
 }
