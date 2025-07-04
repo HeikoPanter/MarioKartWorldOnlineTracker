@@ -8,7 +8,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper.createStandardTrackImageView
+import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectPositionBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
@@ -40,17 +44,24 @@ class SelectPositionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonPosition1.setOnClickListener {
-            navigateNext(1)
+        val positionOptions: List<Short> = (1..24).toList().map { it.toShort() }
+        val itemsPerRow = MkwotSettings.itemsPerRow
+        val imageMarginDp = 4
+        val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
+
+        val positionClickHandler = { position: Short ->
+            navigateNext(position)
         }
 
-        binding.buttonPosition2.setOnClickListener {
-            navigateNext(2)
-        }
-
-        binding.buttonPosition3.setOnClickListener {
-            navigateNext(3)
-        }
+        TrackAndKnockoutHelper.populateImageRows(
+            requireContext(),
+            positionOptions,
+            itemsPerRow,
+            binding.imageViewContainer,
+            imageMarginPx,
+            TrackAndKnockoutHelper::createStandardPositionImageView,
+            positionClickHandler
+        )
     }
 
     fun navigateNext(position: Short?) {
