@@ -1,28 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:fillViewport="true"
     android:background="@drawable/background"
     tools:context=".ui.onlinesession.details.SelectEngineClassFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_mode_150cc"
-        android:text="150cc"
-        android:layout_height="40dp"
-        android:layout_width="match_parent"/>
+    <LinearLayout
+        android:id="@+id/image_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_mode_mirror"
-        android:text="Mirror"
-        android:layout_height="40dp"
-        android:layout_width="match_parent"/>
+        <LinearLayout
+            android:id="@+id/layout_150"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_mode_100cc"
-        android:text="100cc"
-        android:layout_height="40dp"
-        android:layout_width="match_parent"/>
+        <LinearLayout
+            android:id="@+id/layout_mirror"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"/>
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_100"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"/>
+    </LinearLayout>
+</ScrollView>
