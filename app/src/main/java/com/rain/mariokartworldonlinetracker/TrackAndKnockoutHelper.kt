@@ -78,6 +78,33 @@ object TrackAndKnockoutHelper {
     private val knockoutCupResMap: Map<KnockoutCupName, Int> = mutableMapOf(
     )
 
+    private val positionResMap: Map<Short, Int> = mutableMapOf(
+        1.toShort() to R.drawable.button_1,
+        2.toShort() to R.drawable.button_2,
+        3.toShort() to R.drawable.button_3,
+        4.toShort() to R.drawable.button_4,
+        5.toShort() to R.drawable.button_5,
+        6.toShort() to R.drawable.button_6,
+        7.toShort() to R.drawable.button_7,
+        8.toShort() to R.drawable.button_8,
+        9.toShort() to R.drawable.button_9,
+        10.toShort() to R.drawable.button_10,
+        11.toShort() to R.drawable.button_11,
+        12.toShort() to R.drawable.button_12,
+        13.toShort() to R.drawable.button_13,
+        14.toShort() to R.drawable.button_14,
+        15.toShort() to R.drawable.button_15,
+        16.toShort() to R.drawable.button_16,
+        17.toShort() to R.drawable.button_17,
+        18.toShort() to R.drawable.button_18,
+        19.toShort() to R.drawable.button_19,
+        20.toShort() to R.drawable.button_20,
+        21.toShort() to R.drawable.button_21,
+        22.toShort() to R.drawable.button_22,
+        23.toShort() to R.drawable.button_23,
+        24.toShort() to R.drawable.button_24
+    )
+
     fun getTrackResId(trackName: TrackName?): Int {
         return trackResMap[trackName] ?: 0
     }
@@ -227,6 +254,38 @@ object TrackAndKnockoutHelper {
 
             setOnClickListener {
                 onKnockoutCupClicked(knockoutCupName) // Der übergebene Klick-Handler wird hier aufgerufen
+            }
+        }
+    }
+
+    fun createStandardPositionImageView(
+        context: Context,
+        position: Short,
+        marginPx: Int,
+        onPositionClicked: (Short) -> Unit // Wichtig: Der Klick-Handler wird durchgereicht
+    ): ImageView {
+        // Dieser Code ist im Grunde Ihre createTrackImageViewWithCustomClickHandler,
+        // aber so angepasst, dass er den Kontext explizit nimmt und den Klick-Handler weiterreicht.
+        return ImageView(context).apply {
+            id = View.generateViewId()
+            setImageResource(positionResMap[position] ?:0)
+            adjustViewBounds = true
+
+            val imageLayoutParams = LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                weight = 1f
+                setMargins(marginPx, marginPx, marginPx, marginPx)
+            }
+            this.layoutParams = imageLayoutParams
+            scaleType = ImageView.ScaleType.FIT_CENTER
+
+            isClickable = true
+            isFocusable = true
+            contentDescription = position.toString()
+
+            setOnClickListener {
+                onPositionClicked(position) // Der übergebene Klick-Handler wird hier aufgerufen
             }
         }
     }
