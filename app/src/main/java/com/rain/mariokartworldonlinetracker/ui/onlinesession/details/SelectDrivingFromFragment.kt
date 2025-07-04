@@ -10,11 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.DrivingFromOption
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
-import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectDrivingFromBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
+import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelProvider
 
 class SelectDrivingFromFragment : Fragment() {
 
@@ -33,12 +34,10 @@ class SelectDrivingFromFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val repository = RaceResultRepository(raceResultDao)
-        newOnlineSessionViewModel = ViewModelProvider(
-            requireActivity(),
-            NewOnlineSessionViewModelFactory(repository))
-            .get(NewOnlineSessionViewModel::class.java)
+        newOnlineSessionViewModel = NewOnlineSessionViewModelProvider.getViewModel(
+            requireActivity().application as MarioKartWorldOnlineTrackerApplication,
+            requireActivity()
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
-import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStartSessionBinding
 
 class StartSessionFragment : Fragment() {
@@ -34,12 +34,10 @@ class StartSessionFragment : Fragment() {
 
         android.util.Log.d("onCreate", "Calling onCreate")
 
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val repository = RaceResultRepository(raceResultDao)
-        newOnlineSessionViewModel = ViewModelProvider(
-                requireActivity(),
-                NewOnlineSessionViewModelFactory(repository))
-            .get(NewOnlineSessionViewModel::class.java)
+        newOnlineSessionViewModel = NewOnlineSessionViewModelProvider.getViewModel(
+            requireActivity().application as MarioKartWorldOnlineTrackerApplication,
+            requireActivity()
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,8 +55,7 @@ class StartSessionFragment : Fragment() {
     }
 
     fun navigateNext(raceCategory: RaceCategory) {
-        newOnlineSessionViewModel.resetSession()
-        newOnlineSessionViewModel.raceCategory = raceCategory
+        newOnlineSessionViewModel.resetSession(raceCategory)
 
         android.util.Log.d("navigateNext", "Calling navigate from the findNavController()")
 

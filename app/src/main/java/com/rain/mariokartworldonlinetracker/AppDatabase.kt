@@ -4,11 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.rain.mariokartworldonlinetracker.data.OnlineSession
+import com.rain.mariokartworldonlinetracker.data.OnlineSessionDao
+import com.rain.mariokartworldonlinetracker.data.RaceResult
+import com.rain.mariokartworldonlinetracker.data.RaceResultDao
 
-@Database(entities = [RaceResult::class], version = 1, exportSchema = false)
+@Database(entities = [RaceResult::class, OnlineSession::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun raceResultDao(): RaceResultDao
+    abstract fun onlineSessionDao(): OnlineSessionDao
 
     companion object {
         @Volatile

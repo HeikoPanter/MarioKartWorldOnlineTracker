@@ -11,11 +11,12 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.EngineClass
-import com.rain.mariokartworldonlinetracker.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectEngineClassBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
+import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelProvider
 
 class SelectEngineClassFragment : Fragment() {
     private var _binding: FragmentSelectEngineClassBinding? = null
@@ -33,12 +34,10 @@ class SelectEngineClassFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val repository = RaceResultRepository(raceResultDao)
-        newOnlineSessionViewModel = ViewModelProvider(
-            requireActivity(),
-            NewOnlineSessionViewModelFactory(repository))
-            .get(NewOnlineSessionViewModel::class.java)
+        newOnlineSessionViewModel = NewOnlineSessionViewModelProvider.getViewModel(
+            requireActivity().application as MarioKartWorldOnlineTrackerApplication,
+            requireActivity()
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +45,7 @@ class SelectEngineClassFragment : Fragment() {
 
         val imageMarginDp = 4
         val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
-        val isRace = newOnlineSessionViewModel.raceCategory == RaceCategory.RACE
+        val isRace = newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE
 
         var button150cc = TrackAndKnockoutHelper.createImageView(
             requireContext(),
@@ -88,10 +87,10 @@ class SelectEngineClassFragment : Fragment() {
 
     fun navigateNext(engineClass: EngineClass) {
         newOnlineSessionViewModel.setEngineClass(engineClass)
-        if (newOnlineSessionViewModel.raceCategory == RaceCategory.RACE) {
+        if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE) {
             findNavController().navigate(R.id.action_selectEngineClassFragment_to_selectDrivingFromFragment)
         }
-        else if (newOnlineSessionViewModel.raceCategory == RaceCategory.KNOCKOUT) {
+        else if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.KNOCKOUT) {
             findNavController().navigate(R.id.action_selectEngineClassFragment_to_selectKnockoutCupFragment)
         }
     }
