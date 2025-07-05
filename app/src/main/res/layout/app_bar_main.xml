@@ -15,7 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/mk_black"
+            android:background="@color/black"
             app:popupTheme="@style/Theme.MarioKartWorldOnlineTracker.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
