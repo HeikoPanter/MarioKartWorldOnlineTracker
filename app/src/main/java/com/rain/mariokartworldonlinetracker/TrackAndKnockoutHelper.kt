@@ -76,6 +76,14 @@ object TrackAndKnockoutHelper {
     )
 
     private val knockoutCupResMap: Map<KnockoutCupName, Int> = mutableMapOf(
+        KnockoutCupName.GR1 to R.drawable.button_gr1,
+        KnockoutCupName.IR2 to R.drawable.button_ir2,
+        KnockoutCupName.MR3 to R.drawable.button_mr3,
+        KnockoutCupName.SR4 to R.drawable.button_sr4,
+        KnockoutCupName.CR5 to R.drawable.button_cr5,
+        KnockoutCupName.AR6 to R.drawable.button_ar6,
+        KnockoutCupName.CR7 to R.drawable.button_cr7,
+        KnockoutCupName.HR8 to R.drawable.button_hr8
     )
 
     private val positionResMap: Map<Short, Int> = mutableMapOf(
