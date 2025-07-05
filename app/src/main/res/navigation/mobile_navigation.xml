@@ -18,7 +18,12 @@
         tools:layout="@layout/fragment_start_session">
         <action
             android:id="@+id/action_startSessionFragment_to_newRaceFlowNavGraph"
-            app:destination="@id/new_race_flow_nav_graph_id" />
+            app:destination="@id/new_race_flow_nav_graph_id"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <!-- Einbinden des anderen Navigationsgraphen -->

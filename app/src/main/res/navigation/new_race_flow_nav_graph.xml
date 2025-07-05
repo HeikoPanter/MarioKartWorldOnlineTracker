@@ -12,11 +12,21 @@
         tools:layout="@layout/fragment_select_engine_class">
         <action
             android:id="@+id/action_selectEngineClassFragment_to_selectDrivingFromFragment"
-            app:destination="@id/selectDrivingFromFragment" />
+            app:destination="@id/selectDrivingFromFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
         <action
             android:id="@+id/action_selectEngineClassFragment_to_selectKnockoutCupFragment"
-            app:destination="@id/selectKnockoutCupFragment" />
+            app:destination="@id/selectKnockoutCupFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <!-- Knockout Session -->
@@ -27,7 +37,12 @@
         tools:layout="@layout/fragment_select_knockout_cup">
         <action
             android:id="@+id/action_selectKnockoutCupFragment_to_selectPositionFragment"
-            app:destination="@id/selectPositionFragment" />
+            app:destination="@id/selectPositionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <!-- Race Session -->
@@ -38,11 +53,21 @@
         tools:layout="@layout/fragment_select_driving_from">
         <action
             android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingToFragment"
-            app:destination="@id/selectDrivingToFragment" />
+            app:destination="@id/selectDrivingToFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
         <action
             android:id="@+id/action_selectDrivingFromFragment_to_selectDrivingFromOtherFragment"
-            app:destination="@id/selectDrivingFromOtherFragment" />
+            app:destination="@id/selectDrivingFromOtherFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <fragment
@@ -52,7 +77,12 @@
         tools:layout="@layout/fragment_select_driving_from_other">
         <action
             android:id="@+id/action_selectDrivingFromOtherFragment_to_selectDrivingToFragment"
-            app:destination="@id/selectDrivingToFragment" />
+            app:destination="@id/selectDrivingToFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <fragment
@@ -62,7 +92,12 @@
         tools:layout="@layout/fragment_select_driving_to">
         <action
             android:id="@+id/action_selectDrivingToFragment_to_enterPositionFragment"
-            app:destination="@id/selectPositionFragment" />
+            app:destination="@id/selectPositionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
     <fragment
@@ -75,7 +110,12 @@
             android:id="@+id/action_selectPosition_back_to_selectEngineClass"
             app:destination="@id/selectEngineClassFragment"
             app:popUpTo="@id/selectEngineClassFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
     </fragment>
 
 </navigation>
