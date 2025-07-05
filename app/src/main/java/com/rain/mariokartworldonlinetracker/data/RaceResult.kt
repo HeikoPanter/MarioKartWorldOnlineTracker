@@ -21,7 +21,7 @@ import com.rain.mariokartworldonlinetracker.TrackName
         )
     ]
     )
-data class RaceResult(
+data class  RaceResult(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0, // Primärschlüssel, automatisch generiert
     val engineClass: EngineClass,
