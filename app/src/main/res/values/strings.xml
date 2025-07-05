@@ -9,10 +9,10 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_start_session">New session</string>
-    <string name="menu_statistics">Stats</string>
+    <string name="menu_statistics">Result history</string>
     <string name="new_race">Start race session</string>
     <string name="new_knockout">Start knockout session</string>
-    <string name="race_statistics">Race Statistics</string>
+    <string name="race_statistics">Result history</string>
     <string name="no_race_results_yet">No race results yet.</string>
     <string name="home_intro_title">Welcome to the Mario Kart World Online Tracker</string>
     <string name="home_intro_message">
