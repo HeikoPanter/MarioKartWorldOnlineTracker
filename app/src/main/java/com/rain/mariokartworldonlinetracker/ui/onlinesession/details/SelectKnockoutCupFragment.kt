@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
-import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectKnockoutCupBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
-import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelProvider
 
 class SelectKnockoutCupFragment : Fragment() {
@@ -42,17 +41,24 @@ class SelectKnockoutCupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonKoGr.setOnClickListener {
-            navigateNext(KnockoutCupName.GR1)
+        val cupOptions: List<KnockoutCupName> = TrackAndKnockoutHelper.getKnockoutCups()
+        val itemsPerRow = MkwotSettings.itemsPerRow
+        val imageMarginDp = 4
+        val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
+
+        val selectKnockoutCupClickHandler = { cupName: KnockoutCupName ->
+            navigateNext(cupName)
         }
 
-        binding.buttonKoIr.setOnClickListener {
-            navigateNext(KnockoutCupName.IR2)
-        }
-
-        binding.buttonKoMr.setOnClickListener {
-            navigateNext(KnockoutCupName.MR3)
-        }
+        TrackAndKnockoutHelper.populateImageRows(
+            requireContext(),
+            cupOptions,
+            itemsPerRow,
+            binding.imageViewContainer,
+            imageMarginPx,
+            TrackAndKnockoutHelper::createStandardKnockoutCupImageView,
+            selectKnockoutCupClickHandler
+        )
     }
 
     fun navigateNext(knockoutCupName: KnockoutCupName) {
