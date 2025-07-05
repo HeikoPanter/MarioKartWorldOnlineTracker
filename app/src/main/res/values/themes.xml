@@ -10,6 +10,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
+        <item name="fontFamily">@font/candara_bold_italic</item>
     </style>
 
     <style name="Theme.MarioKartWorldOnlineTracker.NoActionBar">
@@ -24,8 +25,6 @@
     <!-- ... Ihr App-Theme ... -->
 
     <style name="NavigationViewTextStyle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:fontFamily">@font/candara_bold_italic</item>
-        <!-- Sie können hier auch andere Textattribute wie textSize, textColor etc. anpassen -->
         <item name="android:textSize">18sp</item>
     </style>
 </resources>
