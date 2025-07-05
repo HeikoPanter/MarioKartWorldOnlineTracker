@@ -14,7 +14,14 @@
     <string name="new_knockout">Start knockout session</string>
     <string name="race_statistics">Race Statistics</string>
     <string name="no_race_results_yet">No race results yet.</string>
-    <string name="home_start_message">Welcome to the Mario Kart World Online Tracker</string>
+    <string name="home_intro_title">Welcome to the Mario Kart World Online Tracker</string>
+    <string name="home_intro_message">
+        Track all your online race or knockout results in one place.\n
+        \n
+        Start a session via the menu on the left. While in a session you can continuously save your results.\n
+        \n
+        If you want to view your results, go to the result history.
+    </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

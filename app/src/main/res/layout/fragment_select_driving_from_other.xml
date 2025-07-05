@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     style="@style/Fragment.Mkwot"
-    android:background="@drawable/background_2_darkened_50"
     tools:context=".ui.onlinesession.details.SelectDrivingFromOtherFragment">
 
     <LinearLayout
