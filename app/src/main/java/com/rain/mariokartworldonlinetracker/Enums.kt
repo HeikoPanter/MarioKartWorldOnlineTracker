@@ -36,7 +36,7 @@ enum class TrackName {
     MBC1,
     CC2,
     WSS3,
-    DKSS4,
+    DKSP4,
     DH5,
     SGB6,
     WS7,
