@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Ebene 1: Das ursprüngliche Hintergrundbild -->
+    <item android:drawable="@drawable/background_2" />
+
+    <!-- Ebene 2: Die halbtransparente schwarze Überlagerung -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Farbe mit Alpha: #AARRGGBB -->
+            <!-- Alpha-Wert:
+            von 0 - 255, danach in Hex umwandeln
+             -->
+            <solid android:color="#7A000000" />
+        </shape>
+    </item>
+
+</layer-list>

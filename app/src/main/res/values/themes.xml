@@ -13,6 +13,10 @@
         <item name="fontFamily">@font/candara_bold_italic</item>
     </style>
 
+    <style name="Fragment.Mkwot" parent="">
+        <item name="android:background">@drawable/background_2</item>
+    </style>
+
     <style name="Theme.MarioKartWorldOnlineTracker.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
