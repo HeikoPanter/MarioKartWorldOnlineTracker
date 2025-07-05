@@ -1,5 +1,6 @@
 package com.rain.mariokartworldonlinetracker.ui.onlinesession
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
@@ -15,6 +16,8 @@ class NewOnlineSessionViewModel(
     private val onlineSessionRepository: OnlineSessionRepository
 ) : ViewModel() {
 
+    private val _saveResultStatus = MutableLiveData<Event<Boolean>>() // Boolean: true für Erfolg, false für Fehler
+    val saveResultStatus: LiveData<Event<Boolean>> = _saveResultStatus
 
     var lastDrivingToTrackName: TrackName? = null
 
@@ -108,22 +111,56 @@ class NewOnlineSessionViewModel(
         val knockoutCupName = _knockoutCupName.value
         val position = _position.value
 
-        val newRace = RaceResult(
-            engineClass = _engineClass,
-            drivingFromTrackName = fromTrack,
-            drivingToTrackName = toTrack,
-            knockoutCupName = knockoutCupName,
-            position = position,
-            creationDate = System.currentTimeMillis(),
-            onlineSessionId = _sessionId
-        )
         viewModelScope.launch {
-            raceResultRepository.insert(newRace)
+            try {
+                val newRace = RaceResult(
+                    engineClass = _engineClass,
+                    drivingFromTrackName = fromTrack,
+                    drivingToTrackName = toTrack,
+                    knockoutCupName = knockoutCupName,
+                    position = position,
+                    creationDate = System.currentTimeMillis(),
+                    onlineSessionId = _sessionId
+                )
+
+                raceResultRepository.insert(newRace)
+                _saveResultStatus.value = Event(true)
+            } catch (e: Exception) {
+                // Loggen Sie den Fehler
+                Log.e("NewOnlineSessionViewModel", "Error saving race result", e)
+                _saveResultStatus.value = Event(false) // Fehler signalisieren
+            }
         }
 
         lastDrivingToTrackName = toTrack
         resetRace()
     }
+}
+
+// Hilfsklasse für einmalige Events mit LiveData (um das Popup nicht bei Konfigurationsänderungen erneut anzuzeigen)
+open class Event<out T>(private val content: T) {
+    var hasBeenHandled = false
+        private set // Allow external read but not write
+
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+
+    fun peekContent(): T = content
+}
+
+class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Observer<Event<T>> {
+    override fun onChanged(event: Event<T>) {
+        event?.getContentIfNotHandled()?.let { value ->
+            onEventUnhandledContent(value)
+        }
+    }
+
 }
 
 class NewOnlineSessionViewModelFactory(
