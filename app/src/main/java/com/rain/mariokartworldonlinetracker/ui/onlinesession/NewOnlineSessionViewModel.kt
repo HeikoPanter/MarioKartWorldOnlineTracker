@@ -48,18 +48,6 @@ class NewOnlineSessionViewModel(
         lastDrivingToTrackName = null
         _sessionId = 0
         resetRace()
-
-        if (raceCategory != RaceCategory.UNKNOWN) {
-
-            var newSession = OnlineSession(
-                creationDate = System.currentTimeMillis(),
-                category = raceCategory
-            )
-
-            viewModelScope.launch {
-                _sessionId = onlineSessionRepository.insert(newSession)
-            }
-        }
     }
 
     fun resetRace() {
@@ -113,6 +101,15 @@ class NewOnlineSessionViewModel(
 
         viewModelScope.launch {
             try {
+                if (_sessionId == 0.toLong()) {
+                    var newSession = OnlineSession(
+                        creationDate = System.currentTimeMillis(),
+                        category = _raceCategory
+                    )
+
+                    _sessionId = onlineSessionRepository.insert(newSession)
+                }
+
                 val newRace = RaceResult(
                     engineClass = _engineClass,
                     drivingFromTrackName = fromTrack,

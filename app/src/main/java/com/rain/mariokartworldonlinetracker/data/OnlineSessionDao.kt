@@ -12,4 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface OnlineSessionDao {
     @Insert
     suspend fun insert(onlineSession: OnlineSession): Long
+
+    @Query("SELECT count(id) FROM online_sessions WHERE category = :raceCategory")
+    fun getSessionCount(raceCategory: RaceCategory): Flow<Int>
 }
