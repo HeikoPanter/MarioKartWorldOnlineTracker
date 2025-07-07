@@ -1,9 +1,15 @@
 package com.rain.mariokartworldonlinetracker
 
+import android.icu.text.SimpleDateFormat
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -13,12 +19,30 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import com.rain.mariokartworldonlinetracker.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.util.Date
+import java.util.Locale
+import kotlin.text.format
+import kotlin.text.isEmpty
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    private val raceResultRepository: RaceResultRepository by lazy {
+        RaceResultRepository((application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao())
+    }
+
+    private lateinit var createFileLauncher: ActivityResultLauncher<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +65,17 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // Initialisieren des ActivityResultLauncher für das Erstellen von Dateien
+        createFileLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri: Uri? ->
+            uri?.let {
+                lifecycleScope.launch { // Starten Sie eine Coroutine zum Schreiben der Datei
+                    exportDataToUri(it)
+                }
+            } ?: run {
+                Toast.makeText(this, getString(R.string.export_cancelled), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,6 +88,10 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings_items_per_row -> {
                 showItemsPerRowDialog()
+                true
+            }
+            R.id.action_settings_export_to_csv -> {
+                promptToCreateCsvFile()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -98,5 +137,105 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun promptToCreateCsvFile() {
+        val sdf =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+        val currentDateTime = sdf.format(java.util.Date())
+        val fileName = "mkwot_race_history_$currentDateTime.csv"
+        createFileLauncher.launch(fileName)
+    }
+
+    private suspend fun exportDataToUri(uri: Uri) {
+        try {
+            val raceResults = raceResultRepository.getResultHistory() // Daten im Hintergrund abrufen
+
+            if (raceResults.isEmpty()) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@MainActivity, getString(R.string.no_data_to_export), Toast.LENGTH_LONG).show()
+                }
+                return
+            }
+
+            val csvData = convertRaceResultsToCsv(raceResults)
+
+            // In die Datei schreiben (auf einem Hintergrundthread)
+            withContext(Dispatchers.IO) {
+                try {
+                    contentResolver.openOutputStream(uri)?.use { outputStream ->
+                        outputStream.bufferedWriter().use { writer ->
+                            writer.write(csvData)
+                        }
+                    }
+                    // Erfolg auf dem UI-Thread anzeigen
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, getString(R.string.export_successful), Toast.LENGTH_LONG).show()
+                    }
+                } catch (e: IOException) {
+                    Log.e("ExportCSV", "Error writing CSV file", e)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, getString(R.string.export_failed), Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ExportCSV", "Error fetching data for CSV export", e)
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@MainActivity, getString(R.string.export_data_fetch_failed), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+    private fun convertRaceResultsToCsv(raceResults: List<ResultHistory>): String {
+        val stringBuilder = StringBuilder()
+
+        val outputDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+        // CSV-Header (passen Sie dies an die Spalten Ihrer RaceResult-Entität an)
+        // WICHTIG: Die Reihenfolge muss konsistent sein!
+        stringBuilder.append("onlineSessionId;onlineSessionCreationDate;onlineSessionCategory;creationDate;engineClass;drivingFromTrackName;drivingToTrackName;knockoutCupName;position;\n")
+
+        // CSV-Datenzeilen
+        raceResults.forEach { result ->
+            stringBuilder.append("${result.onlineSessionId};")
+            val formattedSessionCreationDate = if (result.onlineSessionCreationDate != null && result.onlineSessionCreationDate > 0) {
+                outputDateFormat.format(Date(result.onlineSessionCreationDate))
+            } else {
+                ""
+            }
+            val formattedCreationDate = if (result.creationDate != null && result.creationDate > 0) {
+                outputDateFormat.format(Date(result.creationDate))
+            } else {
+                ""
+            }
+
+            stringBuilder.append("${formattedSessionCreationDate};")
+            stringBuilder.append("${result.onlineSessionCategory.name};")
+            stringBuilder.append("${formattedCreationDate};")
+            stringBuilder.append("${result.engineClass.name};")
+            stringBuilder.append("${result.drivingFromTrackName};")
+            stringBuilder.append("${result.drivingToTrackName};")
+            stringBuilder.append("${result.knockoutCupName};")
+            stringBuilder.append("${result.position};\n") // Letzte Spalte, dann Zeilenumbruch
+        }
+        return stringBuilder.toString()
+    }
+
+    /**
+     * Escapes special characters for CSV fields.
+     * Specifically, it doubles any double quotes within the field
+     * and wraps the field in double quotes if it contains a comma, a double quote, or a newline.
+     */
+    private fun escapeCsvField(field: String?): String {
+        if (field == null) {
+            return ""
+        }
+        var escapedField = field.replace("\"", "\"\"") // Double up existing quotes
+        if (field.contains(",") || field.contains("\"") || field.contains("\n") || field.contains("\r")) {
+            escapedField = "\"$escapedField\"" // Wrap in quotes if it contains comma, quote, or newline
+        }
+        return escapedField
     }
 }

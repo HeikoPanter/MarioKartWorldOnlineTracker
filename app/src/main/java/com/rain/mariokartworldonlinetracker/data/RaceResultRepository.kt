@@ -5,6 +5,7 @@ import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
+import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -72,6 +73,10 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
 
     fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute> {
         return raceResultDao.getMostFrequentRouteTrackName()
+    }
+
+    suspend fun getResultHistory() : List<ResultHistory> {
+        return raceResultDao.getResultHistory()
     }
 }
 

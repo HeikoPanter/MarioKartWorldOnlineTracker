@@ -32,4 +32,10 @@
     <string name="statistics_race_most_played_three_lap_track">Most played three-lap track:</string>
     <string name="statistics_race_most_played_route">Most played route:</string>
     <string name="result_count_separator_text">\u00A0/\u00A0</string>
+    <string name="action_settings_export_to_csv">Export result history to CSV</string>
+    <string name="no_data_to_export">No data to export</string>
+    <string name="export_successful">Export successful</string>
+    <string name="export_failed">Export failed</string>
+    <string name="export_data_fetch_failed">Data fetch failed</string>
+    <string name="export_cancelled">Export cancelled</string>
 </resources>

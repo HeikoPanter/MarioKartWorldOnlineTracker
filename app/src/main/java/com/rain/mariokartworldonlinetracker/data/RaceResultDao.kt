@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
+import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -117,4 +118,26 @@ interface RaceResultDao {
         LIMIT 1
     """)
     fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute>
+
+    @Query("""
+        SELECT
+         rr.id as id,
+         rr.creationDate as creationDate,
+         rr.drivingFromTrackName as drivingFromTrackName,
+         rr.drivingToTrackName as drivingToTrackName,
+         rr.engineClass as engineClass,
+         rr.knockoutCupName as knockoutCupName,
+         rr.position as position,
+         rr.onlineSessionId as onlineSessionId,
+         os.creationDate as onlineSessionCreationDate,
+         os.category as onlineSessionCategory
+        FROM
+            race_results rr
+        LEFT JOIN
+            online_sessions os
+        ON rr.onlineSessionId = os.id
+        ORDER BY
+            creationDate DESC
+    """)
+    suspend fun getResultHistory(): List<ResultHistory>
 }
