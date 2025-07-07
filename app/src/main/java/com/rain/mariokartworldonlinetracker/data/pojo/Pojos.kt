@@ -24,9 +24,9 @@ data class AveragePositionByType(
 )
 
 data class MostPlayedRaceRoute(
-    val drivingFromTrackName: TrackName,
-    val drivingToTrackName: TrackName,
-    val frequency: Int
+    val drivingFromTrackName: TrackName?,
+    val drivingToTrackName: TrackName?,
+    val frequency: Int?
 )
 
 data class ResultHistory(

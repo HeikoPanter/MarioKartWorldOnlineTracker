@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.TrackName
@@ -55,32 +56,31 @@ class StatisticsFragment : Fragment() {
                     statisticsViewModel.raceCountPOJO.collect { raceCounts ->
                         // UI mit den neuen Werten aktualisieren
                         updateRaceCountUI(raceCounts)
-
                     }
                 }
-
-                // Session Count
+//
+                //// Session Count
                 launch {
                     statisticsViewModel.raceSessionCount.collect { sessionCount ->
                         updateSessionCountUI(sessionCount)
                     }
                 }
-
-                // Average Race per Session Count
+//
+                //// Average Race per Session Count
                 launch {
                     statisticsViewModel.medianRaceCountPerSessionPOJO.collect { averageRaceCountPerSession ->
                         updateAverageRaceCountPerSessionUI(averageRaceCountPerSession)
                     }
                 }
-
-                // Average Position
+//
+                //// Average Position
                 launch {
                     statisticsViewModel.averagePositionPOJO.collect { averagePosition ->
                         updateAveragePositionUI(averagePosition)
                     }
                 }
-
-                // Most played threelap track
+//
+                //// Most played threelap track
                 launch {
                     statisticsViewModel.mostPlayedThreelapTrackName.collect { trackName ->
                         updateMostPlayedThreelapTrack(trackName)
@@ -91,6 +91,42 @@ class StatisticsFragment : Fragment() {
                 launch {
                     statisticsViewModel.mostPlayedRaceRoute.collect { route ->
                         updateMostPlayedRoute(route)
+                    }
+                }
+
+                // Knockout Session Count
+                launch {
+                    statisticsViewModel.knockoutSessionCount.collect { sessionCount ->
+                        updateKnockoutSessionCount(sessionCount)
+                    }
+                }
+//
+                // Knockout Race Count
+                launch {
+                    statisticsViewModel.knockoutCount.collect { raceCounts ->
+                        // UI mit den neuen Werten aktualisieren
+                        updateKnockoutCountUI(raceCounts)
+                    }
+                }
+//
+                // Average Race per Session Count
+                launch {
+                    statisticsViewModel.medianKnockoutCountPerSession.collect { averageRaceCountPerSession ->
+                        updateAverageKnockoutCountPerSessionUI(averageRaceCountPerSession)
+                    }
+                }
+//
+                // Average Position
+                launch {
+                    statisticsViewModel.knockoutAveragePosition.collect { averagePosition ->
+                        updateAverageKnockoutPositionUI(averagePosition)
+                    }
+                }
+//
+                // Most played threelap track
+                launch {
+                    statisticsViewModel.mostFrequentKnockoutCup.collect { trackName ->
+                        updateMostPlayedRally(trackName)
                     }
                 }
             }
@@ -119,13 +155,33 @@ class StatisticsFragment : Fragment() {
         binding.statisticsRaceAveragePositionRoute.text = averagePosition.averagePositionRoute.toString()
     }
 
-    private fun updateMostPlayedThreelapTrack(trackName: TrackName) {
+    private fun updateMostPlayedThreelapTrack(trackName: TrackName?) {
         binding.statisticsRaceMostPlayedThreeLapTrack.setImageResource(TrackAndKnockoutHelper.getTrackResId(trackName))
     }
 
-    private fun updateMostPlayedRoute(route: MostPlayedRaceRoute) {
-        binding.statisticsRaceMostPlayedRouteFrom.setImageResource(TrackAndKnockoutHelper.getTrackResId(route.drivingFromTrackName))
-        binding.statisticsRaceMostPlayedRouteTo.setImageResource(TrackAndKnockoutHelper.getTrackResId(route.drivingToTrackName))
+    private fun updateMostPlayedRoute(route: MostPlayedRaceRoute?) {
+        binding.statisticsRaceMostPlayedRouteFrom.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingFromTrackName))
+        binding.statisticsRaceMostPlayedRouteTo.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingToTrackName))
+    }
+
+    private fun updateKnockoutSessionCount(sessionCount: Int) {
+        binding.statisticsKnockoutTotalSessions.text = sessionCount.toString()
+    }
+
+    private fun updateKnockoutCountUI(knockoutCount: Int) {
+        binding.statisticsKnockoutTotalRacesTotal.text = knockoutCount.toString()
+    }
+
+    private fun updateAverageKnockoutCountPerSessionUI(averageKnockoutCountPerSession: Int) {
+        binding.statisticsKnockoutAverageRacesPerSessionTotal.text = averageKnockoutCountPerSession.toString()
+    }
+
+    private fun updateAverageKnockoutPositionUI(averagePosition: Int?) {
+        binding.statisticsKnockoutAveragePositionTotal.text = (averagePosition ?: 0).toString()
+    }
+
+    private fun updateMostPlayedRally(knockoutCupName: KnockoutCupName?) {
+        binding.statisticsKnockoutMostPlayedRally.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(knockoutCupName))
     }
 
     override fun onDestroyView() {
