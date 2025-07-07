@@ -1,21 +1,42 @@
+package com.rain.mariokartworldonlinetracker.ui.statistics
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
-import com.rain.mariokartworldonlinetracker.data.RaceResult // Ihre Entitätsklasse
+import com.rain.mariokartworldonlinetracker.TrackName
+import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository // Ihr Repository
+import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
+import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
+import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
+import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
+import kotlinx.coroutines.flow.Flow
 
-class StatisticsViewModel(private val repository: RaceResultRepository) : ViewModel() {
+class StatisticsViewModel(
+    private val raceResultRepository: RaceResultRepository,
+    private val onlineSessionRepository: OnlineSessionRepository
+) : ViewModel() {
 
-    // Wandelt den Flow in LiveData um, wenn Sie LiveData in Ihrem Fragment bevorzugen.
-    // LiveData ist Lifecycle-aware und gut für die UI.
-    val allRaceResultsLiveData = repository.allRaceResults.asLiveData()
+    /*
+    Race values
+     */
+    val raceCountPOJO: Flow<RaceCountByType> = raceResultRepository.getRaceCountPOJO()
+    val medianRaceCountPerSessionPOJO: Flow<MedianRaceCountPerSessionByType> = raceResultRepository.getMedianRaceCountPerSessionPOJO()
+    val averagePositionPOJO: Flow<AveragePositionByType> = raceResultRepository.getAveragePositionPOJO()
+    val mostPlayedThreelapTrackName: Flow<TrackName> = raceResultRepository.getMostFrequentThreelapTrackName()
+    val mostPlayedRaceRoute: Flow<MostPlayedRaceRoute> = raceResultRepository.getMostFrequentRouteTrackName()
+    val raceSessionCount: Flow<Int> = onlineSessionRepository.raceSessionCount
+
+    /*
+    Knockout values
+     */
+    val knockoutSessionCount: Flow<Int> = onlineSessionRepository.knockoutSessionCount
 }
 
-class StatisticsViewModelFactory(private val repository: RaceResultRepository) : ViewModelProvider.Factory {
+class StatisticsViewModelFactory(private val raceResultRepository: RaceResultRepository, private val onlineSessionRepository: OnlineSessionRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatisticsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return StatisticsViewModel(repository) as T
+            return StatisticsViewModel(raceResultRepository, onlineSessionRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

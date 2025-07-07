@@ -9,10 +9,10 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_start_session">New session</string>
-    <string name="menu_statistics">Result history</string>
+    <string name="menu_statistics">Statistics</string>
     <string name="new_race">Start race session</string>
     <string name="new_knockout">Start knockout session</string>
-    <string name="race_statistics">Result history</string>
+    <string name="race_statistics">Statistics</string>
     <string name="no_race_results_yet">No race results yet.</string>
     <string name="home_intro_title">Welcome to the Mario Kart World Online Tracker</string>
     <string name="home_intro_message">
@@ -20,6 +20,16 @@
         \n
         Start a session via the menu on the left. While in a session you can continuously save your results.\n
         \n
-        If you want to view your results, go to the result history.
+        If you want to view your results and highlights, go to statistics.
     </string>
+    <string name="statistics_race_title">Race results</string>
+    <string name="statistics_race_total_sessions">Total sessions:</string>
+    <string name="statistics_race_average_races_per_session">Median races per session:</string>
+    <string name="statistics_race_total_races">Total races:</string>
+    <string name="statistics_race_average_position">Average position:</string>
+    <string name="statistics_race_summary">
+        Multiple numbers are shown in format 1 / 1 / 1 which means:\nTotal / three-lap only / route only</string>
+    <string name="statistics_race_most_played_three_lap_track">Most played three-lap track:</string>
+    <string name="statistics_race_most_played_route">Most played route:</string>
+    <string name="result_count_separator_text">\u00A0/\u00A0</string>
 </resources>

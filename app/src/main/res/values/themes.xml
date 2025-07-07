@@ -10,11 +10,56 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Customize your theme here. -->
-        <item name="fontFamily">@font/candara_bold_italic</item>
+        <item name="android:fontFamily">@font/candara_bold_italic</item>
     </style>
 
     <style name="Fragment.Mkwot" parent="">
         <item name="android:background">@drawable/background_2_darkened_50</item>
+    </style>
+
+    <style name="Mkwot.Statistics.KeyValueContainer" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="Mkwot.Statistics.Key" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Mkwot.Statistics.Value" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start|bottom</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="outlineColor">@color/black</item>
+        <item name="outlineWidth">2dp</item>
+    </style>
+
+    <style name="Mkwot.Statistics.Value.Separator">
+        <item name="android:text">@string/result_count_separator_text</item>
+    </style>
+
+    <style name="Mkwot.Statistics.Value.Threelap">
+        <item name="android:textColor">@color/race_blue</item>
+        <item name="android:textSize">20sp</item>
+        <item name="outlineColor">@color/white</item>
+    </style>
+
+    <style name="Mkwot.Statistics.Value.Route">
+        <item name="android:textColor">@color/knockout_green</item>
+        <item name="android:textSize">20sp</item>
+        <item name="outlineColor">@color/white</item>
     </style>
 
     <style name="Theme.MarioKartWorldOnlineTracker.NoActionBar">

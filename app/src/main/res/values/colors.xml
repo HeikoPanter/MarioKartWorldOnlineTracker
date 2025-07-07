@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="sand_300">#EAFFE190</color>
+    <color name="sand_500">#EAFFDC8B</color>
+    <color name="race_blue">#FF264DC5</color>
+    <color name="knockout_green">#FF51B287</color>
     <color name="terracotta_200">#FFE4937F</color>
     <color name="terracotta_500">#DCD55434</color>
     <color name="terracotta_700">#FFD55434</color>
