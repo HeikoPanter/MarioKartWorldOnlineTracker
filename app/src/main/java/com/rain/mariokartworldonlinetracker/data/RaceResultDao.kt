@@ -3,6 +3,7 @@ package com.rain.mariokartworldonlinetracker.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
@@ -70,7 +71,7 @@ interface RaceResultDao {
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
         WHERE os.category = 'RACE'
     """)
-    fun getAveragePositionTotal(): Flow<Int>
+    fun getAveragePositionTotal(): Flow<Int?>
 
     @Query("""
         SELECT AVG(rr.position) as average_position
@@ -78,7 +79,7 @@ interface RaceResultDao {
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
         WHERE os.category = 'RACE' and rr.drivingFromTrackName is null
     """)
-    fun getAveragePositionThreelap(): Flow<Int>
+    fun getAveragePositionThreelap(): Flow<Int?>
 
     @Query("""
         SELECT AVG(rr.position) as average_position
@@ -86,7 +87,7 @@ interface RaceResultDao {
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
         WHERE os.category = 'RACE' and rr.drivingFromTrackName is not null
     """)
-    fun getAveragePositionRoute(): Flow<Int>
+    fun getAveragePositionRoute(): Flow<Int?>
 
     @Query("""
         SELECT drivingToTrackName 
@@ -98,7 +99,7 @@ interface RaceResultDao {
             MIN(creationDate) ASC
         LIMIT 1
     """)
-    fun getMostFrequentThreelapTrackName(): Flow<TrackName>
+    fun getMostFrequentThreelapTrackName(): Flow<TrackName?>
 
     @Query("""
         SELECT 
@@ -117,7 +118,44 @@ interface RaceResultDao {
             MIN(creationDate) ASC
         LIMIT 1
     """)
-    fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute>
+    fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute?>
+
+    @Query("""
+        SELECT count(rr.id)
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT'
+    """)
+    fun getKnockoutCountTotal(): Flow<Int>
+
+    @Query("""
+        SELECT COUNT(rr.id) as races_per_session
+        FROM race_results rr
+        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
+        WHERE os.category = 'KNOCKOUT' 
+        GROUP BY os.id
+    """)
+    fun getKnockoutCountPerSessionTotal(): Flow<List<Int>>
+
+    @Query("""
+        SELECT AVG(rr.position) as average_position
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT'
+    """)
+    fun getKnockoutAveragePositionTotal(): Flow<Int?>
+
+    @Query("""
+        SELECT knockoutCupName 
+        FROM race_results
+        WHERE knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
+        GROUP BY knockoutCupName
+        ORDER BY
+            COUNT(knockoutCupName) DESC,
+            MIN(creationDate) ASC
+        LIMIT 1
+    """)
+    fun getMostFrequentKnockoutCupName(): Flow<KnockoutCupName?>
 
     @Query("""
         SELECT

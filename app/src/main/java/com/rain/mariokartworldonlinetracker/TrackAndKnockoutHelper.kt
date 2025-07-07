@@ -122,6 +122,10 @@ object TrackAndKnockoutHelper {
         return KnockoutCupName.entries.toList()
     }
 
+    fun getKnockoutResId(knockoutCupName: KnockoutCupName?): Int {
+        return knockoutCupResMap[knockoutCupName] ?: 0
+    }
+
     /**
      * Erstellt und füllt ein LinearLayout mit Reihen von ImageViews.
      *
