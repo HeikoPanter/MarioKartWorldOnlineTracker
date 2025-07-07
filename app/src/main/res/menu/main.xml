@@ -6,4 +6,10 @@
         android:orderInCategory="100"
         android:title="@string/action_settings_items_per_row"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings_export_to_csv"
+        android:orderInCategory="101"
+        android:title="@string/action_settings_export_to_csv"
+        app:showAsAction="never" />
+
 </menu>
