@@ -50,4 +50,8 @@ Keep in mind, currently the app is for **Android only**. No iOS support and sinc
 
 You can download the release form this GitHub repository under [Releases](https://github.com/HeikoPanter/MarioKartWorldOnlineTracker/releases).
 
+## Feedback or issues
+
+If you have any feedback or issues please feel free to contact me here on GitHub by creating an issue and I will try to get back to you shortly.
+
 The download is **completely free and without any ads**.
