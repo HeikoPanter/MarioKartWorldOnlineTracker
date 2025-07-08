@@ -48,6 +48,6 @@ And here's a sample video:
 
 Keep in mind, currently the app is for **Android only**. No iOS support and since I do not have an iOS device myself I will probably not develop the app for anything other than Android.
 
-You can download the release form this GitHub repository under **Releases**.
+You can download the release form this GitHub repository under [Releases](https://github.com/HeikoPanter/MarioKartWorldOnlineTracker/releases).
 
 The download is **completely free and without any ads**.
