@@ -127,10 +127,10 @@ class NewOnlineSessionViewModel(
                 Log.e("NewOnlineSessionViewModel", "Error saving race result", e)
                 _saveResultStatus.value = Event(false) // Fehler signalisieren
             }
-        }
 
-        lastDrivingToTrackName = toTrack
-        resetRace()
+            lastDrivingToTrackName = toTrack
+            resetRace()
+        }
     }
 }
 

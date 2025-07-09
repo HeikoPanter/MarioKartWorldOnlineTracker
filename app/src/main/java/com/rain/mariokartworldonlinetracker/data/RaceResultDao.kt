@@ -14,6 +14,7 @@ interface RaceResultDao {
     @Insert
     suspend fun insert(raceResult: RaceResult)
 
+    //<editor-fold desc="Race Queries">
     @Query("""
         SELECT count(rr.id)
         FROM race_results rr
@@ -91,12 +92,13 @@ interface RaceResultDao {
 
     @Query("""
         SELECT drivingToTrackName 
-        FROM race_results
-        WHERE drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL -- Nur gültige Namen zählen
+        FROM race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
         GROUP BY drivingToTrackName
         ORDER BY
             COUNT(drivingToTrackName) DESC,
-            MIN(creationDate) ASC
+            MIN(rr.creationDate) ASC
         LIMIT 1
     """)
     fun getMostFrequentThreelapTrackName(): Flow<TrackName?>
@@ -107,19 +109,134 @@ interface RaceResultDao {
             drivingToTrackName as drivingToTrackName, 
             COUNT(*) as frequency
         FROM 
-            race_results
+            race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE 
+            os.category = 'RACE' AND
             drivingFromTrackName IS NOT NULL 
             AND drivingToTrackName IS NOT NULL
         GROUP BY 
             drivingFromTrackName, drivingToTrackName
         ORDER BY 
             frequency DESC,
-            MIN(creationDate) ASC
+            MIN(rr.creationDate) ASC
         LIMIT 1
     """)
     fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute?>
+    //</editor-fold>
 
+    //<editor-fold desc="Race VS Queries">
+    @Query("""
+        SELECT count(rr.id)
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS'
+    """)
+    fun getRaceVsCountTotal(): Flow<Int>
+
+    @Query("""
+        SELECT count(rr.id)
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is null
+    """)
+    fun getRaceVsCountThreelap(): Flow<Int>
+
+    @Query("""
+        SELECT count(rr.id)
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is not null
+    """)
+    fun getRaceVsCountRoute(): Flow<Int>
+
+    @Query("""
+        SELECT COUNT(rr.id) as races_per_session
+        FROM race_results rr
+        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
+        WHERE os.category = 'RACE_VS' 
+        GROUP BY os.id
+    """)
+    fun getRaceVsCountPerSessionTotal(): Flow<List<Int>>
+
+    @Query("""
+        SELECT SUM(CASE WHEN rr.drivingFromTrackName is null THEN 1 ELSE 0 END) as races_per_session
+        FROM race_results rr
+        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
+        WHERE os.category = 'RACE_VS'
+        GROUP BY os.id
+    """)
+    fun getRaceVsCountPerSessionThreelap(): Flow<List<Int>>
+
+    @Query("""
+        SELECT SUM(CASE WHEN rr.drivingFromTrackName is not null THEN 1 ELSE 0 END) as races_per_session
+        FROM race_results rr
+        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
+        WHERE os.category = 'RACE_VS'
+        GROUP BY os.id
+    """)
+    fun getRaceVsCountPerSessionRoute(): Flow<List<Int>>
+
+    @Query("""
+        SELECT AVG(rr.position) as average_position
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS'
+    """)
+    fun getAverageRaceVsPositionTotal(): Flow<Int?>
+
+    @Query("""
+        SELECT AVG(rr.position) as average_position
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is null
+    """)
+    fun getAverageRaceVsPositionThreelap(): Flow<Int?>
+
+    @Query("""
+        SELECT AVG(rr.position) as average_position
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is not null
+    """)
+    fun getAverageRaceVsPositionRoute(): Flow<Int?>
+
+    @Query("""
+        SELECT drivingToTrackName 
+        FROM race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
+        WHERE os.category = 'RACE_VS' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
+        GROUP BY drivingToTrackName
+        ORDER BY
+            COUNT(drivingToTrackName) DESC,
+            MIN(rr.creationDate) ASC
+        LIMIT 1
+    """)
+    fun getMostFrequentThreelapVsTrackName(): Flow<TrackName?>
+
+    @Query("""
+        SELECT 
+            drivingFromTrackName as drivingFromTrackName, 
+            drivingToTrackName as drivingToTrackName, 
+            COUNT(*) as frequency
+        FROM 
+            race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
+        WHERE 
+            os.category = 'RACE_VS'
+            AND drivingFromTrackName IS NOT NULL 
+            AND drivingToTrackName IS NOT NULL
+        GROUP BY 
+            drivingFromTrackName, drivingToTrackName
+        ORDER BY 
+            frequency DESC,
+            MIN(rr.creationDate) ASC
+        LIMIT 1
+    """)
+    fun getMostFrequentRouteVsTrackName(): Flow<MostPlayedRaceRoute?>
+    //</editor-fold>
+
+    //<editor-fold desc="Knockout Queries">
     @Query("""
         SELECT count(rr.id)
         FROM race_results rr
@@ -156,6 +273,7 @@ interface RaceResultDao {
         LIMIT 1
     """)
     fun getMostFrequentKnockoutCupName(): Flow<KnockoutCupName?>
+    //</editor-fold>
 
     @Query("""
         SELECT

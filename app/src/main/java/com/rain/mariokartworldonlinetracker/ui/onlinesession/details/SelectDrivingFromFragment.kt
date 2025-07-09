@@ -45,7 +45,7 @@ class SelectDrivingFromFragment : Fragment() {
 
         val lastTrackName = newOnlineSessionViewModel.lastDrivingToTrackName
         val lastTrackContentDescr = lastTrackName?.name ?: "No last track"
-        var lastTrackResId = if (lastTrackName == null) R.drawable.noselected  else TrackAndKnockoutHelper.getTrackResId(lastTrackName)
+        var lastTrackResId = if (lastTrackName == null) R.drawable.noselected_2  else TrackAndKnockoutHelper.getTrackResId(lastTrackName)
 
         val imageMarginDp = 4
         val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
@@ -64,14 +64,14 @@ class SelectDrivingFromFragment : Fragment() {
         var buttonFromNone = TrackAndKnockoutHelper.createImageView(
             requireContext(),
             "Three lap track",
-            R.drawable.threelap,
+            R.drawable.threelap_2,
             imageMarginPx
         )
 
         var buttonFromOther = TrackAndKnockoutHelper.createImageView(
             requireContext(),
             "Other track",
-            R.drawable.othertracks,
+            R.drawable.othertracks_2,
             imageMarginPx
         )
 

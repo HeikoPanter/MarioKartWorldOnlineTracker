@@ -11,7 +11,8 @@ enum class DrivingFromOption {
 enum class RaceCategory {
     UNKNOWN,
     RACE,
-    KNOCKOUT
+    KNOCKOUT,
+    RACE_VS
 }
 
 enum class EngineClass {

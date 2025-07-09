@@ -45,7 +45,7 @@ class SelectEngineClassFragment : Fragment() {
 
         val imageMarginDp = 4
         val imageMarginPx = (imageMarginDp * resources.displayMetrics.density).toInt()
-        val isRace = newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE
+        val isRace = newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE || newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS
 
         var button150cc = TrackAndKnockoutHelper.createImageView(
             requireContext(),
@@ -87,7 +87,7 @@ class SelectEngineClassFragment : Fragment() {
 
     fun navigateNext(engineClass: EngineClass) {
         newOnlineSessionViewModel.setEngineClass(engineClass)
-        if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE) {
+        if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE || newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS) {
             findNavController().navigate(R.id.action_selectEngineClassFragment_to_selectDrivingFromFragment)
         }
         else if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.KNOCKOUT) {

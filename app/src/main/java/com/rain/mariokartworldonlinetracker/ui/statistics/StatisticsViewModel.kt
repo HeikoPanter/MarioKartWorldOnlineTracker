@@ -28,6 +28,16 @@ class StatisticsViewModel(
     val raceSessionCount: Flow<Int> = onlineSessionRepository.raceSessionCount
 
     /*
+    Race VS values
+     */
+    val raceVsCountPOJO: Flow<RaceCountByType> = raceResultRepository.getRaceVsCountPOJO()
+    val medianRaceVsCountPerSessionPOJO: Flow<MedianRaceCountPerSessionByType> = raceResultRepository.getMedianRaceVsCountPerSessionPOJO()
+    val averageRaceVsPositionPOJO: Flow<AveragePositionByType> = raceResultRepository.getAverageRaceVsPositionPOJO()
+    val mostPlayedThreelapVsTrackName: Flow<TrackName?> = raceResultRepository.getMostFrequentThreelapVsTrackName()
+    val mostPlayedRaceVsRoute: Flow<MostPlayedRaceRoute?> = raceResultRepository.getMostFrequentRouteVsTrackName()
+    val raceVsSessionCount: Flow<Int> = onlineSessionRepository.raceVsSessionCount
+
+    /*
     Knockout values
      */
     val knockoutSessionCount: Flow<Int> = onlineSessionRepository.knockoutSessionCount

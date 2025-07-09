@@ -38,6 +38,23 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
         }
     }
 
+    fun getRaceVsCountPOJO(): Flow<RaceCountByType> {
+        val raceCountTotal: Flow<Int> = raceResultDao.getRaceVsCountTotal()
+        val raceCountThreelap: Flow<Int> = raceResultDao.getRaceVsCountThreelap()
+        val raceCountRoute: Flow<Int> = raceResultDao.getRaceVsCountRoute()
+
+        return combine(
+            raceCountTotal,
+            raceCountThreelap,
+            raceCountRoute
+        ) { total, threelap, route ->
+            RaceCountByType(
+                raceCountTotal = total,
+                raceCountThreelap = threelap,
+                raceCountRoute = route)
+        }
+    }
+
     fun getMedianKnockoutCountPerSession(): Flow<Int> {
         return raceResultDao.getKnockoutCountPerSessionTotal().map { countsList -> MathUtils.calculateMedian(countsList) }
     }
@@ -46,6 +63,23 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
         val averageTotal: Flow<Int> = raceResultDao.getRaceCountPerSessionTotal().map { countsList -> MathUtils.calculateMedian(countsList) }
         val averageThreelap: Flow<Int> = raceResultDao.getRaceCountPerSessionThreelap().map { countsList -> MathUtils.calculateMedian(countsList) }
         val averageRoute: Flow<Int> = raceResultDao.getRaceCountPerSessionRoute().map { countsList -> MathUtils.calculateMedian(countsList) }
+
+        return combine(
+            averageTotal,
+            averageThreelap,
+            averageRoute
+        ) { total, threelap, route ->
+            MedianRaceCountPerSessionByType(
+                raceCountTotal = total,
+                raceCountThreelap = threelap,
+                raceCountRoute = route)
+        }
+    }
+
+    fun getMedianRaceVsCountPerSessionPOJO(): Flow<MedianRaceCountPerSessionByType> {
+        val averageTotal: Flow<Int> = raceResultDao.getRaceVsCountPerSessionTotal().map { countsList -> MathUtils.calculateMedian(countsList) }
+        val averageThreelap: Flow<Int> = raceResultDao.getRaceVsCountPerSessionThreelap().map { countsList -> MathUtils.calculateMedian(countsList) }
+        val averageRoute: Flow<Int> = raceResultDao.getRaceVsCountPerSessionRoute().map { countsList -> MathUtils.calculateMedian(countsList) }
 
         return combine(
             averageTotal,
@@ -76,12 +110,37 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
         }
     }
 
+    fun getAverageRaceVsPositionPOJO(): Flow<AveragePositionByType> {
+        val averageTotal: Flow<Int?> = raceResultDao.getAverageRaceVsPositionTotal()
+        val averageThreelap: Flow<Int?> = raceResultDao.getAverageRaceVsPositionThreelap()
+        val averageRoute: Flow<Int?> = raceResultDao.getAverageRaceVsPositionRoute()
+
+        return combine(
+            averageTotal,
+            averageThreelap,
+            averageRoute
+        ) { total, threelap, route ->
+            AveragePositionByType(
+                averagePositionTotal = total ?: 0,
+                averagePositionThreelap = threelap ?: 0,
+                averagePositionRoute = route ?: 0)
+        }
+    }
+
     fun getMostFrequentThreelapTrackName(): Flow<TrackName?> {
         return raceResultDao.getMostFrequentThreelapTrackName()
     }
 
+    fun getMostFrequentThreelapVsTrackName(): Flow<TrackName?> {
+        return raceResultDao.getMostFrequentThreelapVsTrackName()
+    }
+
     fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute?> {
         return raceResultDao.getMostFrequentRouteTrackName()
+    }
+
+    fun getMostFrequentRouteVsTrackName(): Flow<MostPlayedRaceRoute?> {
+        return raceResultDao.getMostFrequentRouteVsTrackName()
     }
 
     suspend fun getResultHistory() : List<ResultHistory> {
