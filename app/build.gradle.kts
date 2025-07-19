@@ -29,7 +29,7 @@ android {
         }
         debug {
             isMinifyEnabled = false
-            isShrinkResources = false
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {

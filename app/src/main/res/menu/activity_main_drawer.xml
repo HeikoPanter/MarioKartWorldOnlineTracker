@@ -8,13 +8,32 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/home"
             android:title="@string/menu_home" />
+
         <item
             android:id="@+id/nav_start_session"
             android:icon="@drawable/session"
             android:title="@string/menu_start_session" />
+
+        <!-- Oberpunkt "Statistics" - ohne eigene ID oder Aktion -->
         <item
-            android:id="@+id/nav_statistics"
             android:icon="@drawable/history"
-            android:title="@string/menu_statistics" />
+            android:title="@string/menu_statistics">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_statistics_race_worldwide"
+                        android:icon="@drawable/race_icon"
+                        android:title="@string/menu_statistics_race_worldwide" />
+                    <item
+                        android:id="@+id/nav_statistics_race_versus"
+                        android:icon="@drawable/race_icon"
+                        android:title="@string/menu_statistics_race_versus" />
+                    <item
+                        android:id="@+id/nav_statistics_knockout"
+                        android:icon="@drawable/knockout_icon"
+                        android:title="@string/menu_statistics_knockout" />
+                </group>
+            </menu>
+        </item>
     </group>
 </menu>
