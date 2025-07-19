@@ -5,17 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
-import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutRalliesBinding
+import kotlinx.coroutines.launch
 
-class StatisticsKnockoutFragment : Fragment() {
+class StatisticsKnockoutRalliesFragment : Fragment() {
 
-    private var _binding: FragmentStatisticsKnockoutBinding? = null
+    private var _binding: FragmentStatisticsKnockoutRalliesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -25,7 +29,7 @@ class StatisticsKnockoutFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsKnockoutBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsKnockoutRalliesBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
@@ -37,26 +41,24 @@ class StatisticsKnockoutFragment : Fragment() {
         return binding.root
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pagerAdapter =
-            StatisticsKnockoutPagerAdapter(this)
-        binding.viewPager.adapter = pagerAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.statistics_tab_general)
-                1 -> getString(R.string.statistics_tab_rallies)
-                else -> null
+//
+                // Most played threelap track
+                launch {
+                    statisticsViewModel.mostFrequentKnockoutCup.collect { trackName ->
+                        updateMostPlayedRally(trackName)
+                    }
+                }
             }
-        }.attach()
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun updateMostPlayedRally(knockoutCupName: KnockoutCupName?) {
+        binding.statisticsKnockoutMostPlayedRally.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(knockoutCupName))
     }
 }

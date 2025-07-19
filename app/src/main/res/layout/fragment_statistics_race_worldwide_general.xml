@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.statistics.StatisticsRaceWorldwideGeneralFragment">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="top"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/sand_300"
+        app:strokeColor="@android:color/black"
+        app:strokeWidth="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <!-- Title -->
+            <include layout="@layout/layout_statistics_race_worldwide_title"/>
+
+            <!-- Race result statistics -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/statistics_race_summary"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Number of race sessions -->
+            <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">
+                <TextView
+                    style="@style/Mkwot.Statistics.Key"
+                    android:text="@string/statistics_race_total_sessions"/>
+
+                <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                    android:id="@+id/statistics_race_total_sessions"
+                    style="@style/Mkwot.Statistics.Value"
+                    android:text="119"/>
+            </LinearLayout>
+
+            <!-- Number of races -->
+            <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">
+                <TextView
+                    style="@style/Mkwot.Statistics.Key"
+                    android:text="@string/statistics_race_total_races"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_total_races_total"
+                        style="@style/Mkwot.Statistics.Value"
+                        android:text="250"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_total_races_threelap"
+                        style="@style/Mkwot.Statistics.Value.Threelap"
+                        android:text="72"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_total_races_route"
+                        style="@style/Mkwot.Statistics.Value.Route"
+                        android:text="178"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Number of races per session (avg) -->
+            <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">
+                <TextView
+                    style="@style/Mkwot.Statistics.Key"
+                    android:text="@string/statistics_race_average_races_per_session"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_races_per_session_total"
+                        style="@style/Mkwot.Statistics.Value"
+                        android:text="5"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_races_per_session_threelap"
+                        style="@style/Mkwot.Statistics.Value.Threelap"
+                        android:text="2"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_races_per_session_route"
+                        style="@style/Mkwot.Statistics.Value.Route"
+                        android:text="3"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!-- Average race placement -->
+            <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">
+                <TextView
+                    style="@style/Mkwot.Statistics.Key"
+                    android:text="@string/statistics_race_average_position"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_position_total"
+                        style="@style/Mkwot.Statistics.Value"
+                        android:text="6"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_position_threelap"
+                        style="@style/Mkwot.Statistics.Value.Threelap"
+                        android:text="3"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        style="@style/Mkwot.Statistics.Value.Separator"/>
+                    <com.rain.mariokartworldonlinetracker.views.OutlinedTextView
+                        android:id="@+id/statistics_race_average_position_route"
+                        style="@style/Mkwot.Statistics.Value.Route"
+                        android:text="8"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</ScrollView>

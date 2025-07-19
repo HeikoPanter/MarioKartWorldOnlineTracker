@@ -9,6 +9,16 @@ class MarioKartWorldOnlineTrackerApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        val defaultExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(
+            GlobalExceptionHandler(
+                applicationContext,
+                defaultExceptionHandler,
+                MainActivity::class.java // Ersetze MainActivity::class.java durch CrashActivity::class.java wenn du diese verwendest
+            )
+        )
+
         MkwotSettings.init(applicationContext)
     }
 }

@@ -1,21 +1,24 @@
 package com.rain.mariokartworldonlinetracker.ui.statistics
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
-import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideBinding
+import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideRoutesBinding
+import kotlinx.coroutines.launch
 
-class StatisticsRaceWorldwideFragment : Fragment() {
-
-    private var _binding: FragmentStatisticsRaceWorldwideBinding? = null
+class StatisticsRaceWorldwideRoutesFragment : Fragment() {
+    private var _binding: FragmentStatisticsRaceWorldwideRoutesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -25,7 +28,7 @@ class StatisticsRaceWorldwideFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsRaceWorldwideBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsRaceWorldwideRoutesBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
@@ -41,23 +44,21 @@ class StatisticsRaceWorldwideFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pagerAdapter =
-            StatisticsRaceWorldwidePagerAdapter(this)
-        binding.viewPager.adapter = pagerAdapter
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.statistics_tab_general)
-                1 -> getString(R.string.statistics_tab_tracks)
-                2 -> getString(R.string.statistics_tab_routes)
-                else -> null
+                // Most played route
+                launch {
+                    statisticsViewModel.mostPlayedRaceRoute.collect { route ->
+                        updateMostPlayedRoute(route)
+                    }
+                }
             }
-        }.attach()
+        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun updateMostPlayedRoute(route: MostPlayedRaceRoute?) {
+        binding.statisticsRaceMostPlayedRouteFrom.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingFromTrackName))
+        binding.statisticsRaceMostPlayedRouteTo.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingToTrackName))
     }
-
 }
