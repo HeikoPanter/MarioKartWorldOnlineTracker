@@ -9,14 +9,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.SortColumn
+import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusRalliesBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.RallyDiffCallback
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.RallyViewHolder
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class StatisticsKnockoutVersusRalliesFragment : Fragment() {
@@ -25,6 +34,7 @@ class StatisticsKnockoutVersusRalliesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
+    private lateinit var trackListAdapter: StatisticsListAdapter<RallyDetailedData, RallyViewHolder>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,21 +59,67 @@ class StatisticsKnockoutVersusRalliesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupRecyclerView()
+        setupHeaderClickListeners()
+        observeSortedTrackData()
+        updateHeaderUI()
+    }
+
+    private fun setupRecyclerView() {
+        trackListAdapter = StatisticsListAdapter<RallyDetailedData, RallyViewHolder>(
+            RallyDiffCallback(),
+            viewHolderCreator = { parent, _ -> RallyViewHolder.create(parent) }
+        )
+        binding.tracksRecyclerview.apply {
+            adapter = trackListAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+    }
+
+    private fun setupHeaderClickListeners() {
+        binding.trackListHeader.headerName.setOnClickListener {
+            statisticsViewModel.requestKnockoutVersusSort(SortColumn.NAME)
+        }
+        binding.trackListHeader.headerPosition.setOnClickListener {
+            statisticsViewModel.requestKnockoutVersusSort(SortColumn.POSITION)
+        }
+        binding.trackListHeader.headerAmount.setOnClickListener {
+            statisticsViewModel.requestKnockoutVersusSort(SortColumn.AMOUNT)
+        }
+    }
+
+    private fun observeSortedTrackData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                statisticsViewModel.versusRallyDetailedData.collectLatest { trackList ->
+                    trackListAdapter.submitList(trackList)
 
-//
-                // Most played threelap track
-                launch {
-                    statisticsViewModel.mostFrequentKnockoutVsCup.collect { trackName ->
-                        updateMostPlayedRally(trackName)
-                    }
+                    updateHeaderUI()
                 }
             }
         }
     }
 
-    private fun updateMostPlayedRally(knockoutCupName: KnockoutCupName?) {
-        binding.statisticsKnockoutMostPlayedRally.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(knockoutCupName))
+    private fun updateHeaderUI() {
+        val sortState = statisticsViewModel.getKnockoutVersusSortState()
+
+        // Setze alle Header-Texte zurück
+        binding.trackListHeader.headerName.text = getString(R.string.statistics_list_header_rally)
+        binding.trackListHeader.headerPosition.text = getString(R.string.statistics_list_header_position)
+        binding.trackListHeader.headerAmount.text = getString(R.string.statistics_list_header_amount)
+
+        val arrow = if (sortState.direction == SortDirection.ASCENDING) " ↑" else " ↓"
+
+        when (sortState.column) {
+            SortColumn.NAME -> binding.trackListHeader.headerName.append(arrow)
+            SortColumn.POSITION -> binding.trackListHeader.headerPosition.append(arrow)
+            SortColumn.AMOUNT -> binding.trackListHeader.headerAmount.append(arrow)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.tracksRecyclerview.adapter = null
+        _binding = null
     }
 }

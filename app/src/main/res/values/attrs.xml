@@ -3,4 +3,8 @@
         <attr name="outlineColor" format="color" />
         <attr name="outlineWidth" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="CustomOutlineTextView">
+        <attr name="customOutlineColor" format="color" />
+        <attr name="customOutlineWidth" format="dimension" />
+    </declare-styleable>
 </resources>

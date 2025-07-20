@@ -6,7 +6,10 @@ import androidx.room.Query
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
+import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
+import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
+import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -91,23 +94,20 @@ interface RaceResultDao {
     fun getAveragePositionRoute(): Flow<Int?>
 
     @Query("""
-        SELECT drivingToTrackName 
+        SELECT rr.drivingToTrackName as drivingToTrackName, COUNT(rr.drivingToTrackName) as amountOfRaces, AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE os.category = 'RACE' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
         GROUP BY drivingToTrackName
-        ORDER BY
-            COUNT(drivingToTrackName) DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentThreelapTrackName(): Flow<TrackName?>
+    fun getThreeLapTrackDetailedDataList(): Flow<List<ThreeLapTrackDetailedData>>
 
     @Query("""
         SELECT 
-            drivingFromTrackName as drivingFromTrackName, 
-            drivingToTrackName as drivingToTrackName, 
-            COUNT(*) as frequency
+            rr.drivingFromTrackName as drivingFromTrackName, 
+            rr.drivingToTrackName as drivingToTrackName, 
+            COUNT(*) as amountOfRaces,
+            AVG(rr.position) as averagePosition
         FROM 
             race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
@@ -117,12 +117,8 @@ interface RaceResultDao {
             AND drivingToTrackName IS NOT NULL
         GROUP BY 
             drivingFromTrackName, drivingToTrackName
-        ORDER BY 
-            frequency DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentRouteTrackName(): Flow<MostPlayedRaceRoute?>
+    fun getRouteDetailedDataList(): Flow<List<RouteDetailedData>>
     //</editor-fold>
 
     //<editor-fold desc="Race VS Queries">
@@ -202,23 +198,22 @@ interface RaceResultDao {
     fun getAverageRaceVsPositionRoute(): Flow<Int?>
 
     @Query("""
-        SELECT drivingToTrackName 
+        SELECT rr.drivingToTrackName as drivingToTrackName,
+            COUNT(*) as amountOfRaces,
+            AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE os.category = 'RACE_VS' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
         GROUP BY drivingToTrackName
-        ORDER BY
-            COUNT(drivingToTrackName) DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentThreelapVsTrackName(): Flow<TrackName?>
+    fun getVsThreeLapTrackDetailedDataList(): Flow<List<ThreeLapTrackDetailedData>>
 
     @Query("""
         SELECT 
-            drivingFromTrackName as drivingFromTrackName, 
-            drivingToTrackName as drivingToTrackName, 
-            COUNT(*) as frequency
+            rr.drivingFromTrackName as drivingFromTrackName, 
+            rr.drivingToTrackName as drivingToTrackName, 
+            COUNT(*) as amountOfRaces,
+            AVG(rr.position) as averagePosition
         FROM 
             race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
@@ -228,12 +223,8 @@ interface RaceResultDao {
             AND drivingToTrackName IS NOT NULL
         GROUP BY 
             drivingFromTrackName, drivingToTrackName
-        ORDER BY 
-            frequency DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentRouteVsTrackName(): Flow<MostPlayedRaceRoute?>
+    fun getVsRouteDetailedDataList(): Flow<List<RouteDetailedData>>
     //</editor-fold>
 
     //<editor-fold desc="Knockout Queries">
@@ -263,17 +254,15 @@ interface RaceResultDao {
     fun getKnockoutAveragePositionTotal(): Flow<Int?>
 
     @Query("""
-        SELECT knockoutCupName 
+        SELECT rr.knockoutCupName as knockoutCupName,
+        COUNT(*) as amountOfRaces,
+        AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE os.category = 'KNOCKOUT' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
         GROUP BY rr.knockoutCupName
-        ORDER BY
-            COUNT(rr.knockoutCupName) DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentKnockoutCupName(): Flow<KnockoutCupName?>
+    fun getRallyDetailedDataList(): Flow<List<RallyDetailedData>>
     //</editor-fold>
 
     //<editor-fold desc="Knockout VS Queries">
@@ -303,17 +292,15 @@ interface RaceResultDao {
     fun getKnockoutVsAveragePositionTotal(): Flow<Int?>
 
     @Query("""
-        SELECT knockoutCupName 
+        SELECT rr.knockoutCupName as knockoutCupName,
+        COUNT(*) as amountOfRaces,
+        AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE os.category = 'KNOCKOUT_VS' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
         GROUP BY rr.knockoutCupName
-        ORDER BY
-            COUNT(rr.knockoutCupName) DESC,
-            MIN(rr.creationDate) ASC
-        LIMIT 1
     """)
-    fun getMostFrequentKnockoutVsCupName(): Flow<KnockoutCupName?>
+    fun getVsRallyDetailedDataList(): Flow<List<RallyDetailedData>>
     //</editor-fold>
 
     //<editor-fold desc="Misc queries">

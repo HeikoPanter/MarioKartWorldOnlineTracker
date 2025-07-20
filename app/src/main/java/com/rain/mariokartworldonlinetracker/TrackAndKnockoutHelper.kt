@@ -84,6 +84,33 @@ object TrackAndKnockoutHelper {
     )
 
     private val positionResMap: Map<Short, Int> = mutableMapOf(
+        1.toShort() to R.drawable.pos1,
+        2.toShort() to R.drawable.pos2,
+        3.toShort() to R.drawable.pos3,
+        4.toShort() to R.drawable.pos4,
+        5.toShort() to R.drawable.pos5,
+        6.toShort() to R.drawable.pos6,
+        7.toShort() to R.drawable.pos7,
+        8.toShort() to R.drawable.pos8,
+        9.toShort() to R.drawable.pos9,
+        10.toShort() to R.drawable.pos10,
+        11.toShort() to R.drawable.pos11,
+        12.toShort() to R.drawable.pos12,
+        13.toShort() to R.drawable.pos13,
+        14.toShort() to R.drawable.pos14,
+        15.toShort() to R.drawable.pos15,
+        16.toShort() to R.drawable.pos16,
+        17.toShort() to R.drawable.pos17,
+        18.toShort() to R.drawable.pos18,
+        19.toShort() to R.drawable.pos19,
+        20.toShort() to R.drawable.pos20,
+        21.toShort() to R.drawable.pos21,
+        22.toShort() to R.drawable.pos22,
+        23.toShort() to R.drawable.pos23,
+        24.toShort() to R.drawable.pos24
+    )
+
+    private val positionButtonResMap: Map<Short, Int> = mutableMapOf(
         1.toShort() to R.drawable.button_1,
         2.toShort() to R.drawable.button_2,
         3.toShort() to R.drawable.button_3,
@@ -124,6 +151,10 @@ object TrackAndKnockoutHelper {
 
     fun getKnockoutResId(knockoutCupName: KnockoutCupName?): Int {
         return knockoutCupResMap[knockoutCupName] ?: 0
+    }
+
+    fun getPositionResId(position: Short): Int {
+        return positionResMap[position] ?: 0
     }
 
     /**
@@ -277,7 +308,7 @@ object TrackAndKnockoutHelper {
         // aber so angepasst, dass er den Kontext explizit nimmt und den Klick-Handler weiterreicht.
         return ImageView(context).apply {
             id = View.generateViewId()
-            setImageResource(positionResMap[position] ?:0)
+            setImageResource(positionButtonResMap[position] ?:0)
             adjustViewBounds = true
 
             val imageLayoutParams = LinearLayout.LayoutParams(

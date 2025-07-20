@@ -67,6 +67,9 @@
     <string name="statistics_tab_routes">Routes</string>
     <string name="statistics_tab_rallies">Rallies</string>
     <string name="statistics_tab_history">Result history</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="statistics_list_header_track">Track</string>
+    <string name="statistics_list_header_position">Average position</string>
+    <string name="statistics_list_header_amount">No. of races</string>
+    <string name="statistics_list_header_route">Route</string>
+    <string name="statistics_list_header_rally">Rally</string>
 </resources>

@@ -18,7 +18,6 @@ class MarioKartWorldOnlineTrackerApplication : Application() {
                 MainActivity::class.java // Ersetze MainActivity::class.java durch CrashActivity::class.java wenn du diese verwendest
             )
         )
-
         MkwotSettings.init(applicationContext)
     }
 }

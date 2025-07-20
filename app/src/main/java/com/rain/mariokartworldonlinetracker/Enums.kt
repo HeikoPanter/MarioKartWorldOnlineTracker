@@ -66,3 +66,13 @@ enum class TrackName {
     MC29,
     RR30
 }
+
+enum class SortColumn {
+    NAME,
+    POSITION,
+    AMOUNT
+}
+enum class SortDirection {
+    ASCENDING,
+    DESCENDING
+}

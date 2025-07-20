@@ -4,6 +4,7 @@ import com.rain.mariokartworldonlinetracker.EngineClass
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackName
+import com.rain.mariokartworldonlinetracker.ui.statistics.DetailedData
 
 data class RaceCountByType(
     val raceCountTotal: Int,
@@ -22,6 +23,25 @@ data class AveragePositionByType(
     val averagePositionThreelap: Int,
     val averagePositionRoute: Int
 )
+
+data class ThreeLapTrackDetailedData(
+    val drivingToTrackName: TrackName,
+    val amountOfRaces: Int,
+    val averagePosition: Int
+) : DetailedData
+
+data class RouteDetailedData(
+    val drivingFromTrackName: TrackName,
+    val drivingToTrackName: TrackName,
+    val amountOfRaces: Int,
+    val averagePosition: Int
+) : DetailedData
+
+data class RallyDetailedData(
+    val knockoutCupName: KnockoutCupName,
+    val amountOfRaces: Int,
+    val averagePosition: Int
+) : DetailedData
 
 data class MostPlayedRaceRoute(
     val drivingFromTrackName: TrackName?,
