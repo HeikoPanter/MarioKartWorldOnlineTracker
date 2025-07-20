@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings_items_per_row">Change displayed items per row</string>
+    <string name="action_settings_show_all_entries">Show all statistics entries</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_start_session">New session</string>
@@ -72,4 +73,8 @@
     <string name="statistics_list_header_amount">No. of races</string>
     <string name="statistics_list_header_route">Route</string>
     <string name="statistics_list_header_rally">Rally</string>
+    <string name="settings_option_yes">Yes</string>
+    <string name="settings_option_no">No</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>

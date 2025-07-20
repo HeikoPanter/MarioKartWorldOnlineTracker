@@ -95,6 +95,10 @@ class MainActivity : AppCompatActivity() {
                 showItemsPerRowDialog()
                 true
             }
+            R.id.action_settings_show_all_entries -> {
+                showShowAllEntriesDialog()
+                true
+            }
             R.id.action_settings_export_to_csv -> {
                 promptToCreateCsvFile()
                 true
@@ -119,26 +123,56 @@ class MainActivity : AppCompatActivity() {
                 // Dieser Block wird sofort ausgeführt, wenn eine Auswahl getroffen wird.
                 // Besser ist es, die Auswahl erst beim Klick auf "OK" zu speichern.
             }
-            .setPositiveButton("OK") { dialog, _ ->
+            .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
                 val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
                 if (selectedPosition != -1) {
                     val selectedValue = options[selectedPosition].toIntOrNull()
                     selectedValue?.let {
                         MkwotSettings.saveItemsPerRow(applicationContext, it)
-                        // HIER: UI benachrichtigen, dass sich die Einstellung geändert hat,
-                        // damit sich z.B. ein RecyclerView neu anordnet.
-                        // Das kann über ein LiveData im ViewModel geschehen,
-                        // das von der Activity/Fragment beobachtet wird, oder durch einen direkten Aufruf
-                        // einer Methode, die das Layout aktualisiert.
                         Toast.makeText(this, "Changed items per row to $it", Toast.LENGTH_SHORT).show()
-                        // Beispiel: recreate() // Startet die Activity neu, um Änderungen zu sehen (einfachste, aber nicht immer beste Lösung)
-                        // Besser: Spezifische UI-Komponenten gezielt aktualisieren.
                         recreate()
                     }
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showShowAllEntriesDialog() {
+        val options = arrayOf(getString(R.string.settings_option_yes), getString(R.string.settings_option_no))
+        // Alternativ: val options = arrayOf("An", "Aus") oder "Anzeigen", "Verbergen"
+
+        // Holen Sie den aktuellen Wert aus Ihren Settings (MkwotSettings)
+        val currentShowAllEntries = MkwotSettings.showAllEntries
+        val currentSelectionIndex = if (currentShowAllEntries.value) 0 else 1 // 0 für "Ja/An", 1 für "Nein/Aus"
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.action_settings_show_all_entries) // Stellen Sie sicher, dass dieser String existiert
+            .setSingleChoiceItems(options, currentSelectionIndex) { dialog, which ->
+                // Die Auswahl wird erst bei Klick auf "OK" gespeichert.
+                // 'which' gibt den Index der ausgewählten Option an.
+            }
+            .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
+                val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
+                if (selectedPosition != -1) {
+                    val selectedValueBoolean = (selectedPosition == 0) // True, wenn "Ja/An" (Index 0) ausgewählt wurde
+
+                    MkwotSettings.saveShowAllEntries(applicationContext, selectedValueBoolean)
+
+                    Toast.makeText(
+                        this,
+                        "Changed show all entries to $selectedValueBoolean",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    recreate() // Überdenken Sie dies für eine gezieltere Aktualisierung
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()

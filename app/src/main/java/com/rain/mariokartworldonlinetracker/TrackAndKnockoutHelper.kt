@@ -4,6 +4,9 @@ import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
+import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
+import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 
 object TrackAndKnockoutHelper {
     private val trackMap: Map<TrackName?, List<TrackName>> = mutableMapOf(
@@ -155,6 +158,27 @@ object TrackAndKnockoutHelper {
 
     fun getPositionResId(position: Short): Int {
         return positionResMap[position] ?: 0
+    }
+
+    fun getThreeLapTrackList(): List<ThreeLapTrackDetailedData> {
+        return TrackName.values().map { ThreeLapTrackDetailedData(it, 0, 999) }
+    }
+
+    fun getRouteList(): List<RouteDetailedData> {
+
+        var list = mutableListOf<RouteDetailedData>()
+
+        TrackName.values().forEach { drivingFromTrackName ->
+            trackMap[drivingFromTrackName]?.forEach { drivingToTrackName ->
+                list.add(RouteDetailedData(drivingFromTrackName, drivingToTrackName, 0, 999))
+            }
+        }
+
+        return list
+    }
+
+    fun getRallyList(): List<RallyDetailedData> {
+        return KnockoutCupName.values().map { RallyDetailedData(it, 0, 999) }
     }
 
     /**

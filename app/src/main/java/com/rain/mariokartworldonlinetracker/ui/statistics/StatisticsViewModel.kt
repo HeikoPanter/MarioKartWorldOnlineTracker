@@ -2,16 +2,16 @@ package com.rain.mariokartworldonlinetracker.ui.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.application
 import androidx.lifecycle.viewModelScope
-import com.rain.mariokartworldonlinetracker.KnockoutCupName
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
-import com.rain.mariokartworldonlinetracker.TrackName
+import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
-import com.rain.mariokartworldonlinetracker.data.RaceResultRepository // Ihr Repository
+import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -35,13 +36,33 @@ class StatisticsViewModel(
     private val onlineSessionRepository: OnlineSessionRepository
 ) : ViewModel() {
 
+    private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
 
     //<editor-fold desc="Race Worldwide">
     private val _raceWorldwideSortState = MutableStateFlow(TrackSortState())
     private val originalThreeLapTrackDetailedData: Flow<List<ThreeLapTrackDetailedData>> = raceResultRepository.getThreeLapTrackDetailedDataList()
 
     val threeLapTrackDetailedData: StateFlow<List<ThreeLapTrackDetailedData>> =
-        combine(originalThreeLapTrackDetailedData, _raceWorldwideSortState) { tracks, sortState ->
+        combine(
+            originalThreeLapTrackDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.drivingToTrackName }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getThreeLapTrackList().map { track ->
+                    val dbData = trackMap[track.drivingToTrackName]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_raceWorldwideSortState) { tracks, sortState ->
             sortTracks(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -53,7 +74,26 @@ class StatisticsViewModel(
     private val originalRouteDetailedData: Flow<List<RouteDetailedData>> = raceResultRepository.getRouteDetailedDataList()
 
     val routeDetailedData: StateFlow<List<RouteDetailedData>> =
-        combine(originalRouteDetailedData, _raceWorldwideRouteSortState) { tracks, sortState ->
+        combine(
+            originalRouteDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.drivingFromTrackName.name + it.drivingToTrackName.name }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getRouteList().map { track ->
+                    val dbData = trackMap[track.drivingFromTrackName.name + track.drivingToTrackName.name]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_raceWorldwideRouteSortState) { tracks, sortState ->
             sortRoutes(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -111,7 +151,26 @@ class StatisticsViewModel(
     private val originalVersusThreeLapTrackDetailedData: Flow<List<ThreeLapTrackDetailedData>> = raceResultRepository.getVsThreeLapTrackDetailedDataList()
 
     val versusThreeLapTrackDetailedData: StateFlow<List<ThreeLapTrackDetailedData>> =
-        combine(originalVersusThreeLapTrackDetailedData, _raceVersusSortState) { tracks, sortState ->
+        combine(
+            originalVersusThreeLapTrackDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.drivingToTrackName }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getThreeLapTrackList().map { track ->
+                    val dbData = trackMap[track.drivingToTrackName]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_raceVersusSortState) { tracks, sortState ->
             sortTracks(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -123,7 +182,26 @@ class StatisticsViewModel(
     private val originalVersusRouteDetailedData: Flow<List<RouteDetailedData>> = raceResultRepository.getVsRouteDetailedDataList()
 
     val versusRouteDetailedData: StateFlow<List<RouteDetailedData>> =
-        combine(originalVersusRouteDetailedData, _raceVersusRouteSortState) { tracks, sortState ->
+        combine(
+            originalVersusRouteDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.drivingFromTrackName.name + it.drivingToTrackName.name }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getRouteList().map { track ->
+                    val dbData = trackMap[track.drivingFromTrackName.name + track.drivingToTrackName.name]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_raceVersusRouteSortState) { tracks, sortState ->
             sortRoutes(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -180,7 +258,26 @@ class StatisticsViewModel(
     private val originalRallyDetailedData: Flow<List<RallyDetailedData>> = raceResultRepository.getRallyDetailedDataList()
 
     val rallyDetailedData: StateFlow<List<RallyDetailedData>> =
-        combine(originalRallyDetailedData, _knockoutWorldwideSortState) { tracks, sortState ->
+        combine(
+            originalRallyDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.knockoutCupName }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getRallyList().map { track ->
+                    val dbData = trackMap[track.knockoutCupName]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_knockoutWorldwideSortState) { tracks, sortState ->
             sortRallies(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -220,7 +317,26 @@ class StatisticsViewModel(
     private val originalVersusRallyDetailedData: Flow<List<RallyDetailedData>> = raceResultRepository.getVsRallyDetailedDataList()
 
     val versusRallyDetailedData: StateFlow<List<RallyDetailedData>> =
-        combine(originalVersusRallyDetailedData, _knockoutVersusSortState) { tracks, sortState ->
+        combine(
+            originalVersusRallyDetailedData,
+            _showAllTracksSetting
+        ) { wwTracks, showAll ->
+            val trackMap = wwTracks.associateBy { it.knockoutCupName }
+
+            if (showAll) {
+                TrackAndKnockoutHelper.getRallyList().map { track ->
+                    val dbData = trackMap[track.knockoutCupName]
+                    if (dbData != null) {
+                        dbData
+                    }
+                    else {
+                        track
+                    }
+                }
+            } else {
+                wwTracks
+            }
+        }.combine(_knockoutVersusSortState) { tracks, sortState ->
             sortRallies(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
@@ -340,8 +456,6 @@ class StatisticsViewModel(
             }
         }
     }
-
-
 }
 
 class StatisticsViewModelFactory(private val raceResultRepository: RaceResultRepository, private val onlineSessionRepository: OnlineSessionRepository) : ViewModelProvider.Factory {
