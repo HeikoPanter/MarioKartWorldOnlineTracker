@@ -1,6 +1,7 @@
 package com.rain.mariokartworldonlinetracker.data
 
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
@@ -180,6 +181,10 @@ class RaceResultRepository(private val raceResultDao: RaceResultDao) {
 
     suspend fun getResultHistory() : List<ResultHistory> {
         return raceResultDao.getResultHistory()
+    }
+
+    fun getResultHistory(raceCategory: RaceCategory): Flow<List<ResultHistory>> {
+        return raceResultDao.getResultHistory(raceCategory)
     }
 
     //</editor-fold>

@@ -53,6 +53,7 @@ class StatisticsKnockoutVersusFragment : Fragment() {
             tab.text = when (position) {
                 0 -> getString(R.string.statistics_tab_general)
                 1 -> getString(R.string.statistics_tab_rallies)
+                2 -> getString(R.string.statistics_tab_history)
                 else -> null
             }
         }.attach()

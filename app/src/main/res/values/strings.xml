@@ -77,4 +77,11 @@
     <string name="settings_option_no">No</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="statistics_history_header_race_no">Race No.</string>
+    <string name="statistics_history_header_track_route">Track/route</string>
+    <string name="statistics_history_header_position">Position</string>
+    <string name="statistics_history_header_engine_class">Engine class</string>
+    <string name="statistics_history_header_rally_no">Rally no.</string>
+    <string name="statistics_history_header_rally">Rally</string>
+    <string name="statistics_history_header_date">Date</string>
 </resources>

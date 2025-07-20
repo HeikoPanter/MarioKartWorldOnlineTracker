@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rain.mariokartworldonlinetracker.MkwotSettings
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
@@ -12,6 +13,7 @@ import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
+import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
 import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.ui.statistics.TrackSortState
@@ -30,6 +32,19 @@ class StatisticsRaceVersusViewModel(
 ) : ViewModel() {
 
     private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
+
+    private val _raceVersusHistorySortState = MutableStateFlow(TrackSortState())
+    private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.RACE_VS)
+
+    val resultHistory: StateFlow<List<ResultHistory>> =
+        combine(originalResultHistory, _raceVersusHistorySortState) { tracks, sortState ->
+            sortHistory(tracks, sortState)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+
+        )
 
     //<editor-fold desc="Race VS values">
 
@@ -137,6 +152,39 @@ class StatisticsRaceVersusViewModel(
         return _raceVersusRouteSortState.value
     }
 //</editor-fold>
+
+    fun getHistorySortState(): TrackSortState {
+        return _raceVersusHistorySortState.value
+    }
+
+    fun requestHistorySort(requestedColumn: SortColumn) {
+        viewModelScope.launch { // In einer Coroutine, da _sortState ein StateFlow ist
+            _raceVersusHistorySortState.update { currentState ->
+                val newDirection = if (currentState.column == requestedColumn) {
+                    if (currentState.direction == SortDirection.ASCENDING) SortDirection.DESCENDING else SortDirection.ASCENDING
+                } else {
+                    SortDirection.ASCENDING
+                }
+                TrackSortState(column = requestedColumn, direction = newDirection)
+            }
+        }
+    }
+
+    private fun sortHistory(
+        tracks: List<ResultHistory>,
+        sortState: TrackSortState
+    ): List<ResultHistory> {
+        if (sortState.column == SortColumn.AMOUNT) {
+            if (sortState.direction == SortDirection.ASCENDING) {
+                return tracks.sortedBy { it.creationDate }
+            } else {
+                return tracks.sortedByDescending { it.creationDate }
+            }
+        }
+        else {
+            return tracks
+        }
+    }
 
     private fun sortTracks(
         tracks: List<ThreeLapTrackDetailedData>,

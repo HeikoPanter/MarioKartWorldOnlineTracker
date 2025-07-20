@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rain.mariokartworldonlinetracker.MkwotSettings
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
+import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import com.rain.mariokartworldonlinetracker.ui.statistics.TrackSortState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +28,19 @@ class StatisticsRallyWorldwideViewModel(
 ) : ViewModel() {
 
     private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
+
+    private val _knockoutWorldwideHistorySortState = MutableStateFlow(TrackSortState())
+    private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.KNOCKOUT)
+
+    val resultHistory: StateFlow<List<ResultHistory>> =
+        combine(originalResultHistory, _knockoutWorldwideHistorySortState) { tracks, sortState ->
+            sortHistory(tracks, sortState)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+
+        )
 
     //<editor-fold desc="Knockout values">
 
@@ -85,6 +100,39 @@ class StatisticsRallyWorldwideViewModel(
     }
 
     //</editor-fold>
+
+    fun getHistorySortState(): TrackSortState {
+        return _knockoutWorldwideHistorySortState.value
+    }
+
+    fun requestHistorySort(requestedColumn: SortColumn) {
+        viewModelScope.launch { // In einer Coroutine, da _sortState ein StateFlow ist
+            _knockoutWorldwideHistorySortState.update { currentState ->
+                val newDirection = if (currentState.column == requestedColumn) {
+                    if (currentState.direction == SortDirection.ASCENDING) SortDirection.DESCENDING else SortDirection.ASCENDING
+                } else {
+                    SortDirection.ASCENDING
+                }
+                TrackSortState(column = requestedColumn, direction = newDirection)
+            }
+        }
+    }
+
+    private fun sortHistory(
+        tracks: List<ResultHistory>,
+        sortState: TrackSortState
+    ): List<ResultHistory> {
+        if (sortState.column == SortColumn.AMOUNT) {
+            if (sortState.direction == SortDirection.ASCENDING) {
+                return tracks.sortedBy { it.creationDate }
+            } else {
+                return tracks.sortedByDescending { it.creationDate }
+            }
+        }
+        else {
+            return tracks
+        }
+    }
 
     private fun sortRallies(
         tracks: List<RallyDetailedData>,

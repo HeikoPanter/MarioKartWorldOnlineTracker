@@ -86,6 +86,18 @@ object TrackAndKnockoutHelper {
         KnockoutCupName.HR8 to R.drawable.button_hr8
     )
 
+    private val engineClassResMap: Map<EngineClass, Int> = mutableMapOf(
+        EngineClass._100CC to R.drawable._100cc_race,
+        EngineClass._150CC to R.drawable._150cc_race,
+        EngineClass.MIRROR to R.drawable.mirror_race
+    )
+
+    private val engineClassKnockoutResMap: Map<EngineClass, Int> = mutableMapOf(
+        EngineClass._100CC to R.drawable._100cc,
+        EngineClass._150CC to R.drawable._150cc,
+        EngineClass.MIRROR to R.drawable.mirror
+    )
+
     private val positionResMap: Map<Short, Int> = mutableMapOf(
         1.toShort() to R.drawable.pos1,
         2.toShort() to R.drawable.pos2,
@@ -158,6 +170,18 @@ object TrackAndKnockoutHelper {
 
     fun getPositionResId(position: Short): Int {
         return positionResMap[position] ?: 0
+    }
+
+    fun getEngineClassResId(engineClass: EngineClass, raceCategory: RaceCategory): Int {
+        if (raceCategory == RaceCategory.RACE || raceCategory == RaceCategory.RACE_VS) {
+            return engineClassResMap[engineClass] ?: 0
+        }
+        else if (raceCategory == RaceCategory.KNOCKOUT || raceCategory == RaceCategory.KNOCKOUT_VS) {
+            return engineClassKnockoutResMap[engineClass] ?: 0
+        }
+        else {
+            return 0
+        }
     }
 
     fun getThreeLapTrackList(): List<ThreeLapTrackDetailedData> {

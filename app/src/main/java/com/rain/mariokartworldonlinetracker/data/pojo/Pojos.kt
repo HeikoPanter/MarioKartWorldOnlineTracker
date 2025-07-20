@@ -60,4 +60,4 @@ data class ResultHistory(
     val onlineSessionId: Long,
     val onlineSessionCreationDate: Long,
     val onlineSessionCategory: RaceCategory
-)
+) : DetailedData

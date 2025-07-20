@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
@@ -325,5 +326,28 @@ interface RaceResultDao {
             creationDate DESC
     """)
     suspend fun getResultHistory(): List<ResultHistory>
+
+    @Query("""
+        SELECT
+         rr.id as id,
+         rr.creationDate as creationDate,
+         rr.drivingFromTrackName as drivingFromTrackName,
+         rr.drivingToTrackName as drivingToTrackName,
+         rr.engineClass as engineClass,
+         rr.knockoutCupName as knockoutCupName,
+         rr.position as position,
+         rr.onlineSessionId as onlineSessionId,
+         os.creationDate as onlineSessionCreationDate,
+         os.category as onlineSessionCategory
+        FROM
+            race_results rr
+        LEFT JOIN
+            online_sessions os
+        ON rr.onlineSessionId = os.id
+        WHERE os.category = :raceCategory
+        ORDER BY
+            creationDate DESC
+    """)
+    fun getResultHistory(raceCategory: RaceCategory) : Flow<List<ResultHistory>>
     //</editor-fold>
 }

@@ -52,6 +52,7 @@ class StatisticsRaceVersusFragment : Fragment() {
                 0 -> getString(R.string.statistics_tab_general)
                 1 -> getString(R.string.statistics_tab_tracks)
                 2 -> getString(R.string.statistics_tab_routes)
+                3 -> getString(R.string.statistics_tab_history)
                 else -> null
             }
         }.attach()
