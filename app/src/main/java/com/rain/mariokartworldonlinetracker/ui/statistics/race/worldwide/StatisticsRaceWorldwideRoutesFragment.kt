@@ -14,20 +14,13 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
-import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
-import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideRoutesBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteViewHolder
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackDiffCallback
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackViewHolder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,7 +28,7 @@ class StatisticsRaceWorldwideRoutesFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceWorldwideRoutesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceWorldwideViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<RouteDetailedData, RouteViewHolder>
 
     override fun onCreateView(
@@ -49,12 +42,12 @@ class StatisticsRaceWorldwideRoutesFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceWorldwideViewModelFactory(
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsViewModel::class.java)
+            .get(StatisticsRaceWorldwideViewModel::class.java)
 
         return binding.root
     }
@@ -98,6 +91,14 @@ class StatisticsRaceWorldwideRoutesFragment : Fragment() {
                     trackListAdapter.submitList(trackList)
 
                     updateHeaderUI()
+
+                    if (trackList.isNotEmpty() && isAdded && _binding != null) {
+                        binding.tracksRecyclerview.post { // Wichtig: .post{}
+                            if (isAdded && _binding != null) {
+                                binding.tracksRecyclerview.scrollToPosition(0)
+                            }
+                        }
+                    }
                 }
             }
         }

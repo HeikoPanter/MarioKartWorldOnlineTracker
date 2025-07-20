@@ -19,8 +19,6 @@ import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideTracksBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackViewHolder
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +28,7 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceWorldwideTracksBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceWorldwideViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<ThreeLapTrackDetailedData, TrackViewHolder>
 
     override fun onCreateView(
@@ -44,12 +42,12 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceWorldwideViewModelFactory(
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsViewModel::class.java)
+            .get(StatisticsRaceWorldwideViewModel::class.java)
 
         return binding.root
     }
@@ -93,6 +91,14 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
                     trackListAdapter.submitList(trackList)
 
                     updateHeaderUI()
+
+                    if (trackList.isNotEmpty() && isAdded && _binding != null) {
+                        binding.tracksRecyclerview.post { // Wichtig: .post{}
+                            if (isAdded && _binding != null) {
+                                binding.tracksRecyclerview.scrollToPosition(0)
+                            }
+                        }
+                    }
                 }
             }
         }

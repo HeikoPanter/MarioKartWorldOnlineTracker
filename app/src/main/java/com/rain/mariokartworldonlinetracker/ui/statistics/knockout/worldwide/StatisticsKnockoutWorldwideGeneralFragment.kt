@@ -13,8 +13,6 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutWorldwideGeneralBinding
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
-import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsKnockoutWorldwideGeneralFragment : Fragment() {
@@ -22,7 +20,7 @@ class StatisticsKnockoutWorldwideGeneralFragment : Fragment() {
     private var _binding: FragmentStatisticsKnockoutWorldwideGeneralBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsViewModel
+    private lateinit var statisticsViewModel: StatisticsRallyWorldwideViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +32,12 @@ class StatisticsKnockoutWorldwideGeneralFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRallyWorldwideViewModelFactory(
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsViewModel::class.java)
+            .get(StatisticsRallyWorldwideViewModel::class.java)
 
         return binding.root
     }
