@@ -66,6 +66,13 @@ class StartSessionFragment : Fragment() {
             imageMarginPx
         )
 
+        var buttonVsKnockout = TrackAndKnockoutHelper.createImageView(
+            requireContext(),
+            "KnockoutVersus",
+            R.drawable.button_knockout_vs_2,
+            imageMarginPx
+        )
+
         buttonRace.setOnClickListener {
             navigateNext(RaceCategory.RACE)
         }
@@ -78,9 +85,14 @@ class StartSessionFragment : Fragment() {
             navigateNext(RaceCategory.KNOCKOUT)
         }
 
+        buttonVsKnockout.setOnClickListener {
+            navigateNext(RaceCategory.KNOCKOUT_VS)
+        }
+
         binding.raceLayout.addView(buttonRace)
         binding.raceVsLayout.addView(buttonVsRace)
         binding.knockoutLayout.addView(buttonKnockout)
+        binding.knockoutVsLayout.addView(buttonVsKnockout)
     }
 
     fun navigateNext(raceCategory: RaceCategory) {

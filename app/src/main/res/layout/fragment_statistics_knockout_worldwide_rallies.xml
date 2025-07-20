@@ -3,12 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.statistics.race.worldwide.StatisticsRaceWorldwideRoutesFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Fragment.Mkwot"
+    tools:context=".ui.statistics.knockout.worldwide.StatisticsKnockoutWorldwideRalliesFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_gravity="top"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
@@ -29,45 +30,30 @@
             android:layout_marginBottom="8dp">
 
             <!-- Title -->
-            <include layout="@layout/layout_statistics_race_worldwide_title"/>
+            <include layout="@layout/layout_statistics_knockout_worldwide_title"/>
 
-            <!-- Most played route -->
+            <!-- Most played rally -->
             <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">
                 <TextView
                     style="@style/Mkwot.Statistics.Key"
-                    android:text="@string/statistics_race_most_played_route"/>
+                    android:text="@string/statistics_knockout_most_played_rally"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="72dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="3">
                     <ImageView
-                        android:id="@+id/statistics_race_most_played_route_from"
+                        android:id="@+id/statistics_knockout_most_played_rally"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:src="@drawable/mbc1"
-                        android:layout_gravity="center"/>
-                    <ImageView
-                        android:id="@+id/statistics_race_most_played_route_connect"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/route"
-                        android:padding="-5dp"
-                        android:layout_margin="-5dp"
-                        android:layout_gravity="center"/>
-                    <ImageView
-                        android:id="@+id/statistics_race_most_played_route_to"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:src="@drawable/dksp4"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:src="@drawable/button_gr1"
+                        />
                 </LinearLayout>
 
             </LinearLayout>
-
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

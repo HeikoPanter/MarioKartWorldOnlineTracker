@@ -4,22 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
-import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper.createStandardTrackImageView
-import com.rain.mariokartworldonlinetracker.TrackName
-import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectPositionBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.EventObserver
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
-import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModelProvider
 
 class SelectPositionFragment : Fragment() {
@@ -77,7 +71,7 @@ class SelectPositionFragment : Fragment() {
                         Snackbar.LENGTH_SHORT
                     ).show()
 
-                    findNavController().navigate(R.id.action_selectPosition_back_to_selectEngineClass)
+                    findNavController().navigate(R.id.action_selectPosition_back_to_beginning)
                 } else {
                     Snackbar.make(
                         requireView(), "Error saving the result!.",

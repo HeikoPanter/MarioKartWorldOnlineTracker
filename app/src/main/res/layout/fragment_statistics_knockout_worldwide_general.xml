@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Fragment.Mkwot"
-    tools:context=".ui.statistics.StatisticsKnockoutGeneralFragment">
+    tools:context=".ui.statistics.knockout.worldwide.StatisticsKnockoutWorldwideGeneralFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_marginBottom="8dp">
 
             <!-- Title -->
-            <include layout="@layout/layout_statistics_knockout_title"/>
+            <include layout="@layout/layout_statistics_knockout_worldwide_title"/>
 
             <!-- Number of knockout sessions -->
             <LinearLayout style="@style/Mkwot.Statistics.KeyValueContainer">

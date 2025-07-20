@@ -15,24 +15,47 @@
         android:padding="8dp">
 
         <LinearLayout
-            android:id="@+id/race_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1"/>
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/race_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+            <LinearLayout
+                android:id="@+id/race_vs_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/race_vs_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1"/>
+            android:weightSum="2">
 
-        <LinearLayout
-            android:id="@+id/knockout_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"/>
+            <LinearLayout
+                android:id="@+id/knockout_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+            <LinearLayout
+                android:id="@+id/knockout_vs_layout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

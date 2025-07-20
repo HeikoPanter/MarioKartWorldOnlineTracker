@@ -1,11 +1,11 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.knockout.versus
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-private const val NUM_TABS = 3
+private const val NUM_TABS = 2
 
-class StatisticsRaceVersusPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class StatisticsKnockoutVersusPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int {
         return NUM_TABS
@@ -13,9 +13,8 @@ class StatisticsRaceVersusPagerAdapter(fragment: Fragment) : FragmentStateAdapte
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> StatisticsRaceVersusGeneralFragment()
-            1 -> StatisticsRaceVersusTracksFragment()
-            2 -> StatisticsRaceVersusRoutesFragment()
+            0 -> StatisticsKnockoutVersusGeneralFragment()
+            1 -> StatisticsKnockoutVersusRalliesFragment()
             else -> throw IllegalStateException("Invalid adapter position")
         }
     }

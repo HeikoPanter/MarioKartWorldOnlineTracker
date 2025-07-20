@@ -14,6 +14,7 @@
     <string name="menu_statistics_race_worldwide_title">Statistics - Race (worldwide)</string>
     <string name="menu_statistics_race_versus_title">Statistics - Race (versus)</string>
     <string name="menu_statistics_knockout_worldwide_title">Statistics - Knockout (worldwide)</string>
+    <string name="menu_statistics_knockout_versus_title">Statistics - Knockout (versus)</string>
 
     <string name="no_race_results_yet">No race results yet.</string>
     <string name="home_intro_title">Welcome to the Mario Kart World Online Tracker</string>
@@ -51,9 +52,10 @@
 
     <!-- Statistics knockout -->
     <string name="menu_statistics_knockout_worldwide">Knockout (worldwide)</string>
-    <string name="menu_statistics_knockout_versus">Knockout (worldwide)</string>
+    <string name="menu_statistics_knockout_versus">Knockout (versus)</string>
 
     <string name="statistics_knockout_title">Knockout\n(worldwide)</string>
+    <string name="statistics_knockout_versus_title">Knockout\n(versus)</string>
     <string name="statistics_knockout_total_sessions">Total sessions:</string>
     <string name="statistics_knockout_total_races">Total rallies:</string>
     <string name="statistics_knockout_average_races_per_session">Median rallies per session:</string>
@@ -65,4 +67,6 @@
     <string name="statistics_tab_routes">Routes</string>
     <string name="statistics_tab_rallies">Rallies</string>
     <string name="statistics_tab_history">Result history</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

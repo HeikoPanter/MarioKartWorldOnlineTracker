@@ -29,9 +29,13 @@
                         android:icon="@drawable/race_icon"
                         android:title="@string/menu_statistics_race_versus" />
                     <item
-                        android:id="@+id/nav_statistics_knockout"
+                        android:id="@+id/nav_statistics_knockout_worldwide"
                         android:icon="@drawable/knockout_icon"
                         android:title="@string/menu_statistics_knockout_worldwide" />
+                    <item
+                        android:id="@+id/nav_statistics_knockout_versus"
+                        android:icon="@drawable/knockout_icon"
+                        android:title="@string/menu_statistics_knockout_versus" />
                 </group>
             </menu>
         </item>

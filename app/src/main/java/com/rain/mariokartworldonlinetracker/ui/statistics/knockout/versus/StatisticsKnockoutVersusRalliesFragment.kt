@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.knockout.versus
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,19 +12,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
-import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
-import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
-import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusTracksBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusRalliesBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
-class StatisticsRaceVersusTracksFragment : Fragment() {
+class StatisticsKnockoutVersusRalliesFragment : Fragment() {
 
-    private var _binding: FragmentStatisticsRaceVersusTracksBinding? = null
+    private var _binding: FragmentStatisticsKnockoutVersusRalliesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -34,13 +31,16 @@ class StatisticsRaceVersusTracksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsRaceVersusTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsKnockoutVersusRalliesBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root
@@ -52,18 +52,18 @@ class StatisticsRaceVersusTracksFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                //
-                //// Most played threelap track
+//
+                // Most played threelap track
                 launch {
-                    statisticsViewModel.mostPlayedThreelapVsTrackName.collect { trackName ->
-                        updateMostPlayedThreelapVsTrack(trackName)
+                    statisticsViewModel.mostFrequentKnockoutVsCup.collect { trackName ->
+                        updateMostPlayedRally(trackName)
                     }
                 }
             }
         }
     }
 
-    private fun updateMostPlayedThreelapVsTrack(trackName: TrackName?) {
-        binding.statisticsRaceVsMostPlayedThreeLapTrack.setImageResource(TrackAndKnockoutHelper.getTrackResId(trackName))
+    private fun updateMostPlayedRally(knockoutCupName: KnockoutCupName?) {
+        binding.statisticsKnockoutMostPlayedRally.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(knockoutCupName))
     }
 }

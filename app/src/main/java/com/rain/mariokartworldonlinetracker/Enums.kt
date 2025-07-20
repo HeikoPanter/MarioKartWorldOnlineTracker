@@ -12,7 +12,8 @@ enum class RaceCategory {
     UNKNOWN,
     RACE,
     KNOCKOUT,
-    RACE_VS
+    RACE_VS,
+    KNOCKOUT_VS
 }
 
 enum class EngineClass {

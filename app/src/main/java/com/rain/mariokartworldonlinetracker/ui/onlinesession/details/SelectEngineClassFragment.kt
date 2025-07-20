@@ -1,9 +1,11 @@
 package com.rain.mariokartworldonlinetracker.ui.onlinesession.details
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -90,7 +92,7 @@ class SelectEngineClassFragment : Fragment() {
         if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE || newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS) {
             findNavController().navigate(R.id.action_selectEngineClassFragment_to_selectDrivingFromFragment)
         }
-        else if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.KNOCKOUT) {
+        else if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.KNOCKOUT_VS) {
             findNavController().navigate(R.id.action_selectEngineClassFragment_to_selectKnockoutCupFragment)
         }
     }

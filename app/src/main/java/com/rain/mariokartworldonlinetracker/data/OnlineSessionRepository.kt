@@ -8,6 +8,7 @@ class OnlineSessionRepository(private val onlineSessionDao: OnlineSessionDao) {
     val raceSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.RACE)
     val raceVsSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.RACE_VS)
     val knockoutSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.KNOCKOUT)
+    val knockoutVsSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.KNOCKOUT_VS)
 
     suspend fun insert(onlineSession: OnlineSession): Long {
         return onlineSessionDao.insert(onlineSession)

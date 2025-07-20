@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.race.versus
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,17 +9,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutRalliesBinding
+import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusRoutesBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
-class StatisticsKnockoutRalliesFragment : Fragment() {
+class StatisticsRaceVersusRoutesFragment : Fragment() {
 
-    private var _binding: FragmentStatisticsKnockoutRalliesBinding? = null
+    private var _binding: FragmentStatisticsRaceVersusRoutesBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -29,13 +31,16 @@ class StatisticsKnockoutRalliesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsKnockoutRalliesBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsRaceVersusRoutesBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root
@@ -47,18 +52,19 @@ class StatisticsKnockoutRalliesFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-//
-                // Most played threelap track
+                // Most played route
                 launch {
-                    statisticsViewModel.mostFrequentKnockoutCup.collect { trackName ->
-                        updateMostPlayedRally(trackName)
+                    statisticsViewModel.mostPlayedRaceVsRoute.collect { route ->
+                        updateMostPlayedVsRoute(route)
                     }
                 }
+
             }
         }
     }
 
-    private fun updateMostPlayedRally(knockoutCupName: KnockoutCupName?) {
-        binding.statisticsKnockoutMostPlayedRally.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(knockoutCupName))
+    private fun updateMostPlayedVsRoute(route: MostPlayedRaceRoute?) {
+        binding.statisticsRaceVsMostPlayedRouteFrom.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingFromTrackName))
+        binding.statisticsRaceVsMostPlayedRouteTo.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingToTrackName))
     }
 }

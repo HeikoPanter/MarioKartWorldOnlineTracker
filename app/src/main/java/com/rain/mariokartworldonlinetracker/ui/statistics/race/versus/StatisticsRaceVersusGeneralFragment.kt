@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.race.versus
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +9,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
-import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
-import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsRaceVersusGeneralFragment : Fragment() {
@@ -40,8 +37,11 @@ class StatisticsRaceVersusGeneralFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root

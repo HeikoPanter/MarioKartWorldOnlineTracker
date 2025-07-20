@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.race.worldwide
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +16,8 @@ import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsRaceWorldwideGeneralFragment : Fragment() {
@@ -35,8 +37,11 @@ class StatisticsRaceWorldwideGeneralFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Fragment.Mkwot"
-    tools:context=".ui.statistics.StatisticsRaceVersusGeneralFragment">
+    tools:context=".ui.statistics.race.versus.StatisticsRaceVersusGeneralFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

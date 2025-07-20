@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.knockout.versus
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +11,13 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 
-class StatisticsRaceVersusFragment : Fragment() {
+class StatisticsKnockoutVersusFragment : Fragment() {
 
-    private var _binding: FragmentStatisticsRaceVersusBinding? = null
+    private var _binding: FragmentStatisticsKnockoutVersusBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -25,30 +27,34 @@ class StatisticsRaceVersusFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsRaceVersusBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsKnockoutVersusBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val pagerAdapter =
-            StatisticsRaceVersusPagerAdapter(this)
+            StatisticsKnockoutVersusPagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.statistics_tab_general)
-                1 -> getString(R.string.statistics_tab_tracks)
-                2 -> getString(R.string.statistics_tab_routes)
+                1 -> getString(R.string.statistics_tab_rallies)
                 else -> null
             }
         }.attach()

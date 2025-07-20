@@ -3,7 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_race_flow_nav_graph_id"
-    app:startDestination="@+id/selectEngineClassFragment">
+    app:startDestination="@+id/determineStartFragment">
+
+    <fragment
+        android:id="@+id/determineStartFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.onlinesession.details.DetermineStartFragment"
+        android:label="Determine Start"
+        tools:layout="@layout/fragment_determine_start">
+
+        <action
+            android:id="@+id/action_to_selectKnockoutCupFragment"
+            app:destination="@id/selectKnockoutCupFragment"
+            app:popUpTo="@id/determineStartFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+
+        <action
+            android:id="@+id/action_to_selectEngineClassFragment"
+            app:destination="@id/selectEngineClassFragment"
+            app:popUpTo="@id/determineStartFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/selectEngineClassFragment"
@@ -107,15 +136,14 @@
         tools:layout="@layout/fragment_select_position">
 
         <action
-            android:id="@+id/action_selectPosition_back_to_selectEngineClass"
-            app:destination="@id/selectEngineClassFragment"
-            app:popUpTo="@id/selectEngineClassFragment"
-            app:popUpToInclusive="true"
+            android:id="@+id/action_selectPosition_back_to_beginning"
+            app:destination="@id/new_race_flow_nav_graph_id"
+            app:popUpTo="@id/new_race_flow_nav_graph_id"
+            app:popUpToInclusive="false"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
 </navigation>

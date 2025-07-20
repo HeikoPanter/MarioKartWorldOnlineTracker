@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.knockout.worldwide
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,8 +13,8 @@ class StatisticsKnockoutPagerAdapter(fragment: Fragment) : FragmentStateAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> StatisticsKnockoutGeneralFragment()
-            1 -> StatisticsKnockoutRalliesFragment()
+            0 -> StatisticsKnockoutWorldwideGeneralFragment()
+            1 -> StatisticsKnockoutWorldwideRalliesFragment()
             else -> throw IllegalStateException("Invalid adapter position")
         }
     }

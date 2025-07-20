@@ -31,19 +31,25 @@
 
     <fragment
         android:id="@+id/nav_statistics_race_worldwide"
-        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsRaceWorldwideFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.race.worldwide.StatisticsRaceWorldwideFragment"
         android:label="@string/menu_statistics_race_worldwide_title"
         tools:layout="@layout/fragment_statistics_race_worldwide" />
 
     <fragment
         android:id="@+id/nav_statistics_race_versus"
-        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsRaceVersusFragment"
+        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.race.versus.StatisticsRaceVersusFragment"
         android:label="@string/menu_statistics_race_versus_title"
         tools:layout="@layout/fragment_statistics_race_versus" />
 
     <fragment
-        android:id="@+id/nav_statistics_knockout"
-        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsKnockoutFragment"
+        android:id="@+id/nav_statistics_knockout_worldwide"
+        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.knockout.worldwide.StatisticsKnockoutWorldwideFragment"
         android:label="@string/menu_statistics_knockout_worldwide_title"
-        tools:layout="@layout/fragment_statistics_knockout" />
+        tools:layout="@layout/fragment_statistics_knockout_worldwide" />
+
+    <fragment
+        android:id="@+id/nav_statistics_knockout_versus"
+        android:name="com.rain.mariokartworldonlinetracker.ui.statistics.knockout.versus.StatisticsKnockoutVersusFragment"
+        android:label="@string/menu_statistics_knockout_versus_title"
+        tools:layout="@layout/fragment_statistics_knockout_versus" />
 </navigation>

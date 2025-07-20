@@ -1,4 +1,4 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics
+package com.rain.mariokartworldonlinetracker.ui.statistics.race.worldwide
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,14 +11,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
+import com.rain.mariokartworldonlinetracker.TrackName
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
-import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideRoutesBinding
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideTracksBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsViewModelFactory
 import kotlinx.coroutines.launch
 
-class StatisticsRaceWorldwideRoutesFragment : Fragment() {
-    private var _binding: FragmentStatisticsRaceWorldwideRoutesBinding? = null
+class StatisticsRaceWorldwideTracksFragment : Fragment() {
+    private var _binding: FragmentStatisticsRaceWorldwideTracksBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsViewModel
@@ -28,14 +30,17 @@ class StatisticsRaceWorldwideRoutesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStatisticsRaceWorldwideRoutesBinding.inflate(inflater, container, false)
+        _binding = FragmentStatisticsRaceWorldwideTracksBinding.inflate(inflater, container, false)
 
         // Repository und ViewModel initialisieren
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)))
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsViewModelFactory(
+            RaceResultRepository(raceResultDao),
+            OnlineSessionRepository(sessionDao)
+        )
+        )
             .get(StatisticsViewModel::class.java)
 
         return binding.root
@@ -47,18 +52,18 @@ class StatisticsRaceWorldwideRoutesFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                // Most played route
+
+                //// Most played threelap track
                 launch {
-                    statisticsViewModel.mostPlayedRaceRoute.collect { route ->
-                        updateMostPlayedRoute(route)
+                    statisticsViewModel.mostPlayedThreelapTrackName.collect { trackName ->
+                        updateMostPlayedThreelapTrack(trackName)
                     }
                 }
             }
         }
     }
 
-    private fun updateMostPlayedRoute(route: MostPlayedRaceRoute?) {
-        binding.statisticsRaceMostPlayedRouteFrom.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingFromTrackName))
-        binding.statisticsRaceMostPlayedRouteTo.setImageResource(TrackAndKnockoutHelper.getTrackResId(route?.drivingToTrackName))
+    private fun updateMostPlayedThreelapTrack(trackName: TrackName?) {
+        binding.statisticsRaceMostPlayedThreeLapTrack.setImageResource(TrackAndKnockoutHelper.getTrackResId(trackName))
     }
 }

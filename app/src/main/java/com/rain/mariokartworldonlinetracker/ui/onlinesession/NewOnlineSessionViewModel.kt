@@ -53,7 +53,14 @@ class NewOnlineSessionViewModel(
     fun resetRace() {
         setPosition(null)
         setDrivingFromOption(DrivingFromOption.UNKNOWN)
-        setEngineClass(EngineClass.UNKNOWN)
+
+        if (_raceCategory == RaceCategory.KNOCKOUT) {
+            setEngineClass(EngineClass._150CC)
+        }
+        else {
+            setEngineClass(EngineClass.UNKNOWN)
+        }
+
         setDrivingFromTrackName(null)
         setDrivingToTrackName(null)
         setKnockoutCupName(null)

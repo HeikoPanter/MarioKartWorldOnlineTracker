@@ -17,34 +17,40 @@ class StatisticsViewModel(
     private val onlineSessionRepository: OnlineSessionRepository
 ) : ViewModel() {
 
-    /*
-    Race values
-     */
+    //<editor-fold desc="Race Worldwide">
     val raceCountPOJO: Flow<RaceCountByType> = raceResultRepository.getRaceCountPOJO()
     val medianRaceCountPerSessionPOJO: Flow<MedianRaceCountPerSessionByType> = raceResultRepository.getMedianRaceCountPerSessionPOJO()
     val averagePositionPOJO: Flow<AveragePositionByType> = raceResultRepository.getAveragePositionPOJO()
     val mostPlayedThreelapTrackName: Flow<TrackName?> = raceResultRepository.getMostFrequentThreelapTrackName()
     val mostPlayedRaceRoute: Flow<MostPlayedRaceRoute?> = raceResultRepository.getMostFrequentRouteTrackName()
     val raceSessionCount: Flow<Int> = onlineSessionRepository.raceSessionCount
+//</editor-fold>
 
-    /*
-    Race VS values
-     */
+
+    //<editor-fold desc="Race VS values">
     val raceVsCountPOJO: Flow<RaceCountByType> = raceResultRepository.getRaceVsCountPOJO()
     val medianRaceVsCountPerSessionPOJO: Flow<MedianRaceCountPerSessionByType> = raceResultRepository.getMedianRaceVsCountPerSessionPOJO()
     val averageRaceVsPositionPOJO: Flow<AveragePositionByType> = raceResultRepository.getAverageRaceVsPositionPOJO()
     val mostPlayedThreelapVsTrackName: Flow<TrackName?> = raceResultRepository.getMostFrequentThreelapVsTrackName()
     val mostPlayedRaceVsRoute: Flow<MostPlayedRaceRoute?> = raceResultRepository.getMostFrequentRouteVsTrackName()
     val raceVsSessionCount: Flow<Int> = onlineSessionRepository.raceVsSessionCount
+//</editor-fold>
 
-    /*
-    Knockout values
-     */
+    //<editor-fold desc="Knockout values">
     val knockoutSessionCount: Flow<Int> = onlineSessionRepository.knockoutSessionCount
     val knockoutCount: Flow<Int> = raceResultRepository.knockoutCountTotal
     val knockoutAveragePosition: Flow<Int?> = raceResultRepository.knockoutAveragePosition
     val mostFrequentKnockoutCup: Flow<KnockoutCupName?> = raceResultRepository.mostFrequentKnockoutCup
     val medianKnockoutCountPerSession: Flow<Int> = raceResultRepository.getMedianKnockoutCountPerSession()
+    //</editor-fold>
+
+    //<editor-fold desc="Knockout VS values">
+    val knockoutVsSessionCount: Flow<Int> = onlineSessionRepository.knockoutVsSessionCount
+    val knockoutVsCount: Flow<Int> = raceResultRepository.knockoutVsCountTotal
+    val knockoutVsAveragePosition: Flow<Int?> = raceResultRepository.knockoutVsAveragePosition
+    val mostFrequentKnockoutVsCup: Flow<KnockoutCupName?> = raceResultRepository.mostFrequentKnockoutVsCup
+    val medianKnockoutVsCountPerSession: Flow<Int> = raceResultRepository.getMedianKnockoutVsCountPerSession()
+    //</editor-fold>
 }
 
 class StatisticsViewModelFactory(private val raceResultRepository: RaceResultRepository, private val onlineSessionRepository: OnlineSessionRepository) : ViewModelProvider.Factory {

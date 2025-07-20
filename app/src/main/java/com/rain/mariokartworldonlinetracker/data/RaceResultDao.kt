@@ -264,17 +264,59 @@ interface RaceResultDao {
 
     @Query("""
         SELECT knockoutCupName 
-        FROM race_results
-        WHERE knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
-        GROUP BY knockoutCupName
+        FROM race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
+        GROUP BY rr.knockoutCupName
         ORDER BY
-            COUNT(knockoutCupName) DESC,
-            MIN(creationDate) ASC
+            COUNT(rr.knockoutCupName) DESC,
+            MIN(rr.creationDate) ASC
         LIMIT 1
     """)
     fun getMostFrequentKnockoutCupName(): Flow<KnockoutCupName?>
     //</editor-fold>
 
+    //<editor-fold desc="Knockout VS Queries">
+    @Query("""
+        SELECT count(rr.id)
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT_VS'
+    """)
+    fun getKnockoutVsCountTotal(): Flow<Int>
+
+    @Query("""
+        SELECT COUNT(rr.id) as races_per_session
+        FROM race_results rr
+        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
+        WHERE os.category = 'KNOCKOUT_VS' 
+        GROUP BY os.id
+    """)
+    fun getKnockoutVsCountPerSessionTotal(): Flow<List<Int>>
+
+    @Query("""
+        SELECT AVG(rr.position) as average_position
+        FROM race_results rr
+        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT_VS'
+    """)
+    fun getKnockoutVsAveragePositionTotal(): Flow<Int?>
+
+    @Query("""
+        SELECT knockoutCupName 
+        FROM race_results rr
+        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
+        WHERE os.category = 'KNOCKOUT_VS' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
+        GROUP BY rr.knockoutCupName
+        ORDER BY
+            COUNT(rr.knockoutCupName) DESC,
+            MIN(rr.creationDate) ASC
+        LIMIT 1
+    """)
+    fun getMostFrequentKnockoutVsCupName(): Flow<KnockoutCupName?>
+    //</editor-fold>
+
+    //<editor-fold desc="Misc queries">
     @Query("""
         SELECT
          rr.id as id,
@@ -296,4 +338,5 @@ interface RaceResultDao {
             creationDate DESC
     """)
     suspend fun getResultHistory(): List<ResultHistory>
+    //</editor-fold>
 }
