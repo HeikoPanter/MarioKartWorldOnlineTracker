@@ -37,7 +37,7 @@ class StatisticsKnockoutWorldwideHistoryFragment : Fragment() {
     private var _binding: FragmentStatisticsKnockoutWorldwideHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRallyVersusViewModel
+    private lateinit var statisticsViewModel: StatisticsRallyWorldwideViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<ResultHistory, HistoryViewHolder>
 
     override fun onCreateView(
@@ -52,12 +52,12 @@ class StatisticsKnockoutWorldwideHistoryFragment : Fragment() {
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
         statisticsViewModel = ViewModelProvider(requireActivity(),
-            StatisticsRallyVersusViewModelFactory(
+            StatisticsRallyWorldwideViewModelFactory(
                 RaceResultRepository(raceResultDao),
                 OnlineSessionRepository(sessionDao)
             )
         )
-            .get(StatisticsRallyVersusViewModel::class.java)
+            .get(StatisticsRallyWorldwideViewModel::class.java)
 
         return binding.root
     }

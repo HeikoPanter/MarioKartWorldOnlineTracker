@@ -48,7 +48,16 @@
                 android:textSize="16sp"
                 android:gravity="left"/>
 
+            <Button
+                android:id="@+id/backup_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Backup"
+                android:clickable="false"
+                android:visibility="gone"/>
+
         </LinearLayout>
+
 
 
 </com.google.android.material.card.MaterialCardView>
