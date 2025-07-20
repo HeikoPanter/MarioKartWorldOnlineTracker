@@ -38,10 +38,13 @@ class RouteViewHolder(itemView: View) : BaseStatsViewHolder<RouteDetailedData>(i
 
 class RouteDiffCallback : DiffUtil.ItemCallback<RouteDetailedData>() {
     override fun areItemsTheSame(oldItem: RouteDetailedData, newItem: RouteDetailedData): Boolean {
-        return oldItem.drivingToTrackName == newItem.drivingToTrackName && oldItem.drivingFromTrackName == newItem.drivingFromTrackName
+        return oldItem.drivingToTrackName == newItem.drivingToTrackName &&
+                oldItem.drivingFromTrackName == newItem.drivingFromTrackName &&
+                oldItem.amountOfRaces == newItem.amountOfRaces &&
+                oldItem.averagePosition == newItem.averagePosition
     }
 
     override fun areContentsTheSame(oldItem: RouteDetailedData, newItem: RouteDetailedData): Boolean {
-        return oldItem == newItem // Data Classes haben eine sinnvolle equals()-Implementierung
+        return areItemsTheSame(oldItem, newItem)
     }
 }

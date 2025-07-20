@@ -33,10 +33,12 @@ class TrackViewHolder(itemView: View) : BaseStatsViewHolder<ThreeLapTrackDetaile
 
 class TrackDiffCallback : DiffUtil.ItemCallback<ThreeLapTrackDetailedData>() {
     override fun areItemsTheSame(oldItem: ThreeLapTrackDetailedData, newItem: ThreeLapTrackDetailedData): Boolean {
-        return oldItem.drivingToTrackName == newItem.drivingToTrackName
+        return oldItem.drivingToTrackName == newItem.drivingToTrackName &&
+                oldItem.amountOfRaces == newItem.amountOfRaces &&
+                oldItem.averagePosition == newItem.averagePosition
     }
 
     override fun areContentsTheSame(oldItem: ThreeLapTrackDetailedData, newItem: ThreeLapTrackDetailedData): Boolean {
-        return oldItem == newItem // Data Classes haben eine sinnvolle equals()-Implementierung
+        return areItemsTheSame(oldItem, newItem) // Data Classes haben eine sinnvolle equals()-Implementierung
     }
 }

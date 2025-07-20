@@ -34,10 +34,12 @@ class RallyViewHolder(itemView: View) : BaseStatsViewHolder<RallyDetailedData>(i
 
 class RallyDiffCallback : DiffUtil.ItemCallback<RallyDetailedData>() {
     override fun areItemsTheSame(oldItem: RallyDetailedData, newItem: RallyDetailedData): Boolean {
-        return oldItem.knockoutCupName == newItem.knockoutCupName
+        return oldItem.knockoutCupName == newItem.knockoutCupName &&
+                oldItem.amountOfRaces == newItem.amountOfRaces &&
+                oldItem.averagePosition == newItem.averagePosition
     }
 
     override fun areContentsTheSame(oldItem: RallyDetailedData, newItem: RallyDetailedData): Boolean {
-        return oldItem == newItem // Data Classes haben eine sinnvolle equals()-Implementierung
+        return areItemsTheSame(oldItem, newItem)
     }
 }
