@@ -20,8 +20,7 @@ MKWOT can help you with the following:
 If you want to save your results, the process is simple:
 1. Start a new session via the side bar (either race or knockout)
 2. Select the engine class (100cc, 150cc, Mirror)
-3a. For race, select if you drove a three-lap track or a route
-3b. For knockout, select the cup
+3. For race, select if you drove a three-lap track or a route. For knockout, select the cup  
 4. Select the achieved position (1st to 24th)
 5. Repeat from step 2 automatically
 
@@ -32,17 +31,17 @@ Here are a couple screenshots:
 
 <img src="https://github.com/user-attachments/assets/1f0b5e4c-d2f7-4c70-a73c-57b7e38a9c72" width="400">
 
-<img src="https://github.com/user-attachments/assets/3138685b-8d6e-454f-bf51-62f279171945" width="400">
+<img src="https://github.com/user-attachments/assets/40df22e4-9f94-4fe7-a39a-ec74b9af559a" width="400">
 
-<img src="https://github.com/user-attachments/assets/c3fdd4ce-16c2-45ee-a8fe-292dc1d1b764" width="400">
+<img src="https://github.com/user-attachments/assets/2f7983a9-4a83-43e7-af52-1b1dd985afac" width="400">
 
 <img src="https://github.com/user-attachments/assets/590393d0-0765-4219-9a3c-a83eda983728" width="400">
 
-<img src="https://github.com/user-attachments/assets/4d1d1cc4-95ae-411f-a87a-c7d39365ba4d" width="400">
+<img src="https://github.com/user-attachments/assets/90d2b405-4f3d-45c8-bd0a-1b5628ee3448" width="400">
 
-And here's a sample video:
+<img src="https://github.com/user-attachments/assets/bb008c75-54bf-4094-b6be-6b0c8c56c99f" width="400">
 
-![mkwot_screenrecord](https://github.com/user-attachments/assets/52e372f7-ed5f-47a6-9214-d14cd3b3bdd7)
+<img src="https://github.com/user-attachments/assets/2a565943-0b5f-4154-8658-1ad77356f44b" width="400">
 
 ## How do I get it?
 
