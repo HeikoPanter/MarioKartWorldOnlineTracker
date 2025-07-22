@@ -26,7 +26,7 @@ If you want to save your results, the process is simple:
 
 If you want to start a new session, either go back after a race result to the session screen or start a new session from the side bar
 
-## How does it look like?
+## What does it look like?
 Here are a couple screenshots:
 
 <img src="https://github.com/user-attachments/assets/1f0b5e4c-d2f7-4c70-a73c-57b7e38a9c72" width="400">
