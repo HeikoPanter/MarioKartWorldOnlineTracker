@@ -2,7 +2,7 @@
 
 The **Mario Kart World Online Tracker (MKWOT)** makes it easy for you to keep all your race results in one place. Be it worldwides, versus races, friend lobbies or knockout sessions, you can save every single race result with just a few presses.
 
-Everything the app does happens locally on your phone and requires not internet connection or any access at all.
+Everything the app does happens locally on your phone and requires no internet connection or any phone access at all.
 
 ## Why?
 The idea started back for Mario Kart 8 Deluxe where I created a huge Excel sheet for myself because I personally love the idea of knowing how much I play, how often the different tracks are picked and what tracks I perform the best and the worst on. So with the release of Mario Kart World I figured this is the perfect opportunity to finally make the idea a reality.
