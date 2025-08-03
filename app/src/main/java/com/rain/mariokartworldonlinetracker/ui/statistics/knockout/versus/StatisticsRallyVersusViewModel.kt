@@ -34,7 +34,7 @@ class StatisticsRallyVersusViewModel(
 
     private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
 
-    private val _knockoutVersusHistorySortState = MutableStateFlow(TrackSortState())
+    private val _knockoutVersusHistorySortState = MutableStateFlow(TrackSortState(column = SortColumn.AMOUNT, direction = SortDirection.DESCENDING))
     private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.KNOCKOUT_VS)
 
     val resultHistory: StateFlow<List<ResultHistory>> =

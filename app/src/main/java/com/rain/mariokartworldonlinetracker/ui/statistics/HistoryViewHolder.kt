@@ -31,11 +31,16 @@ class HistoryViewHolder(itemView: View) : BaseStatsViewHolder<ResultHistory>(ite
         if (item.drivingFromTrackName != null) {
             drivingFromIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.drivingFromTrackName))
             routeIconImageView.setImageResource(R.drawable.route)
+        } else {
+            drivingFromIconImageView.setImageResource(0)
+            routeIconImageView.setImageResource(0)
         }
         if (item.drivingToTrackName != null) {
             drivingToIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.drivingToTrackName))
         } else if (item.knockoutCupName != null) {
             drivingToIconImageView.setImageResource(TrackAndKnockoutHelper.getKnockoutResId(item.knockoutCupName))
+        } else {
+            drivingToIconImageView.setImageResource(0)
         }
 
         engineClassImageView.setImageResource(TrackAndKnockoutHelper.getEngineClassResId(item.engineClass, item.onlineSessionCategory))

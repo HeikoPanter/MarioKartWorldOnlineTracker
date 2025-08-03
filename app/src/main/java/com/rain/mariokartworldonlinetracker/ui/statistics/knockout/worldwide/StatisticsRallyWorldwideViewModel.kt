@@ -29,7 +29,7 @@ class StatisticsRallyWorldwideViewModel(
 
     private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
 
-    private val _knockoutWorldwideHistorySortState = MutableStateFlow(TrackSortState())
+    private val _knockoutWorldwideHistorySortState = MutableStateFlow(TrackSortState(column = SortColumn.AMOUNT, direction = SortDirection.DESCENDING))
     private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.KNOCKOUT)
 
     val resultHistory: StateFlow<List<ResultHistory>> =
