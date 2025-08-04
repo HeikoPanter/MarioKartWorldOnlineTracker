@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="3dp"
         android:layout_gravity="center_vertical"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
         android:text="@string/history_header_tracks"/>
 
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:fontFamily="sans-serif"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         tools:text="3"/>
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="5dp"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
         android:text="@string/history_header_separator2"/>
 
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="3dp"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
         android:text="@string/history_header_routes"/>
 
@@ -99,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:fontFamily="sans-serif"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         tools:text="11"/>
@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="3dp"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
         android:text="@string/history_header_rallies"/>
 
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:fontFamily="sans-serif"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         tools:text="2"/>
@@ -129,7 +129,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:textSize="11sp"
+        android:textSize="13sp"
         android:textColor="@color/white"
         android:text="@string/history_header_closing_segment"/>
 

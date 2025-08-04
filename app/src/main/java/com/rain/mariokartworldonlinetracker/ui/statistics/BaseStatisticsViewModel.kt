@@ -133,12 +133,34 @@ abstract class BaseStatisticsViewModel<E : Enum<E>, DD : DetailedData<E>>(
 
         val groupedList = mutableListOf<HistoryListItem>()
         var lastSessionId: Long? = null
+        var sessionCounter = 0
+
+        val uniqueSessionIds = sortedResults.map { it.onlineSessionId }.distinct()
+        val totalUniqueSessions = uniqueSessionIds.size
+
+        // Hilfsmap, um jeder Session-ID ihren Zähler zuzuordnen
+        val sessionOrderMap = mutableMapOf<Long, Int>()
+
+        if (sortState.direction == SortDirection.ASCENDING) {
+            var currentAscendingCounter = 1
+            for (sessionId in uniqueSessionIds) { // uniqueSessionIds ist bereits in der sortierten Reihenfolge der Sessions
+                sessionOrderMap[sessionId] = currentAscendingCounter++
+            }
+        } else { // DESCENDING
+            var currentDescendingCounter = totalUniqueSessions
+            for (sessionId in uniqueSessionIds) { // uniqueSessionIds ist bereits in der sortierten Reihenfolge der Sessions
+                sessionOrderMap[sessionId] = currentDescendingCounter--
+            }
+        }
 
         for (result in sortedResults) {
             if (result.onlineSessionId != lastSessionId) {
                 // Neue Session beginnt, füge einen Header hinzu
+                val currentSessionDisplayNumber = sessionOrderMap[result.onlineSessionId] ?: 0
+
                 groupedList.add(
                     HistoryListItem.SessionHeaderItem(
+                        sessionNumber = currentSessionDisplayNumber,
                         sessionId = result.onlineSessionId,
                         sessionCreationDate = result.onlineSessionCreationDate,
                         sessionCategory = result.onlineSessionCategory,

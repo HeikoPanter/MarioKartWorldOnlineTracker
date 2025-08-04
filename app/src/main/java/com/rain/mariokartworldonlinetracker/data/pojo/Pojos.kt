@@ -61,6 +61,7 @@ data class ResultHistory(
 
 sealed class HistoryListItem {
     data class SessionHeaderItem(
+        val sessionNumber: Int,
         val sessionId: Long,
         val sessionCreationDate: Long,
         val sessionCategory: RaceCategory,

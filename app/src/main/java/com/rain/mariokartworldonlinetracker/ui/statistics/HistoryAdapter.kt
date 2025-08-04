@@ -35,7 +35,7 @@ class HistoryAdapter(private val onListUpdated: () -> Unit) : ListAdapter<Histor
         private val trackSeparatorTextView: TextView = itemView.findViewById(R.id.textViewTrackSeparator)
 
         fun bind(header: HistoryListItem.SessionHeaderItem) {
-            sessionIdTextView.text = header.sessionId.toString()
+            sessionIdTextView.text = header.sessionNumber.toString() // Damals ID, davon hat der Anwender aber nichts
             val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             sessionDateTextView.text = dateFormat.format(Date(header.sessionCreationDate))
 
