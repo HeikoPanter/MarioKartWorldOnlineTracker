@@ -25,23 +25,23 @@ data class AveragePositionByType(
 )
 
 data class ThreeLapTrackDetailedData(
-    val drivingToTrackName: TrackName,
-    val amountOfRaces: Int,
-    val averagePosition: Int
-) : DetailedData
+    override val name: TrackName,
+    override val amountOfRaces: Int,
+    override val averagePosition: Int
+) : DetailedData<TrackName>
 
 data class RouteDetailedData(
-    val drivingFromTrackName: TrackName,
+    override val name: TrackName,
     val drivingToTrackName: TrackName,
-    val amountOfRaces: Int,
-    val averagePosition: Int
-) : DetailedData
+    override val amountOfRaces: Int,
+    override val averagePosition: Int
+) : DetailedData<TrackName>
 
 data class RallyDetailedData(
-    val knockoutCupName: KnockoutCupName,
-    val amountOfRaces: Int,
-    val averagePosition: Int
-) : DetailedData
+    override val name: KnockoutCupName,
+    override val amountOfRaces: Int,
+    override val averagePosition: Int
+) : DetailedData<KnockoutCupName>
 
 data class ResultHistory(
     val id: Long,

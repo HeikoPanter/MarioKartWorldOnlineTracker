@@ -17,94 +17,114 @@ interface RaceResultDao {
     @Insert
     suspend fun insert(raceResult: RaceResult)
 
-    //<editor-fold desc="Race Queries">
     @Query("""
         SELECT count(rr.id)
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE'
+        WHERE os.category = :raceCategory
     """)
-    fun getRaceCountTotal(): Flow<Int>
+    fun getCountTotal(raceCategory: RaceCategory): Flow<Int>
 
     @Query("""
         SELECT count(rr.id)
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE' and rr.drivingFromTrackName is null
+        WHERE os.category = :raceCategory 
+            and rr.drivingFromTrackName is null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null
     """)
-    fun getRaceCountThreelap(): Flow<Int>
+    fun getCountThreelap(raceCategory: RaceCategory): Flow<Int>
 
     @Query("""
         SELECT count(rr.id)
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE' and rr.drivingFromTrackName is not null
+        WHERE os.category = :raceCategory
+            and rr.drivingFromTrackName is not null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null            
     """)
-    fun getRaceCountRoute(): Flow<Int>
+    fun getCountRoute(raceCategory: RaceCategory): Flow<Int>
 
     @Query("""
         SELECT COUNT(rr.id) as races_per_session
         FROM race_results rr
         INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE' 
+        WHERE os.category = :raceCategory
         GROUP BY os.id
     """)
-    fun getRaceCountPerSessionTotal(): Flow<List<Int>>
+    fun getCountPerSessionTotal(raceCategory: RaceCategory): Flow<List<Int>>
 
     @Query("""
         SELECT SUM(CASE WHEN rr.drivingFromTrackName is null THEN 1 ELSE 0 END) as races_per_session
         FROM race_results rr
         INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE'
+        WHERE os.category = :raceCategory
+            and rr.drivingFromTrackName is null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null
         GROUP BY os.id
     """)
-    fun getRaceCountPerSessionThreelap(): Flow<List<Int>>
+    fun getCountPerSessionThreelap(raceCategory: RaceCategory): Flow<List<Int>>
 
     @Query("""
         SELECT SUM(CASE WHEN rr.drivingFromTrackName is not null THEN 1 ELSE 0 END) as races_per_session
         FROM race_results rr
         INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE'
+        WHERE os.category = :raceCategory
+            and rr.drivingFromTrackName is not null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null
         GROUP BY os.id
     """)
-    fun getRaceCountPerSessionRoute(): Flow<List<Int>>
+    fun getCountPerSessionRoute(raceCategory: RaceCategory): Flow<List<Int>>
 
     @Query("""
         SELECT AVG(rr.position) as average_position
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE'
+        WHERE os.category = :raceCategory
     """)
-    fun getAveragePositionTotal(): Flow<Int?>
+    fun getAveragePositionTotal(raceCategory: RaceCategory): Flow<Int?>
 
     @Query("""
         SELECT AVG(rr.position) as average_position
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE' and rr.drivingFromTrackName is null
+        WHERE os.category = :raceCategory
+            and rr.drivingFromTrackName is null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null
     """)
-    fun getAveragePositionThreelap(): Flow<Int?>
+    fun getAveragePositionThreelap(raceCategory: RaceCategory): Flow<Int?>
 
     @Query("""
         SELECT AVG(rr.position) as average_position
         FROM race_results rr
         LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE' and rr.drivingFromTrackName is not null
+        WHERE os.category = :raceCategory 
+            and rr.drivingFromTrackName is not null
+            and rr.drivingToTrackName is not null
+            and rr.knockoutCupName is null
     """)
-    fun getAveragePositionRoute(): Flow<Int?>
+    fun getAveragePositionRoute(raceCategory: RaceCategory): Flow<Int?>
 
     @Query("""
-        SELECT rr.drivingToTrackName as drivingToTrackName, COUNT(rr.drivingToTrackName) as amountOfRaces, AVG(rr.position) as averagePosition
+        SELECT rr.drivingToTrackName as name, COUNT(rr.drivingToTrackName) as amountOfRaces, AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
+        WHERE os.category = :raceCategory 
+            AND drivingFromTrackName IS NULL 
+            AND drivingToTrackName IS NOT NULL
+            AND knockoutCupName IS NULL
         GROUP BY drivingToTrackName
     """)
-    fun getThreeLapTrackDetailedDataList(): Flow<List<ThreeLapTrackDetailedData>>
+    fun getThreeLapTrackDetailedDataList(raceCategory: RaceCategory): Flow<List<ThreeLapTrackDetailedData>>
 
     @Query("""
         SELECT 
-            rr.drivingFromTrackName as drivingFromTrackName, 
+            rr.drivingFromTrackName as name, 
             rr.drivingToTrackName as drivingToTrackName, 
             COUNT(*) as amountOfRaces,
             AVG(rr.position) as averagePosition
@@ -112,198 +132,29 @@ interface RaceResultDao {
             race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
         WHERE 
-            os.category = 'RACE' AND
-            drivingFromTrackName IS NOT NULL 
+            os.category = :raceCategory
+            AND drivingFromTrackName IS NOT NULL
             AND drivingToTrackName IS NOT NULL
+            AND knockoutCupName IS NULL
         GROUP BY 
             drivingFromTrackName, drivingToTrackName
     """)
-    fun getRouteDetailedDataList(): Flow<List<RouteDetailedData>>
-    //</editor-fold>
-
-    //<editor-fold desc="Race VS Queries">
-    @Query("""
-        SELECT count(rr.id)
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS'
-    """)
-    fun getRaceVsCountTotal(): Flow<Int>
+    fun getRouteDetailedDataList(raceCategory: RaceCategory): Flow<List<RouteDetailedData>>
 
     @Query("""
-        SELECT count(rr.id)
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is null
-    """)
-    fun getRaceVsCountThreelap(): Flow<Int>
-
-    @Query("""
-        SELECT count(rr.id)
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is not null
-    """)
-    fun getRaceVsCountRoute(): Flow<Int>
-
-    @Query("""
-        SELECT COUNT(rr.id) as races_per_session
-        FROM race_results rr
-        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE_VS' 
-        GROUP BY os.id
-    """)
-    fun getRaceVsCountPerSessionTotal(): Flow<List<Int>>
-
-    @Query("""
-        SELECT SUM(CASE WHEN rr.drivingFromTrackName is null THEN 1 ELSE 0 END) as races_per_session
-        FROM race_results rr
-        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE_VS'
-        GROUP BY os.id
-    """)
-    fun getRaceVsCountPerSessionThreelap(): Flow<List<Int>>
-
-    @Query("""
-        SELECT SUM(CASE WHEN rr.drivingFromTrackName is not null THEN 1 ELSE 0 END) as races_per_session
-        FROM race_results rr
-        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'RACE_VS'
-        GROUP BY os.id
-    """)
-    fun getRaceVsCountPerSessionRoute(): Flow<List<Int>>
-
-    @Query("""
-        SELECT AVG(rr.position) as average_position
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS'
-    """)
-    fun getAverageRaceVsPositionTotal(): Flow<Int?>
-
-    @Query("""
-        SELECT AVG(rr.position) as average_position
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is null
-    """)
-    fun getAverageRaceVsPositionThreelap(): Flow<Int?>
-
-    @Query("""
-        SELECT AVG(rr.position) as average_position
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS' and rr.drivingFromTrackName is not null
-    """)
-    fun getAverageRaceVsPositionRoute(): Flow<Int?>
-
-    @Query("""
-        SELECT rr.drivingToTrackName as drivingToTrackName,
-            COUNT(*) as amountOfRaces,
-            AVG(rr.position) as averagePosition
-        FROM race_results rr
-        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
-        WHERE os.category = 'RACE_VS' AND drivingFromTrackName IS NULL AND drivingToTrackName IS NOT NULL
-        GROUP BY drivingToTrackName
-    """)
-    fun getVsThreeLapTrackDetailedDataList(): Flow<List<ThreeLapTrackDetailedData>>
-
-    @Query("""
-        SELECT 
-            rr.drivingFromTrackName as drivingFromTrackName, 
-            rr.drivingToTrackName as drivingToTrackName, 
-            COUNT(*) as amountOfRaces,
-            AVG(rr.position) as averagePosition
-        FROM 
-            race_results rr
-        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
-        WHERE 
-            os.category = 'RACE_VS'
-            AND drivingFromTrackName IS NOT NULL 
-            AND drivingToTrackName IS NOT NULL
-        GROUP BY 
-            drivingFromTrackName, drivingToTrackName
-    """)
-    fun getVsRouteDetailedDataList(): Flow<List<RouteDetailedData>>
-    //</editor-fold>
-
-    //<editor-fold desc="Knockout Queries">
-    @Query("""
-        SELECT count(rr.id)
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT'
-    """)
-    fun getKnockoutCountTotal(): Flow<Int>
-
-    @Query("""
-        SELECT COUNT(rr.id) as races_per_session
-        FROM race_results rr
-        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'KNOCKOUT' 
-        GROUP BY os.id
-    """)
-    fun getKnockoutCountPerSessionTotal(): Flow<List<Int>>
-
-    @Query("""
-        SELECT AVG(rr.position) as average_position
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT'
-    """)
-    fun getKnockoutAveragePositionTotal(): Flow<Int?>
-
-    @Query("""
-        SELECT rr.knockoutCupName as knockoutCupName,
+        SELECT rr.knockoutCupName as name,
         COUNT(*) as amountOfRaces,
         AVG(rr.position) as averagePosition
         FROM race_results rr
         LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
+        WHERE os.category = :raceCategory
+            AND rr.drivingFromTrackName IS NULL
+            AND rr.drivingToTrackName IS NULL
+            AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
         GROUP BY rr.knockoutCupName
     """)
-    fun getRallyDetailedDataList(): Flow<List<RallyDetailedData>>
-    //</editor-fold>
+    fun getRallyDetailedDataList(raceCategory: RaceCategory): Flow<List<RallyDetailedData>>
 
-    //<editor-fold desc="Knockout VS Queries">
-    @Query("""
-        SELECT count(rr.id)
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT_VS'
-    """)
-    fun getKnockoutVsCountTotal(): Flow<Int>
-
-    @Query("""
-        SELECT COUNT(rr.id) as races_per_session
-        FROM race_results rr
-        INNER JOIN online_sessions os ON os.id = rr.onlineSessionId
-        WHERE os.category = 'KNOCKOUT_VS' 
-        GROUP BY os.id
-    """)
-    fun getKnockoutVsCountPerSessionTotal(): Flow<List<Int>>
-
-    @Query("""
-        SELECT AVG(rr.position) as average_position
-        FROM race_results rr
-        LEFT JOIN online_sessions os ON rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT_VS'
-    """)
-    fun getKnockoutVsAveragePositionTotal(): Flow<Int?>
-
-    @Query("""
-        SELECT rr.knockoutCupName as knockoutCupName,
-        COUNT(*) as amountOfRaces,
-        AVG(rr.position) as averagePosition
-        FROM race_results rr
-        LEFT JOIN online_sessions os on rr.onlineSessionId = os.id
-        WHERE os.category = 'KNOCKOUT_VS' AND rr.knockoutCupName IS NOT NULL -- Nur gültige Namen zählen
-        GROUP BY rr.knockoutCupName
-    """)
-    fun getVsRallyDetailedDataList(): Flow<List<RallyDetailedData>>
-    //</editor-fold>
-
-    //<editor-fold desc="Misc queries">
     @Query("""
         SELECT
          rr.id as id,
@@ -348,5 +199,4 @@ interface RaceResultDao {
             creationDate DESC
     """)
     fun getResultHistory(raceCategory: RaceCategory) : Flow<List<ResultHistory>>
-    //</editor-fold>
 }

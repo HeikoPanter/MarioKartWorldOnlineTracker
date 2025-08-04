@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
@@ -21,6 +22,8 @@ import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVe
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteViewHolder
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,7 +32,7 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceVersusRoutesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRaceVersusViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<RouteDetailedData, RouteViewHolder>
 
     override fun onCreateView(
@@ -42,12 +45,13 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceVersusViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
+            RaceCategory.RACE_VS,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRaceVersusViewModel::class.java)
+            .get(RaceCategory.RACE_VS.name, StatisticsRaceViewModel::class.java)
 
         return binding.root
     }
@@ -74,20 +78,20 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
 
     private fun setupHeaderClickListeners() {
         binding.trackListHeader.headerName.setOnClickListener {
-            statisticsViewModel.requestRaceVersusRouteSort(SortColumn.NAME)
+            statisticsViewModel.requestRouteSort(SortColumn.NAME)
         }
         binding.trackListHeader.headerPosition.setOnClickListener {
-            statisticsViewModel.requestRaceVersusRouteSort(SortColumn.POSITION)
+            statisticsViewModel.requestRouteSort(SortColumn.POSITION)
         }
         binding.trackListHeader.headerAmount.setOnClickListener {
-            statisticsViewModel.requestRaceVersusRouteSort(SortColumn.AMOUNT)
+            statisticsViewModel.requestRouteSort(SortColumn.AMOUNT)
         }
     }
 
     private fun observeSortedTrackData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statisticsViewModel.versusRouteDetailedData.collectLatest { trackList ->
+                statisticsViewModel.routeDetailedData.collectLatest { trackList ->
                     trackListAdapter.submitList(trackList)
 
                     updateHeaderUI()
@@ -105,7 +109,7 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
     }
 
     private fun updateHeaderUI() {
-        val sortState = statisticsViewModel.getRaceVersusRouteSortState()
+        val sortState = statisticsViewModel.getRouteSortState()
 
         // Setze alle Header-Texte zurück
         binding.trackListHeader.headerName.text = getString(R.string.statistics_list_header_route)

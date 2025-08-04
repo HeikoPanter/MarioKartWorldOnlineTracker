@@ -1,19 +1,15 @@
-package com.rain.mariokartworldonlinetracker.ui.statistics.knockout.worldwide
+package com.rain.mariokartworldonlinetracker.ui.statistics
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
-import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.HistoryListItem
-import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
-import com.rain.mariokartworldonlinetracker.ui.statistics.TrackSortState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,18 +19,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class StatisticsRallyWorldwideViewModel(
-    private val raceResultRepository: RaceResultRepository,
-    private val onlineSessionRepository: OnlineSessionRepository
+abstract class BaseStatisticsViewModel<E : Enum<E>, DD : DetailedData<E>>(
+    protected val raceCategory: RaceCategory,
+    protected val raceResultRepository: RaceResultRepository,
+    protected val onlineSessionRepository: OnlineSessionRepository
 ) : ViewModel() {
+    private val _historySortState = MutableStateFlow(TrackSortState(column = SortColumn.AMOUNT, direction = SortDirection.DESCENDING))
+    private val _originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(raceCategory)
+    private val _sortState = MutableStateFlow(TrackSortState())
+    private val _originalDetailedData: Flow<List<DD>> = getDetailedData()
 
-    private val _showAllTracksSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
+    protected val _showAllEntriesSetting: StateFlow<Boolean> = MkwotSettings.showAllEntries
 
-    private val _knockoutWorldwideHistorySortState = MutableStateFlow(TrackSortState(column = SortColumn.AMOUNT, direction = SortDirection.DESCENDING))
-    private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.KNOCKOUT)
+    val sessionCount: Flow<Int> = onlineSessionRepository.getSessionCount(raceCategory)
 
     val resultHistory: StateFlow<List<HistoryListItem>> =
-        combine(originalResultHistory, _knockoutWorldwideHistorySortState) { tracks, sortState ->
+        combine(_originalResultHistory, _historySortState) { tracks, sortState ->
             sortHistory(tracks, sortState)
         }.stateIn(
             scope = viewModelScope,
@@ -43,21 +43,16 @@ class StatisticsRallyWorldwideViewModel(
 
         )
 
-    //<editor-fold desc="Knockout values">
-
-    private val _knockoutWorldwideSortState = MutableStateFlow(TrackSortState())
-    private val originalRallyDetailedData: Flow<List<RallyDetailedData>> = raceResultRepository.getRallyDetailedDataList()
-
-    val rallyDetailedData: StateFlow<List<RallyDetailedData>> =
+    val detailedData: StateFlow<List<DD>> =
         combine(
-            originalRallyDetailedData,
-            _showAllTracksSetting
+            _originalDetailedData,
+            _showAllEntriesSetting
         ) { wwTracks, showAll ->
-            val trackMap = wwTracks.associateBy { it.knockoutCupName }
+            val trackMap = wwTracks.associateBy { it.name }
 
             if (showAll) {
-                TrackAndKnockoutHelper.getRallyList().map { track ->
-                    val dbData = trackMap[track.knockoutCupName]
+                getDetailedDataBaseList().map { track ->
+                    val dbData = trackMap[track.name]
                     if (dbData != null) {
                         dbData
                     }
@@ -68,23 +63,21 @@ class StatisticsRallyWorldwideViewModel(
             } else {
                 wwTracks
             }
-        }.combine(_knockoutWorldwideSortState) { tracks, sortState ->
-            sortRallies(tracks, sortState)
+        }.combine(_sortState) { tracks, sortState ->
+            sort(tracks, sortState)
         }.stateIn( // Konvertiert den Flow in einen StateFlow
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000), // Startet, wenn es Subscriber gibt, stoppt nach 5s ohne
             initialValue = emptyList() // Initialwert, bis der erste Wert vom Flow kommt
         )
 
-    val knockoutSessionCount: Flow<Int> = onlineSessionRepository.knockoutSessionCount
-    val knockoutCount: Flow<Int> = raceResultRepository.knockoutCountTotal
-    val knockoutAveragePosition: Flow<Int?> = raceResultRepository.knockoutAveragePosition
-    val medianKnockoutCountPerSession: Flow<Int> = raceResultRepository.getMedianKnockoutCountPerSession()
+    protected abstract fun getDetailedDataBaseList(): List<DD>
+    protected abstract fun getDetailedData(): Flow<List<DD>>
 
     // Methode, die vom Fragment aufgerufen wird, um die Sortierung zu ändern
-    fun requestKnockoutWorldwideSort(requestedColumn: SortColumn) {
+    fun requestSort(requestedColumn: SortColumn) {
         viewModelScope.launch { // In einer Coroutine, da _sortState ein StateFlow ist
-            _knockoutWorldwideSortState.update { currentState ->
+            _sortState.update { currentState ->
                 val newDirection = if (currentState.column == requestedColumn) {
                     if (currentState.direction == SortDirection.ASCENDING) SortDirection.DESCENDING else SortDirection.ASCENDING
                 } else {
@@ -96,19 +89,17 @@ class StatisticsRallyWorldwideViewModel(
     }
 
     // Um den UI-Header im Fragment zu aktualisieren
-    fun getKnockoutWorldwideSortState(): TrackSortState {
-        return _knockoutWorldwideSortState.value
+    fun getSortState(): TrackSortState {
+        return _sortState.value
     }
 
-    //</editor-fold>
-
     fun getHistorySortState(): TrackSortState {
-        return _knockoutWorldwideHistorySortState.value
+        return _historySortState.value
     }
 
     fun requestHistorySort(requestedColumn: SortColumn) {
         viewModelScope.launch { // In einer Coroutine, da _sortState ein StateFlow ist
-            _knockoutWorldwideHistorySortState.update { currentState ->
+            _historySortState.update { currentState ->
                 val newDirection = if (currentState.column == requestedColumn) {
                     if (currentState.direction == SortDirection.ASCENDING) SortDirection.DESCENDING else SortDirection.ASCENDING
                 } else {
@@ -160,16 +151,16 @@ class StatisticsRallyWorldwideViewModel(
         return groupedList
     }
 
-    private fun sortRallies(
-        tracks: List<RallyDetailedData>,
+    private fun sort(
+        tracks: List<DD>,
         sortState: TrackSortState
-    ): List<RallyDetailedData> {
+    ): List<DD> {
         return when (sortState.column) {
             SortColumn.NAME -> {
                 if (sortState.direction == SortDirection.ASCENDING) {
-                    tracks.sortedBy { it.knockoutCupName }
+                    tracks.sortedBy { it.name }
                 } else {
-                    tracks.sortedByDescending { it.knockoutCupName }
+                    tracks.sortedByDescending { it.name }
                 }
             }
             SortColumn.POSITION -> {
@@ -187,15 +178,5 @@ class StatisticsRallyWorldwideViewModel(
                 }
             }
         }
-    }
-}
-
-class StatisticsRallyWorldwideViewModelFactory(private val raceResultRepository: RaceResultRepository, private val onlineSessionRepository: OnlineSessionRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(StatisticsRallyWorldwideViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return StatisticsRallyWorldwideViewModel(raceResultRepository, onlineSessionRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

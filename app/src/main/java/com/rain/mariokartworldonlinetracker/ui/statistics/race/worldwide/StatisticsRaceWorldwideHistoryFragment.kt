@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
@@ -20,6 +21,8 @@ import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.HistoryListItem
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideHistoryBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -27,7 +30,7 @@ class StatisticsRaceWorldwideHistoryFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceWorldwideHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRaceWorldwideViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceViewModel
     private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreateView(
@@ -41,12 +44,13 @@ class StatisticsRaceWorldwideHistoryFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceWorldwideViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
+            RaceCategory.RACE,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRaceWorldwideViewModel::class.java)
+            .get(RaceCategory.RACE.name, StatisticsRaceViewModel::class.java)
 
         return binding.root
     }

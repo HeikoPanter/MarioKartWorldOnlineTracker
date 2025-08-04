@@ -10,12 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsRaceVersusGeneralFragment : Fragment() {
@@ -23,7 +26,7 @@ class StatisticsRaceVersusGeneralFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceVersusGeneralBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRaceVersusViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,12 +38,13 @@ class StatisticsRaceVersusGeneralFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceVersusViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
+            RaceCategory.RACE_VS,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRaceVersusViewModel::class.java)
+            .get(RaceCategory.RACE_VS.name, StatisticsRaceViewModel::class.java)
 
         return binding.root
     }
@@ -52,7 +56,7 @@ class StatisticsRaceVersusGeneralFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
-                    statisticsViewModel.raceVsCountPOJO.collect { raceCounts ->
+                    statisticsViewModel.raceCountPOJO.collect { raceCounts ->
                         // UI mit den neuen Werten aktualisieren
                         updateRaceVsCountUI(raceCounts)
                     }
@@ -60,21 +64,21 @@ class StatisticsRaceVersusGeneralFragment : Fragment() {
 //
                 //// Session Count
                 launch {
-                    statisticsViewModel.raceVsSessionCount.collect { sessionCount ->
+                    statisticsViewModel.sessionCount.collect { sessionCount ->
                         updateSessionVsCountUI(sessionCount)
                     }
                 }
 //
                 //// Average Race per Session Count
                 launch {
-                    statisticsViewModel.medianRaceVsCountPerSessionPOJO.collect { averageRaceCountPerSession ->
+                    statisticsViewModel.medianRaceCountPerSessionPOJO.collect { averageRaceCountPerSession ->
                         updateAverageRaceVsCountPerSessionUI(averageRaceCountPerSession)
                     }
                 }
 //
                 //// Average Position
                 launch {
-                    statisticsViewModel.averageRaceVsPositionPOJO.collect { averagePosition ->
+                    statisticsViewModel.averagePositionPOJO.collect { averagePosition ->
                         updateAverageRaceVsPositionUI(averagePosition)
                     }
                 }

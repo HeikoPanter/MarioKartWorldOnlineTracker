@@ -10,19 +10,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsRaceWorldwideGeneralFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceWorldwideGeneralBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRaceWorldwideViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,12 +38,13 @@ class StatisticsRaceWorldwideGeneralFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceWorldwideViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
+            RaceCategory.RACE,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRaceWorldwideViewModel::class.java)
+            .get(RaceCategory.RACE.name, StatisticsRaceViewModel::class.java)
 
         return binding.root
     }
@@ -61,7 +65,7 @@ class StatisticsRaceWorldwideGeneralFragment : Fragment() {
 //
                 //// Session Count
                 launch {
-                    statisticsViewModel.raceSessionCount.collect { sessionCount ->
+                    statisticsViewModel.sessionCount.collect { sessionCount ->
                         updateSessionCountUI(sessionCount)
                     }
                 }

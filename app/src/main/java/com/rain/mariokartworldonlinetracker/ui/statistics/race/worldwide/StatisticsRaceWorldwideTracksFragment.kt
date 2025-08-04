@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
@@ -19,6 +20,8 @@ import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideTracksBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackViewHolder
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +31,7 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
     private var _binding: FragmentStatisticsRaceWorldwideTracksBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRaceWorldwideViewModel
+    private lateinit var statisticsViewModel: StatisticsRaceViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<ThreeLapTrackDetailedData, TrackViewHolder>
 
     override fun onCreateView(
@@ -42,12 +45,13 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
         // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceWorldwideViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
+            RaceCategory.RACE,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRaceWorldwideViewModel::class.java)
+            .get(RaceCategory.RACE.name, StatisticsRaceViewModel::class.java)
 
         return binding.root
     }
@@ -74,20 +78,20 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
 
     private fun setupHeaderClickListeners() {
         binding.trackListHeader.headerName.setOnClickListener {
-            statisticsViewModel.requestRaceWorldwideSort(SortColumn.NAME)
+            statisticsViewModel.requestSort(SortColumn.NAME)
         }
         binding.trackListHeader.headerPosition.setOnClickListener {
-            statisticsViewModel.requestRaceWorldwideSort(SortColumn.POSITION)
+            statisticsViewModel.requestSort(SortColumn.POSITION)
         }
         binding.trackListHeader.headerAmount.setOnClickListener {
-            statisticsViewModel.requestRaceWorldwideSort(SortColumn.AMOUNT)
+            statisticsViewModel.requestSort(SortColumn.AMOUNT)
         }
     }
 
     private fun observeSortedTrackData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statisticsViewModel.threeLapTrackDetailedData.collectLatest { trackList ->
+                statisticsViewModel.detailedData.collectLatest { trackList ->
                     trackListAdapter.submitList(trackList)
 
                     updateHeaderUI()
@@ -105,7 +109,7 @@ class StatisticsRaceWorldwideTracksFragment : Fragment() {
     }
 
     private fun updateHeaderUI() {
-        val sortState = statisticsViewModel.getRaceWorldwideSortState()
+        val sortState = statisticsViewModel.getSortState()
 
         // Setze alle Header-Texte zurück
         binding.trackListHeader.headerName.text = getString(R.string.statistics_list_header_track)

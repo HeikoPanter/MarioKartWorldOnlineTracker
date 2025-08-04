@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
-import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.ui.statistics.BaseStatsViewHolder
 
 class RouteViewHolder(itemView: View) : BaseStatsViewHolder<RouteDetailedData>(itemView) {
@@ -20,7 +19,7 @@ class RouteViewHolder(itemView: View) : BaseStatsViewHolder<RouteDetailedData>(i
     private val averagePositionImageView: ImageView = itemView.findViewById(R.id.position_icon)
 
     override fun bind(item: RouteDetailedData) {
-        drivingFromIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.drivingFromTrackName))
+        drivingFromIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.name))
         routeIconImageView.setImageResource(R.drawable.route)
         drivingToIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.drivingToTrackName))
         raceAmountTextView.text = item.amountOfRaces.toString()
@@ -39,7 +38,7 @@ class RouteViewHolder(itemView: View) : BaseStatsViewHolder<RouteDetailedData>(i
 class RouteDiffCallback : DiffUtil.ItemCallback<RouteDetailedData>() {
     override fun areItemsTheSame(oldItem: RouteDetailedData, newItem: RouteDetailedData): Boolean {
         return oldItem.drivingToTrackName == newItem.drivingToTrackName &&
-                oldItem.drivingFromTrackName == newItem.drivingFromTrackName &&
+                oldItem.name == newItem.name &&
                 oldItem.amountOfRaces == newItem.amountOfRaces &&
                 oldItem.averagePosition == newItem.averagePosition
     }

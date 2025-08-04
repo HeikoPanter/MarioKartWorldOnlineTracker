@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
@@ -21,6 +22,8 @@ import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnocko
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.RallyDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.RallyViewHolder
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,7 +32,7 @@ class StatisticsKnockoutWorldwideRalliesFragment : Fragment() {
     private var _binding: FragmentStatisticsKnockoutWorldwideRalliesBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRallyWorldwideViewModel
+    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
     private lateinit var trackListAdapter: StatisticsListAdapter<RallyDetailedData, RallyViewHolder>
 
     override fun onCreateView(
@@ -42,12 +45,14 @@ class StatisticsKnockoutWorldwideRalliesFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRallyWorldwideViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(),
+            StatisticsKnockoutViewModelFactory(
+                RaceCategory.KNOCKOUT,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRallyWorldwideViewModel::class.java)
+            .get(RaceCategory.KNOCKOUT.name, StatisticsKnockoutViewModel::class.java)
 
         return binding.root
     }
@@ -74,20 +79,20 @@ class StatisticsKnockoutWorldwideRalliesFragment : Fragment() {
 
     private fun setupHeaderClickListeners() {
         binding.trackListHeader.headerName.setOnClickListener {
-            statisticsViewModel.requestKnockoutWorldwideSort(SortColumn.NAME)
+            statisticsViewModel.requestSort(SortColumn.NAME)
         }
         binding.trackListHeader.headerPosition.setOnClickListener {
-            statisticsViewModel.requestKnockoutWorldwideSort(SortColumn.POSITION)
+            statisticsViewModel.requestSort(SortColumn.POSITION)
         }
         binding.trackListHeader.headerAmount.setOnClickListener {
-            statisticsViewModel.requestKnockoutWorldwideSort(SortColumn.AMOUNT)
+            statisticsViewModel.requestSort(SortColumn.AMOUNT)
         }
     }
 
     private fun observeSortedTrackData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                statisticsViewModel.rallyDetailedData.collectLatest { trackList ->
+                statisticsViewModel.detailedData.collectLatest { trackList ->
                     trackListAdapter.submitList(trackList)
 
                     updateHeaderUI()
@@ -105,7 +110,7 @@ class StatisticsKnockoutWorldwideRalliesFragment : Fragment() {
     }
 
     private fun updateHeaderUI() {
-        val sortState = statisticsViewModel.getKnockoutWorldwideSortState()
+        val sortState = statisticsViewModel.getSortState()
 
         // Setze alle Header-Texte zurück
         binding.trackListHeader.headerName.text = getString(R.string.statistics_list_header_rally)

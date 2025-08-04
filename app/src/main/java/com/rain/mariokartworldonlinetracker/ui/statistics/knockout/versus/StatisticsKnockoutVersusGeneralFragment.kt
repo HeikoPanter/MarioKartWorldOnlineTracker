@@ -10,9 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 import kotlinx.coroutines.launch
 
 class StatisticsKnockoutVersusGeneralFragment : Fragment() {
@@ -20,7 +23,7 @@ class StatisticsKnockoutVersusGeneralFragment : Fragment() {
     private var _binding: FragmentStatisticsKnockoutVersusGeneralBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRallyVersusViewModel
+    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +35,14 @@ class StatisticsKnockoutVersusGeneralFragment : Fragment() {
         // Repository und ViewModel initialisieren
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRallyVersusViewModelFactory(
+        statisticsViewModel = ViewModelProvider(requireActivity(),
+            StatisticsKnockoutViewModelFactory(
+                RaceCategory.KNOCKOUT_VS,
             RaceResultRepository(raceResultDao),
             OnlineSessionRepository(sessionDao)
         )
         )
-            .get(StatisticsRallyVersusViewModel::class.java)
+            .get(RaceCategory.KNOCKOUT_VS.name, StatisticsKnockoutViewModel::class.java)
 
         return binding.root
     }
@@ -50,14 +55,14 @@ class StatisticsKnockoutVersusGeneralFragment : Fragment() {
 
                 // Knockout Session Count
                 launch {
-                    statisticsViewModel.knockoutVsSessionCount.collect { sessionCount ->
+                    statisticsViewModel.sessionCount.collect { sessionCount ->
                         updateKnockoutSessionCount(sessionCount)
                     }
                 }
 //
                 // Knockout Race Count
                 launch {
-                    statisticsViewModel.knockoutVsCount.collect { raceCounts ->
+                    statisticsViewModel.countTotal.collect { raceCounts ->
                         // UI mit den neuen Werten aktualisieren
                         updateKnockoutCountUI(raceCounts)
                     }
@@ -65,14 +70,14 @@ class StatisticsKnockoutVersusGeneralFragment : Fragment() {
 //
                 // Average Race per Session Count
                 launch {
-                    statisticsViewModel.medianKnockoutVsCountPerSession.collect { averageRaceCountPerSession ->
+                    statisticsViewModel.medianCountPerSession.collect { averageRaceCountPerSession ->
                         updateAverageKnockoutCountPerSessionUI(averageRaceCountPerSession)
                     }
                 }
 //
                 // Average Position
                 launch {
-                    statisticsViewModel.knockoutVsAveragePosition.collect { averagePosition ->
+                    statisticsViewModel.averagePosition.collect { averagePosition ->
                         updateAverageKnockoutPositionUI(averagePosition)
                     }
                 }

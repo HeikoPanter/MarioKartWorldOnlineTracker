@@ -17,7 +17,7 @@ class TrackViewHolder(itemView: View) : BaseStatsViewHolder<ThreeLapTrackDetaile
     private val averagePositionImageView: ImageView = itemView.findViewById(R.id.position_icon)
 
     override fun bind(item: ThreeLapTrackDetailedData) {
-        trackIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.drivingToTrackName))
+        trackIconImageView.setImageResource(TrackAndKnockoutHelper.getTrackResId(item.name))
         raceAmountTextView.text = item.amountOfRaces.toString()
         averagePositionImageView.setImageResource(TrackAndKnockoutHelper.getPositionResId(item.averagePosition.toShort()))
     }
@@ -33,7 +33,7 @@ class TrackViewHolder(itemView: View) : BaseStatsViewHolder<ThreeLapTrackDetaile
 
 class TrackDiffCallback : DiffUtil.ItemCallback<ThreeLapTrackDetailedData>() {
     override fun areItemsTheSame(oldItem: ThreeLapTrackDetailedData, newItem: ThreeLapTrackDetailedData): Boolean {
-        return oldItem.drivingToTrackName == newItem.drivingToTrackName &&
+        return oldItem.name == newItem.name &&
                 oldItem.amountOfRaces == newItem.amountOfRaces &&
                 oldItem.averagePosition == newItem.averagePosition
     }

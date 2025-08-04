@@ -5,10 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 class OnlineSessionRepository(private val onlineSessionDao: OnlineSessionDao) {
 
-    val raceSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.RACE)
-    val raceVsSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.RACE_VS)
-    val knockoutSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.KNOCKOUT)
-    val knockoutVsSessionCount: Flow<Int> = onlineSessionDao.getSessionCount(RaceCategory.KNOCKOUT_VS)
+    fun getSessionCount(raceCategory: RaceCategory): Flow<Int> {
+        return onlineSessionDao.getSessionCount(raceCategory)
+    }
 
     suspend fun insert(onlineSession: OnlineSession): Long {
         return onlineSessionDao.insert(onlineSession)

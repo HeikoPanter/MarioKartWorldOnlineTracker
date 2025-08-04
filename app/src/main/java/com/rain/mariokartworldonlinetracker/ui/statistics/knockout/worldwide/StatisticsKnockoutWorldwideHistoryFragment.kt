@@ -12,12 +12,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.SortColumn
 import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutWorldwideHistoryBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -25,7 +28,7 @@ class StatisticsKnockoutWorldwideHistoryFragment : Fragment() {
     private var _binding: FragmentStatisticsKnockoutWorldwideHistoryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var statisticsViewModel: StatisticsRallyWorldwideViewModel
+    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
     private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreateView(
@@ -40,12 +43,13 @@ class StatisticsKnockoutWorldwideHistoryFragment : Fragment() {
         val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
         val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
         statisticsViewModel = ViewModelProvider(requireActivity(),
-            StatisticsRallyWorldwideViewModelFactory(
+            StatisticsKnockoutViewModelFactory(
+                RaceCategory.KNOCKOUT,
                 RaceResultRepository(raceResultDao),
                 OnlineSessionRepository(sessionDao)
             )
         )
-            .get(StatisticsRallyWorldwideViewModel::class.java)
+            .get(RaceCategory.KNOCKOUT.name, StatisticsKnockoutViewModel::class.java)
 
         return binding.root
     }

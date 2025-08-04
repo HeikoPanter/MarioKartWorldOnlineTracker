@@ -12,9 +12,13 @@ import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 
-interface DetailedData {}
+interface DetailedData<E: Enum<E>> {
+    val name: E
+    val amountOfRaces: Int
+    val averagePosition: Int
+}
 
-class StatisticsListAdapter<T : DetailedData, VH : BaseStatsViewHolder<T>>(
+class StatisticsListAdapter<T : DetailedData<*>, VH : BaseStatsViewHolder<T>>(
     diffCallback: DiffUtil.ItemCallback<T>,
     private val viewHolderCreator: (parent: ViewGroup, viewType: Int) -> VH
 ) : ListAdapter<T, VH>(diffCallback) {
