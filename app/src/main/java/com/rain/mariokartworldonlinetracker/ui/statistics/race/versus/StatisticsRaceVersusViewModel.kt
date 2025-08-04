@@ -11,6 +11,7 @@ import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
+import com.rain.mariokartworldonlinetracker.data.pojo.HistoryListItem
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
@@ -36,7 +37,7 @@ class StatisticsRaceVersusViewModel(
     private val _raceVersusHistorySortState = MutableStateFlow(TrackSortState(column = SortColumn.AMOUNT, direction = SortDirection.DESCENDING))
     private val originalResultHistory: Flow<List<ResultHistory>> = raceResultRepository.getResultHistory(RaceCategory.RACE_VS)
 
-    val resultHistory: StateFlow<List<ResultHistory>> =
+    val resultHistory: StateFlow<List<HistoryListItem>> =
         combine(originalResultHistory, _raceVersusHistorySortState) { tracks, sortState ->
             sortHistory(tracks, sortState)
         }.stateIn(
@@ -173,17 +174,42 @@ class StatisticsRaceVersusViewModel(
     private fun sortHistory(
         tracks: List<ResultHistory>,
         sortState: TrackSortState
-    ): List<ResultHistory> {
+    ): List<HistoryListItem> {
+        var sortedResults: List<ResultHistory>
+
+        sortedResults = tracks.sortedWith(
+            compareByDescending<ResultHistory> { it.onlineSessionId }
+                .thenByDescending { it.creationDate }
+        )
+
         if (sortState.column == SortColumn.AMOUNT) {
             if (sortState.direction == SortDirection.ASCENDING) {
-                return tracks.sortedBy { it.creationDate }
-            } else {
-                return tracks.sortedByDescending { it.creationDate }
+                sortedResults = tracks.sortedWith(
+                    compareBy<ResultHistory> { it.onlineSessionId }
+                        .thenBy { it.creationDate }
+                )
             }
         }
-        else {
-            return tracks
+
+        val groupedList = mutableListOf<HistoryListItem>()
+        var lastSessionId: Long? = null
+
+        for (result in sortedResults) {
+            if (result.onlineSessionId != lastSessionId) {
+                // Neue Session beginnt, füge einen Header hinzu
+                groupedList.add(
+                    HistoryListItem.SessionHeaderItem(
+                        sessionId = result.onlineSessionId,
+                        sessionCreationDate = result.onlineSessionCreationDate
+                    )
+                )
+                lastSessionId = result.onlineSessionId
+            }
+            // Füge das eigentliche Ergebnis hinzu
+            groupedList.add(HistoryListItem.ResultHistoryItem(result))
         }
+
+        return groupedList
     }
 
     private fun sortTracks(

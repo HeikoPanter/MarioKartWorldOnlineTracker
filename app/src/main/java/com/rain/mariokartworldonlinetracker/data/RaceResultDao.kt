@@ -6,7 +6,6 @@ import androidx.room.Query
 import com.rain.mariokartworldonlinetracker.KnockoutCupName
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackName
-import com.rain.mariokartworldonlinetracker.data.pojo.MostPlayedRaceRoute
 import com.rain.mariokartworldonlinetracker.data.pojo.RallyDetailedData
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData

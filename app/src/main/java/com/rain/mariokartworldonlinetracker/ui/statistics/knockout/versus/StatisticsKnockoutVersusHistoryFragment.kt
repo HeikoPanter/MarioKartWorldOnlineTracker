@@ -17,17 +17,9 @@ import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
-import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusHistoryBinding
-import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryDiffCallback
-import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryViewHolder
+import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryAdapter
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackDiffCallback
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackViewHolder
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.versus.StatisticsRaceVersusViewModel
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.versus.StatisticsRaceVersusViewModelFactory
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.worldwide.StatisticsRaceWorldwideViewModel
-import com.rain.mariokartworldonlinetracker.ui.statistics.race.worldwide.StatisticsRaceWorldwideViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,7 +28,7 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var statisticsViewModel: StatisticsRallyVersusViewModel
-    private lateinit var trackListAdapter: StatisticsListAdapter<ResultHistory, HistoryViewHolder>
+    private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,12 +62,19 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        trackListAdapter = StatisticsListAdapter<ResultHistory, HistoryViewHolder>(
-            HistoryDiffCallback(),
-            viewHolderCreator = { parent, _ -> HistoryViewHolder.create(parent) }
-        )
+        historyAdapter = HistoryAdapter {
+            if (isAdded && _binding != null && binding.tracksRecyclerview.adapter?.itemCount ?: 0 > 0) {
+                // Post ist hier weniger kritisch, da onCurrentListChanged synchron zum Update ist,
+                // aber für komplexe Layouts kann es immer noch sicherer sein.
+                binding.tracksRecyclerview.post { // Versuch es erst ohne post
+                    if (isAdded && _binding != null) { // Doppelter Check wegen post
+                        (binding.tracksRecyclerview.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(0, 0)
+                    }
+                }
+            }
+        }
         binding.tracksRecyclerview.apply {
-            adapter = trackListAdapter
+            adapter = historyAdapter
             layoutManager = LinearLayoutManager(context)
         }
     }
@@ -90,7 +89,7 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 statisticsViewModel.resultHistory.collectLatest { trackList ->
-                    trackListAdapter.submitList(trackList)
+                    historyAdapter.submitList(trackList)
 
                     updateHeaderUI()
 

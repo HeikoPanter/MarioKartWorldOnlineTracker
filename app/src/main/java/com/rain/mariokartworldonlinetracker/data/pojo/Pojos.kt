@@ -43,12 +43,6 @@ data class RallyDetailedData(
     val averagePosition: Int
 ) : DetailedData
 
-data class MostPlayedRaceRoute(
-    val drivingFromTrackName: TrackName?,
-    val drivingToTrackName: TrackName?,
-    val frequency: Int?
-)
-
 data class ResultHistory(
     val id: Long,
     val engineClass: EngineClass,
@@ -60,4 +54,21 @@ data class ResultHistory(
     val onlineSessionId: Long,
     val onlineSessionCreationDate: Long,
     val onlineSessionCategory: RaceCategory
-) : DetailedData
+)
+
+sealed class HistoryListItem {
+    data class SessionHeaderItem(
+        val sessionId: Long,
+        val sessionCreationDate: Long
+    ) : HistoryListItem() {
+        // Eindeutige ID für DiffUtil, da sessionId und sessionCreationDate zusammen einzigartig sein sollten für einen Header
+        val id: String = "header_${sessionId}_${sessionCreationDate}"
+    }
+
+    data class ResultHistoryItem(
+        val resultHistory: ResultHistory
+    ) : HistoryListItem() {
+        // Die ID des ResultHistory-Objekts für DiffUtil
+        val id: Long = resultHistory.id
+    }
+}
