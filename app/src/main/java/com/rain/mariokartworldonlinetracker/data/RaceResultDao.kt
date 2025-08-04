@@ -166,7 +166,10 @@ interface RaceResultDao {
          rr.position as position,
          rr.onlineSessionId as onlineSessionId,
          os.creationDate as onlineSessionCreationDate,
-         os.category as onlineSessionCategory
+         os.category as onlineSessionCategory,
+         0 as threeLapCountPerSession,
+         0 as routeCountPerSession,
+         0 as rallyCountPerSession
         FROM
             race_results rr
         LEFT JOIN
@@ -188,7 +191,31 @@ interface RaceResultDao {
          rr.position as position,
          rr.onlineSessionId as onlineSessionId,
          os.creationDate as onlineSessionCreationDate,
-         os.category as onlineSessionCategory
+         os.category as onlineSessionCategory,
+         (
+        SELECT COUNT(sub_rr.id)
+        FROM race_results sub_rr
+        WHERE sub_rr.onlineSessionId = rr.onlineSessionId -- Korrelation zur äußeren Abfrage
+          AND sub_rr.drivingFromTrackName IS NULL
+          AND sub_rr.drivingToTrackName IS NOT NULL
+          AND sub_rr.knockoutCupName IS NULL
+    ) as threeLapCountPerSession,
+    (
+        SELECT COUNT(sub_rr.id)
+        FROM race_results sub_rr
+        WHERE sub_rr.onlineSessionId = rr.onlineSessionId -- Korrelation zur äußeren Abfrage
+          AND sub_rr.drivingFromTrackName IS NOT NULL
+          AND sub_rr.drivingToTrackName IS NOT NULL
+          AND sub_rr.knockoutCupName IS NULL
+    ) as routeCountPerSession,
+    (
+        SELECT COUNT(sub_rr.id)
+        FROM race_results sub_rr
+        WHERE sub_rr.onlineSessionId = rr.onlineSessionId -- Korrelation zur äußeren Abfrage
+          AND sub_rr.drivingFromTrackName IS NULL
+          AND sub_rr.drivingToTrackName IS NULL
+          AND sub_rr.knockoutCupName IS NOT NULL
+    ) as rallyCountPerSession
         FROM
             race_results rr
         LEFT JOIN

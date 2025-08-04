@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.data.pojo.HistoryListItem
 import java.text.SimpleDateFormat
@@ -23,13 +24,42 @@ class HistoryAdapter(private val onListUpdated: () -> Unit) : ListAdapter<Histor
     }
 
     class SessionHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val sessionIdTextView: TextView = itemView.findViewById(R.id.textViewSessionIdHeader) // ID anpassen
-        private val sessionDateTextView: TextView = itemView.findViewById(R.id.textViewSessionDateHeader) // ID anpassen
+        private val sessionIdTextView: TextView = itemView.findViewById(R.id.textViewSessionIdHeader)
+        private val sessionDateTextView: TextView = itemView.findViewById(R.id.textViewSessionDateHeader)
+        private val trackCountTextView: TextView = itemView.findViewById(R.id.textViewTrackCountHeader)
+        private val routeCountTextView: TextView = itemView.findViewById(R.id.textViewRouteCountHeader)
+        private val rallyCountTextView: TextView = itemView.findViewById(R.id.textViewRallyCountHeader)
+        private val trackCountTextView2: TextView = itemView.findViewById(R.id.textViewTrackCountHeaderText)
+        private val routeCountTextView2: TextView = itemView.findViewById(R.id.textViewRouteCountHeaderText)
+        private val rallyCountTextView2: TextView = itemView.findViewById(R.id.textViewRallyCountHeaderText)
+        private val trackSeparatorTextView: TextView = itemView.findViewById(R.id.textViewTrackSeparator)
 
         fun bind(header: HistoryListItem.SessionHeaderItem) {
             sessionIdTextView.text = header.sessionId.toString()
             val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             sessionDateTextView.text = dateFormat.format(Date(header.sessionCreationDate))
+
+            trackCountTextView.text = "${header.threeLapCountPerSession}"
+            routeCountTextView.text = "${header.routeCountPerSession}"
+            rallyCountTextView.text = "${header.rallyCountPerSession}"
+
+            if (header.sessionCategory == RaceCategory.RACE || header.sessionCategory == RaceCategory.RACE_VS) {
+                trackCountTextView.visibility = View.VISIBLE
+                trackCountTextView2.visibility = View.VISIBLE
+                routeCountTextView.visibility = View.VISIBLE
+                routeCountTextView2.visibility = View.VISIBLE
+                trackSeparatorTextView.visibility = View.VISIBLE
+                rallyCountTextView.visibility = View.GONE
+                rallyCountTextView2.visibility = View.GONE
+            } else if (header.sessionCategory == RaceCategory.KNOCKOUT || header.sessionCategory == RaceCategory.KNOCKOUT_VS) {
+                trackCountTextView.visibility = View.GONE
+                trackCountTextView2.visibility = View.GONE
+                routeCountTextView.visibility = View.GONE
+                routeCountTextView2.visibility = View.GONE
+                trackSeparatorTextView.visibility = View.GONE
+                rallyCountTextView.visibility = View.VISIBLE
+                rallyCountTextView2.visibility = View.VISIBLE
+            }
         }
     }
 

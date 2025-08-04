@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.Int
 
 abstract class BaseStatisticsViewModel<E : Enum<E>, DD : DetailedData<E>>(
     protected val raceCategory: RaceCategory,
@@ -139,7 +140,11 @@ abstract class BaseStatisticsViewModel<E : Enum<E>, DD : DetailedData<E>>(
                 groupedList.add(
                     HistoryListItem.SessionHeaderItem(
                         sessionId = result.onlineSessionId,
-                        sessionCreationDate = result.onlineSessionCreationDate
+                        sessionCreationDate = result.onlineSessionCreationDate,
+                        sessionCategory = result.onlineSessionCategory,
+                        threeLapCountPerSession = result.threeLapCountPerSession,
+                        routeCountPerSession = result.routeCountPerSession,
+                        rallyCountPerSession = result.rallyCountPerSession
                     )
                 )
                 lastSessionId = result.onlineSessionId

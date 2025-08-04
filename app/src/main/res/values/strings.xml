@@ -86,4 +86,9 @@
     <string name="statistics_history_header_date">Date</string>
     <string name="history_header_session">Session</string>
     <string name="history_header_separator">-</string>
+    <string name="history_header_tracks">(Tracks:</string>
+    <string name="history_header_routes">Routes:</string>
+    <string name="history_header_rallies">(Rallies:</string>
+    <string name="history_header_closing_segment">)</string>
+    <string name="history_header_separator2">,</string>
 </resources>

@@ -53,13 +53,21 @@ data class ResultHistory(
     val creationDate: Long,
     val onlineSessionId: Long,
     val onlineSessionCreationDate: Long,
-    val onlineSessionCategory: RaceCategory
+    val onlineSessionCategory: RaceCategory,
+    val threeLapCountPerSession: Int,
+    val routeCountPerSession: Int,
+    val rallyCountPerSession: Int
 )
 
 sealed class HistoryListItem {
     data class SessionHeaderItem(
         val sessionId: Long,
-        val sessionCreationDate: Long
+        val sessionCreationDate: Long,
+        val sessionCategory: RaceCategory,
+        val threeLapCountPerSession: Int,
+        val routeCountPerSession: Int,
+        val rallyCountPerSession: Int
+
     ) : HistoryListItem() {
         // Eindeutige ID für DiffUtil, da sessionId und sessionCreationDate zusammen einzigartig sein sollten für einen Header
         val id: String = "header_${sessionId}_${sessionCreationDate}"
