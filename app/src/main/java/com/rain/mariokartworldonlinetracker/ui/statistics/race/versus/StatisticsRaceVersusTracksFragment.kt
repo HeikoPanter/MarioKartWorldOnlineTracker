@@ -18,8 +18,10 @@ import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.ThreeLapTrackDetailedData
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusRoutesBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusTracksBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.BaseStatisticsRaceFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackDiffCallback
@@ -27,34 +29,15 @@ import com.rain.mariokartworldonlinetracker.ui.statistics.race.TrackViewHolder
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class StatisticsRaceVersusTracksFragment : Fragment() {
+class StatisticsRaceVersusTracksFragment : BaseStatisticsRaceFragment<FragmentStatisticsRaceVersusTracksBinding>(
+    RaceCategory.RACE_VS
+) {
 
-    private var _binding: FragmentStatisticsRaceVersusTracksBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var statisticsViewModel: StatisticsRaceViewModel
-    private lateinit var trackListAdapter: StatisticsListAdapter<ThreeLapTrackDetailedData, TrackViewHolder>
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsRaceVersusTracksBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
-            RaceCategory.RACE_VS,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.RACE_VS.name, StatisticsRaceViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsRaceVersusTracksBinding {
+        return FragmentStatisticsRaceVersusTracksBinding.inflate(inflater, container, false)
     }
+
+    private lateinit var trackListAdapter: StatisticsListAdapter<ThreeLapTrackDetailedData, TrackViewHolder>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,9 +79,9 @@ class StatisticsRaceVersusTracksFragment : Fragment() {
 
                     updateHeaderUI()
 
-                    if (trackList.isNotEmpty() && isAdded && _binding != null) {
+                    if (trackList.isNotEmpty() && isAdded && binding != null) {
                         binding.tracksRecyclerview.post { // Wichtig: .post{}
-                            if (isAdded && _binding != null) {
+                            if (isAdded && binding != null) {
                                 binding.tracksRecyclerview.scrollToPosition(0)
                             }
                         }
@@ -126,8 +109,7 @@ class StatisticsRaceVersusTracksFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.tracksRecyclerview.adapter = null
-        _binding = null
+        super.onDestroyView()
     }
 }

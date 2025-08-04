@@ -16,37 +16,19 @@ import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.AveragePositionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.MedianRaceCountPerSessionByType
 import com.rain.mariokartworldonlinetracker.data.pojo.RaceCountByType
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.BaseStatisticsRaceFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.launch
 
-class StatisticsRaceWorldwideGeneralFragment : Fragment() {
-    private var _binding: FragmentStatisticsRaceWorldwideGeneralBinding? = null
-    private val binding get() = _binding!!
+class StatisticsRaceWorldwideGeneralFragment : BaseStatisticsRaceFragment<FragmentStatisticsRaceWorldwideGeneralBinding>(
+    RaceCategory.RACE
+) {
 
-    private lateinit var statisticsViewModel: StatisticsRaceViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsRaceWorldwideGeneralBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
-            RaceCategory.RACE,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.RACE.name, StatisticsRaceViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsRaceWorldwideGeneralBinding {
+        return FragmentStatisticsRaceWorldwideGeneralBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

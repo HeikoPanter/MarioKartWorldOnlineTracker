@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.R
@@ -13,35 +11,15 @@ import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.BaseStatisticsRaceFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 
-class StatisticsRaceVersusFragment : Fragment() {
-
-    private var _binding: FragmentStatisticsRaceVersusBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var statisticsViewModel: StatisticsRaceViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsRaceVersusBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
-            RaceCategory.RACE_VS,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.RACE_VS.name, StatisticsRaceViewModel::class.java)
-
-        return binding.root
+class StatisticsRaceVersusFragment : BaseStatisticsRaceFragment<FragmentStatisticsRaceVersusBinding>(
+    RaceCategory.RACE_VS
+) {
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsRaceVersusBinding {
+        return FragmentStatisticsRaceVersusBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,10 +38,5 @@ class StatisticsRaceVersusFragment : Fragment() {
                 else -> null
             }
         }.attach()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

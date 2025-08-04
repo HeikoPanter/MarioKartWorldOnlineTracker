@@ -12,40 +12,19 @@ import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutWorldwideBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.BaseStatisticsKnockoutFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 
-class StatisticsKnockoutWorldwideFragment : Fragment() {
+class StatisticsKnockoutWorldwideFragment : BaseStatisticsKnockoutFragment<FragmentStatisticsKnockoutWorldwideBinding>(
+    RaceCategory.KNOCKOUT
+) {
 
-    private var _binding: FragmentStatisticsKnockoutWorldwideBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsKnockoutWorldwideBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(),
-            StatisticsKnockoutViewModelFactory(
-                RaceCategory.KNOCKOUT,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.KNOCKOUT.name, StatisticsKnockoutViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsKnockoutWorldwideBinding {
+        return FragmentStatisticsKnockoutWorldwideBinding.inflate(inflater, container, false)
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,10 +41,5 @@ class StatisticsKnockoutWorldwideFragment : Fragment() {
                 else -> null
             }
         }.attach()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

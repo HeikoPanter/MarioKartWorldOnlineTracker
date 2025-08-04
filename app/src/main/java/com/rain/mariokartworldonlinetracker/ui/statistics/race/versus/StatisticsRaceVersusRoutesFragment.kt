@@ -18,8 +18,10 @@ import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.RouteDetailedData
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusHistoryBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceVersusRoutesBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.BaseStatisticsRaceFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteDiffCallback
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.RouteViewHolder
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
@@ -27,34 +29,14 @@ import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceVie
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class StatisticsRaceVersusRoutesFragment : Fragment() {
-
-    private var _binding: FragmentStatisticsRaceVersusRoutesBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var statisticsViewModel: StatisticsRaceViewModel
-    private lateinit var trackListAdapter: StatisticsListAdapter<RouteDetailedData, RouteViewHolder>
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsRaceVersusRoutesBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
-            RaceCategory.RACE_VS,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.RACE_VS.name, StatisticsRaceViewModel::class.java)
-
-        return binding.root
+class StatisticsRaceVersusRoutesFragment : BaseStatisticsRaceFragment<FragmentStatisticsRaceVersusRoutesBinding>(
+    RaceCategory.RACE_VS
+) {
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsRaceVersusRoutesBinding {
+        return FragmentStatisticsRaceVersusRoutesBinding.inflate(inflater, container, false)
     }
+
+    private lateinit var trackListAdapter: StatisticsListAdapter<RouteDetailedData, RouteViewHolder>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,9 +78,9 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
 
                     updateHeaderUI()
 
-                    if (trackList.isNotEmpty() && isAdded && _binding != null) {
+                    if (trackList.isNotEmpty() && isAdded && binding != null) {
                         binding.tracksRecyclerview.post { // Wichtig: .post{}
-                            if (isAdded && _binding != null) {
+                            if (isAdded && binding != null) {
                                 binding.tracksRecyclerview.scrollToPosition(0)
                             }
                         }
@@ -126,8 +108,7 @@ class StatisticsRaceVersusRoutesFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.tracksRecyclerview.adapter = null
-        _binding = null
+        super.onDestroyView()
     }
 }

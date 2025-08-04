@@ -19,41 +19,23 @@ import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.HistoryListItem
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideGeneralBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsRaceWorldwideHistoryBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.race.BaseStatisticsRaceFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.race.StatisticsRaceViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class StatisticsRaceWorldwideHistoryFragment : Fragment() {
-    private var _binding: FragmentStatisticsRaceWorldwideHistoryBinding? = null
-    private val binding get() = _binding!!
+class StatisticsRaceWorldwideHistoryFragment : BaseStatisticsRaceFragment<FragmentStatisticsRaceWorldwideHistoryBinding>(
+    RaceCategory.RACE
+) {
 
-    private lateinit var statisticsViewModel: StatisticsRaceViewModel
-    private lateinit var historyAdapter: HistoryAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsRaceWorldwideHistoryBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(), StatisticsRaceViewModelFactory(
-            RaceCategory.RACE,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.RACE.name, StatisticsRaceViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsRaceWorldwideHistoryBinding {
+        return FragmentStatisticsRaceWorldwideHistoryBinding.inflate(inflater, container, false)
     }
+    private lateinit var historyAdapter: HistoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,11 +48,11 @@ class StatisticsRaceWorldwideHistoryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         historyAdapter = HistoryAdapter {
-            if (isAdded && _binding != null && binding.tracksRecyclerview.adapter?.itemCount ?: 0 > 0) {
+            if (isAdded && binding != null && binding.tracksRecyclerview.adapter?.itemCount ?: 0 > 0) {
                 // Post ist hier weniger kritisch, da onCurrentListChanged synchron zum Update ist,
                 // aber für komplexe Layouts kann es immer noch sicherer sein.
                 binding.tracksRecyclerview.post { // Versuch es erst ohne post
-                    if (isAdded && _binding != null) { // Doppelter Check wegen post
+                    if (isAdded && binding != null) { // Doppelter Check wegen post
                         (binding.tracksRecyclerview.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(0, 0)
                     }
                 }
@@ -114,8 +96,7 @@ class StatisticsRaceWorldwideHistoryFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.tracksRecyclerview.adapter = null
-        _binding = null
+        super.onDestroyView()
     }
 }

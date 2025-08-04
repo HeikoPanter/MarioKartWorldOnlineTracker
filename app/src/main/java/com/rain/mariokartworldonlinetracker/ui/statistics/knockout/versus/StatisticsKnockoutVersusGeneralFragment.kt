@@ -13,38 +13,19 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusGeneralBinding
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.BaseStatisticsKnockoutFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 import kotlinx.coroutines.launch
 
-class StatisticsKnockoutVersusGeneralFragment : Fragment() {
+class StatisticsKnockoutVersusGeneralFragment : BaseStatisticsKnockoutFragment<FragmentStatisticsKnockoutVersusGeneralBinding>(
+    RaceCategory.KNOCKOUT_VS
+) {
 
-    private var _binding: FragmentStatisticsKnockoutVersusGeneralBinding? = null
-    private val binding get() = _binding!!
-
-    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsKnockoutVersusGeneralBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(),
-            StatisticsKnockoutViewModelFactory(
-                RaceCategory.KNOCKOUT_VS,
-            RaceResultRepository(raceResultDao),
-            OnlineSessionRepository(sessionDao)
-        )
-        )
-            .get(RaceCategory.KNOCKOUT_VS.name, StatisticsKnockoutViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsKnockoutVersusGeneralBinding {
+        return FragmentStatisticsKnockoutVersusGeneralBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -18,43 +18,25 @@ import com.rain.mariokartworldonlinetracker.SortDirection
 import com.rain.mariokartworldonlinetracker.data.OnlineSessionRepository
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.data.pojo.ResultHistory
+import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusBinding
 import com.rain.mariokartworldonlinetracker.databinding.FragmentStatisticsKnockoutVersusHistoryBinding
 import com.rain.mariokartworldonlinetracker.ui.statistics.HistoryAdapter
 import com.rain.mariokartworldonlinetracker.ui.statistics.StatisticsListAdapter
+import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.BaseStatisticsKnockoutFragment
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModel
 import com.rain.mariokartworldonlinetracker.ui.statistics.knockout.StatisticsKnockoutViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class StatisticsKnockoutVersusHistoryFragment : Fragment() {
-    private var _binding: FragmentStatisticsKnockoutVersusHistoryBinding? = null
-    private val binding get() = _binding!!
+class StatisticsKnockoutVersusHistoryFragment : BaseStatisticsKnockoutFragment<FragmentStatisticsKnockoutVersusHistoryBinding>(
+    RaceCategory.KNOCKOUT_VS
+) {
 
-    private lateinit var statisticsViewModel: StatisticsKnockoutViewModel
-    private lateinit var historyAdapter: HistoryAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStatisticsKnockoutVersusHistoryBinding.inflate(inflater, container, false)
-
-        // Repository und ViewModel initialisieren
-        // Owner des Repos ist die Activity, damit untergeordnete Fragments auch auf die gleiche Instanz zugreifen
-        val raceResultDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.raceResultDao()
-        val sessionDao = (requireActivity().application as MarioKartWorldOnlineTrackerApplication).database.onlineSessionDao()
-        statisticsViewModel = ViewModelProvider(requireActivity(),
-            StatisticsKnockoutViewModelFactory(
-                RaceCategory.KNOCKOUT_VS,
-                RaceResultRepository(raceResultDao),
-                OnlineSessionRepository(sessionDao)
-            )
-        )
-            .get(RaceCategory.KNOCKOUT_VS.name, StatisticsKnockoutViewModel::class.java)
-
-        return binding.root
+    override fun createBinding(inflater: LayoutInflater,container: ViewGroup?): FragmentStatisticsKnockoutVersusHistoryBinding {
+        return FragmentStatisticsKnockoutVersusHistoryBinding.inflate(inflater, container, false)
     }
+
+    private lateinit var historyAdapter: HistoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,11 +49,11 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
 
     private fun setupRecyclerView() {
         historyAdapter = HistoryAdapter {
-            if (isAdded && _binding != null && binding.tracksRecyclerview.adapter?.itemCount ?: 0 > 0) {
+            if (isAdded && binding != null && binding.tracksRecyclerview.adapter?.itemCount ?: 0 > 0) {
                 // Post ist hier weniger kritisch, da onCurrentListChanged synchron zum Update ist,
                 // aber für komplexe Layouts kann es immer noch sicherer sein.
                 binding.tracksRecyclerview.post { // Versuch es erst ohne post
-                    if (isAdded && _binding != null) { // Doppelter Check wegen post
+                    if (isAdded && binding != null) { // Doppelter Check wegen post
                         (binding.tracksRecyclerview.layoutManager as? LinearLayoutManager)?.scrollToPositionWithOffset(0, 0)
                     }
                 }
@@ -97,9 +79,9 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
 
                     updateHeaderUI()
 
-                    if (trackList.isNotEmpty() && isAdded && _binding != null) {
+                    if (trackList.isNotEmpty() && isAdded && binding != null) {
                         binding.tracksRecyclerview.post { // Wichtig: .post{}
-                            if (isAdded && _binding != null) {
+                            if (isAdded && binding != null) {
                                 binding.tracksRecyclerview.scrollToPosition(0)
                             }
                         }
@@ -123,8 +105,7 @@ class StatisticsKnockoutVersusHistoryFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.tracksRecyclerview.adapter = null
-        _binding = null
+        super.onDestroyView()
     }
 }
