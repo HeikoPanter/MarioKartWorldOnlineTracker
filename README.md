@@ -41,7 +41,7 @@ Here are a couple screenshots:
 
 <img src="https://github.com/user-attachments/assets/bb008c75-54bf-4094-b6be-6b0c8c56c99f" width="400">
 
-<img src="https://github.com/user-attachments/assets/2a565943-0b5f-4154-8658-1ad77356f44b" width="400">
+<img src="https://github.com/user-attachments/assets/729cadad-edcc-4ea4-9a00-4e987ded2883" width="400">
 
 ## How do I get it?
 
