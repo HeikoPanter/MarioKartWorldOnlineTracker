@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -63,6 +65,16 @@ class SelectDrivingFromFragment : Fragment() {
 
         if (lastTrackName == null) {
             buttonFromLast.isEnabled = false
+        } else {
+            newOnlineSessionViewModel.engineClass.observe(viewLifecycleOwner, Observer { currentEngineClass ->
+                val isMirrorActive = (currentEngineClass == EngineClass.MIRROR)
+
+                if (isMirrorActive) {
+                    buttonFromLast.scaleX = -1f
+                } else {
+                    buttonFromLast.scaleX = 1f
+                }
+            })
         }
 
         var buttonFromNone = TrackAndKnockoutHelper.createImageView(

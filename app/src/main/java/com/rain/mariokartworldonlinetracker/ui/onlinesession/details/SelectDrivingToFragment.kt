@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -89,6 +91,24 @@ class SelectDrivingToFragment : Fragment() {
         } else {
             binding.layoutCheckboxMirrorMode.checkboxMirrorMode.visibility = View.GONE
         }
+
+        newOnlineSessionViewModel.engineClass.observe(viewLifecycleOwner, Observer { currentEngineClass ->
+            val isMirrorActive = (currentEngineClass == EngineClass.MIRROR)
+
+            for (i in 0 until binding.imageViewContainer.childCount) {
+                val childView = binding.imageViewContainer.getChildAt(i)
+                if (childView is LinearLayout) {
+                    for (j in 0 until childView.childCount) {
+                        val imageView = childView.getChildAt(j) as ImageView
+                        if (isMirrorActive) {
+                            imageView.scaleX = -1f
+                        } else {
+                            imageView.scaleX = 1f
+                        }
+                    }
+                }
+            }
+        })
     }
 
     fun navigateNext(drivingToTrackName: TrackName) {
