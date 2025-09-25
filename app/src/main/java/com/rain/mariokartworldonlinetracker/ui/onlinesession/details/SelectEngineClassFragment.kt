@@ -13,6 +13,7 @@ import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplicati
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.EngineClass
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.databinding.FragmentSelectEngineClassBinding
@@ -69,6 +70,12 @@ class SelectEngineClassFragment : Fragment() {
             if (isRace) R.drawable.engine100cc_race else R.drawable.engine100cc_knockout,
             imageMarginPx
         )
+
+        if (MkwotSettings.hide100cc) {
+            button100cc.visibility = View.GONE
+        } else {
+            button100cc.visibility = View.VISIBLE
+        }
 
         button150cc.setOnClickListener {
             navigateNext(EngineClass._150CC)

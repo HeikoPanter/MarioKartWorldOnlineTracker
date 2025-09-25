@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -29,8 +30,6 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.Date
 import java.util.Locale
-import kotlin.text.format
-import kotlin.text.isEmpty
 
 class MainActivity : AppCompatActivity() {
 
@@ -95,6 +94,10 @@ class MainActivity : AppCompatActivity() {
                 showItemsPerRowDialog()
                 true
             }
+            R.id.action_settings_change_engine_class_display -> {
+                showChangeEngineClassDisplayDialog()
+                true
+            }
             R.id.action_settings_show_all_entries -> {
                 showShowAllEntriesDialog()
                 true
@@ -133,6 +136,78 @@ class MainActivity : AppCompatActivity() {
                         recreate()
                     }
                 }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showChangeEngineClassDisplayDialog() {
+        // Layout für den Dialog-Inhalt dynamisch erstellen oder ein XML-Layout inflaten
+        // Für zwei Checkboxen ist das dynamische Erstellen hier recht einfach:
+        val context = this
+        val linearLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            // Padding für den Inhalt des Dialogs
+            val padding = (16 * resources.displayMetrics.density).toInt() // 16dp in Pixel
+            setPadding(padding, padding, padding, padding)
+        }
+
+        // CheckBox 1: "Hide 100cc option"
+        val checkBoxHide100cc = CheckBox(context).apply {
+            text = getString(R.string.settings_hide_100cc) // Erstelle diesen String in strings.xml
+            isChecked = MkwotSettings.hide100cc // Hole aktuellen Wert
+            textSize = 18f // Beispiel für Textgröße
+        }
+
+        // CheckBox 2: "Auto-select 150cc"
+        val checkBoxAutoSelect150cc = CheckBox(context).apply {
+            text = getString(R.string.settings_auto_select_150cc) // Erstelle diesen String in strings.xml
+            isChecked = MkwotSettings.autoSelect150cc // Hole aktuellen Wert
+            textSize = 18f
+
+            // Wichtig: Checkbox 2 initial (de)aktivieren basierend auf Checkbox 1
+            isEnabled = checkBoxHide100cc.isChecked
+            alpha = if (isEnabled) 1.0f else 0.5f // Visuelles Feedback für Deaktivierung
+        }
+
+        // Listener für CheckBox 1, um CheckBox 2 zu (de)aktivieren
+        checkBoxHide100cc.setOnCheckedChangeListener { _, isChecked ->
+            checkBoxAutoSelect150cc.isEnabled = isChecked
+            checkBoxAutoSelect150cc.alpha = if (isChecked) 1.0f else 0.5f
+            // Wenn "Hide 100cc" deaktiviert wird, sollte "Auto-select 150cc" auch deaktiviert werden,
+            // da die Bedingung nicht mehr erfüllt ist.
+            if (!isChecked) {
+                checkBoxAutoSelect150cc.isChecked = false
+            }
+        }
+
+        linearLayout.addView(checkBoxHide100cc)
+        linearLayout.addView(checkBoxAutoSelect150cc)
+
+        AlertDialog.Builder(context)
+            .setTitle(getString(R.string.settings_engine_class_options_title)) // Erstelle diesen String in strings.xml
+            .setView(linearLayout) // Füge das Layout mit den Checkboxen hinzu
+            .setPositiveButton(R.string.dialog_ok) { dialog, _ ->
+                // Speichere die Einstellungen
+                val hide100ccSelected = checkBoxHide100cc.isChecked
+                val autoSelect150ccSelected = checkBoxAutoSelect150cc.isChecked
+
+                MkwotSettings.saveHide100cc(context, hide100ccSelected)
+
+                // Speichere AutoSelect150cc nur, wenn Hide100cc auch aktiv ist.
+                // Ansonsten wird es auf false zurückgesetzt (durch den Listener oder hier explizit)
+                if (hide100ccSelected) {
+                    MkwotSettings.saveAutoSelect150cc(context, autoSelect150ccSelected)
+                } else {
+                    MkwotSettings.saveAutoSelect150cc(context, false)
+                }
+
+                Toast.makeText(context, getString(R.string.settings_saved), Toast.LENGTH_SHORT).show()
+                // Ggf. UI aktualisieren, wenn diese Einstellungen sofortige Auswirkungen haben
+                // recreate() // Nur wenn absolut notwendig und es keine bessere Möglichkeit gibt
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.dialog_cancel) { dialog, _ ->

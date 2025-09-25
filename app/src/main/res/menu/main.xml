@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_settings_items_per_row"
-        android:orderInCategory="100"
-        android:title="@string/action_settings_items_per_row"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_settings_show_all_entries"
-        android:orderInCategory="101"
-        android:title="@string/action_settings_show_all_entries"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_settings_export_to_csv"
-        android:orderInCategory="102"
-        android:title="@string/action_settings_export_to_csv"
-        app:showAsAction="never" />
-
+    <group
+        android:id="@+id/session_group"
+        app:showAsAction="never" >
+        <item
+            android:id="@+id/action_settings_items_per_row"
+            android:orderInCategory="100"
+            android:title="@string/action_settings_items_per_row"
+            />
+        <item
+            android:id="@+id/action_settings_change_engine_class_display"
+            android:orderInCategory="101"
+            android:title="@string/action_settings_change_engine_class_display"/>
+    </group>
+    <group
+        android:id="@+id/statistics_group"
+        app:showAsAction="never" >
+        <item
+            android:id="@+id/action_settings_show_all_entries"
+            android:orderInCategory="101"
+            android:title="@string/action_settings_show_all_entries"/>
+    </group>
+    <group
+        android:id="@+id/misc_group"
+        app:showAsAction="never" >
+        <item
+            android:id="@+id/action_settings_export_to_csv"
+            android:orderInCategory="102"
+            android:title="@string/action_settings_export_to_csv"/>
+    </group>
 </menu>

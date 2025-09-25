@@ -5,7 +5,8 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings_items_per_row">Change displayed items per row</string>
+    <string name="action_settings_items_per_row">Displayed items per row</string>
+    <string name="action_settings_change_engine_class_display">Select engine class display</string>
     <string name="action_settings_show_all_entries">Show all statistics entries</string>
 
     <string name="menu_home">Home</string>
@@ -91,4 +92,8 @@
     <string name="history_header_rallies">(Rallies:</string>
     <string name="history_header_closing_segment">)</string>
     <string name="history_header_separator2">,</string>
+    <string name="settings_engine_class_options_title">Engine class options for races</string>
+    <string name="settings_hide_100cc">Hide 100cc option</string>
+    <string name="settings_auto_select_150cc">Auto-select 150cc</string>
+    <string name="settings_saved">Settings saved</string>
 </resources>
