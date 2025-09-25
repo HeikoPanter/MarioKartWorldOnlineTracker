@@ -47,8 +47,7 @@ class DetermineStartFragment : Fragment() {
                 findNavController().navigate(R.id.action_to_selectKnockoutCupFragment)
             }
             else {
-                if ((newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE ||
-                    newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS) &&
+                if (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE &&
                     MkwotSettings.autoSelect150cc) {
                     newOnlineSessionViewModel.setEngineClass(EngineClass._150CC)
                     findNavController().navigate(R.id.action_to_selectDrivingFromFragment)

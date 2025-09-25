@@ -80,7 +80,7 @@ class SelectDrivingFromFragment : Fragment() {
         )
 
         if (MkwotSettings.autoSelect150cc &&
-            (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE || newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS)) {
+            newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE) {
             binding.layoutCheckboxMirrorMode.checkboxMirrorMode.visibility = View.VISIBLE
 
             newOnlineSessionViewModel.engineClass.observe(viewLifecycleOwner,
