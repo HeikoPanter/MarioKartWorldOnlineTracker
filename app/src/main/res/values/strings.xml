@@ -96,4 +96,5 @@
     <string name="settings_hide_100cc">Hide 100cc option</string>
     <string name="settings_auto_select_150cc">Auto-select 150cc</string>
     <string name="settings_saved">Settings saved</string>
+    <string name="checkbox_mirror_mode">Mirror mode</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.EngineClass
+import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.databinding.FragmentDetermineStartBinding
 import com.rain.mariokartworldonlinetracker.ui.onlinesession.NewOnlineSessionViewModel
@@ -35,8 +36,6 @@ class DetermineStartFragment : Fragment() {
             requireActivity().application as MarioKartWorldOnlineTrackerApplication,
             requireActivity()
         )
-
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +47,14 @@ class DetermineStartFragment : Fragment() {
                 findNavController().navigate(R.id.action_to_selectKnockoutCupFragment)
             }
             else {
-                findNavController().navigate(R.id.action_to_selectEngineClassFragment)
+                if ((newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE ||
+                    newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS) &&
+                    MkwotSettings.autoSelect150cc) {
+                    newOnlineSessionViewModel.setEngineClass(EngineClass._150CC)
+                    findNavController().navigate(R.id.action_to_selectDrivingFromFragment)
+                } else {
+                    findNavController().navigate(R.id.action_to_selectEngineClassFragment)
+                }
             }
         }
     }

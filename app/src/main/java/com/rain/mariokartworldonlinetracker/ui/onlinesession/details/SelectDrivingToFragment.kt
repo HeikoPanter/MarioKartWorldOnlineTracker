@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.rain.mariokartworldonlinetracker.EngineClass
 import com.rain.mariokartworldonlinetracker.MarioKartWorldOnlineTrackerApplication
 import com.rain.mariokartworldonlinetracker.MkwotSettings
 import com.rain.mariokartworldonlinetracker.R
+import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.data.RaceResultRepository
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper.createStandardTrackImageView
@@ -68,6 +71,24 @@ class SelectDrivingToFragment : Fragment() {
             TrackAndKnockoutHelper::createStandardTrackImageView,
             drivingFromClickHandler
         )
+
+        if (MkwotSettings.autoSelect150cc &&
+            (newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE || newOnlineSessionViewModel.getRaceCategory() == RaceCategory.RACE_VS)) {
+            binding.layoutCheckboxMirrorMode.checkboxMirrorMode.visibility = View.VISIBLE
+            newOnlineSessionViewModel.engineClass.observe(viewLifecycleOwner,
+                Observer { currentEngineClass ->
+                    val expectedCheckedState = (currentEngineClass == EngineClass.MIRROR)
+                    if (binding.layoutCheckboxMirrorMode.checkboxMirrorMode.isChecked != expectedCheckedState) {
+                        binding.layoutCheckboxMirrorMode.checkboxMirrorMode.isChecked = expectedCheckedState
+                    }
+                })
+
+            binding.layoutCheckboxMirrorMode.checkboxMirrorMode.setOnCheckedChangeListener { _, isCheckedByUser ->
+                newOnlineSessionViewModel.onMirrorCheckboxToggled(isCheckedByUser)
+            }
+        } else {
+            binding.layoutCheckboxMirrorMode.checkboxMirrorMode.visibility = View.GONE
+        }
     }
 
     fun navigateNext(drivingToTrackName: TrackName) {

@@ -23,7 +23,8 @@ class NewOnlineSessionViewModel(
 
     private var _raceCategory: RaceCategory = RaceCategory.UNKNOWN
     private var _sessionId: Long = 0
-    private var _engineClass: EngineClass = EngineClass.UNKNOWN
+    private val _engineClass = MutableLiveData<EngineClass>(EngineClass.UNKNOWN)
+    val engineClass: LiveData<EngineClass> = _engineClass
 
     private val _drivingFromOption = MutableLiveData<DrivingFromOption>()
 
@@ -70,8 +71,22 @@ class NewOnlineSessionViewModel(
         return _raceCategory
     }
 
+    fun getEngineClass(): EngineClass {
+        return _engineClass.value
+    }
+
     fun setEngineClass(engineClass: EngineClass) {
-        _engineClass = engineClass
+        _engineClass.value = engineClass
+    }
+
+    fun onMirrorCheckboxToggled(isChecked: Boolean) {
+        val newEngineClass = if (isChecked) {
+            EngineClass.MIRROR
+        } else {
+            EngineClass._150CC // Standard, wenn Mirror-Checkbox nicht ausgewählt ist
+        }
+        // Aktualisiere den LiveData-Wert. Dies löst dann die Beobachter im Fragment aus.
+        setEngineClass(newEngineClass)
     }
 
     fun setDrivingFromOption(option: DrivingFromOption) {
@@ -118,7 +133,7 @@ class NewOnlineSessionViewModel(
                 }
 
                 val newRace = RaceResult(
-                    engineClass = _engineClass,
+                    engineClass = _engineClass.value,
                     drivingFromTrackName = fromTrack,
                     drivingToTrackName = toTrack,
                     knockoutCupName = knockoutCupName,

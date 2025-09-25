@@ -23,6 +23,17 @@
             />
 
         <action
+            android:id="@+id/action_to_selectDrivingFromFragment"
+            app:destination="@id/selectDrivingFromFragment"
+            app:popUpTo="@id/determineStartFragment"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
+
+        <action
             android:id="@+id/action_to_selectEngineClassFragment"
             app:destination="@id/selectEngineClassFragment"
             app:popUpTo="@id/determineStartFragment"
