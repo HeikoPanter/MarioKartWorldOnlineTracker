@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.rain.mariokartworldonlinetracker.EngineClass
 import com.rain.mariokartworldonlinetracker.R
 import com.rain.mariokartworldonlinetracker.RaceCategory
 import com.rain.mariokartworldonlinetracker.TrackAndKnockoutHelper
@@ -82,6 +83,7 @@ class HistoryAdapter(private val onListUpdated: () -> Unit) : ListAdapter<Histor
                 drivingFromIconImageView.setImageResource(
                     TrackAndKnockoutHelper.getTrackResId(
                         item.resultHistory.drivingFromTrackName))
+
                 routeIconImageView.setImageResource(
                     R.drawable.route)
             } else {
@@ -98,6 +100,14 @@ class HistoryAdapter(private val onListUpdated: () -> Unit) : ListAdapter<Histor
                         item.resultHistory.knockoutCupName))
             } else {
                 drivingToIconImageView.setImageResource(0)
+            }
+
+            if (item.resultHistory.engineClass == EngineClass.MIRROR) {
+                drivingFromIconImageView.scaleX = -1f
+                drivingToIconImageView.scaleX = -1f
+            } else {
+                drivingFromIconImageView.scaleX = 1f
+                drivingToIconImageView.scaleX = 1f
             }
 
             engineClassImageView.setImageResource(
